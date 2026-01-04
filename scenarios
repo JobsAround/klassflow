@@ -1,0 +1,25 @@
+Il faut s'assurer que ces scenarios sont possibles avec l'application.
+
+En général :
+Les utilisateurs doivent valider leur adresse email lorsqu'ils sont ajoutés par un admin ou par un enseignant.
+Tant qu'ils n'ont pas validé, ils ne peuvent pas se connecter sur l'application et leur statut apparait "en attente de validation".
+Seuls les Enseignants et Admin peuvent se connecter via le formulaire principal d'accès.
+Les Apprenants/Stagiaires ne feront que recevoir des mails.
+
+Stagiaire :
+N'a pas besoin de se connecter sur l'application.
+Reçoit un mail de signature de sa présence 5 minutes avant le début de chaque cours, si la fonctionnalité est activée. Il peut aussi déclarer être absent et justifier son absence.
+
+Enseignant :
+Peut se connecter sur l'application.
+Peut ajouter des apprenants/stagiaires à une Classroom si ils sont assignés à la Classroom.
+Peut exporter une fiche de présence en pdf A4 pour chaque Classroom, par semaine ou par mois. Elle contient le nom de l'enseignant, le nom de la classroom, le nom de l'apprenant, la date, le cours et si l'apprenant est présent ou absent, la signature de chaque apprenant à chaque session, le nombre d'heures réalisés par chaque apprenant sur la semaine, le nombre d'heures réalisés au total par chaque enseignant sur la semaine, le nombre d'heures réalisés au total sur la semaine par l'ensemble des apprenants présents. Les statistiques sont en haut du document.
+Peut désactiver la fonctionnalité de signature de présence pour une Classroom, ce qui notifie les admins de l'organiations par mail.
+Peut forcer le renvoi d'un mail de signature de présence à un apprenant/stagiaire si la fonctionnalité était désactivée.
+Peut accéder à une interface de signature de présence où chaque apprenant/stagiaire peut signer sa présence (par exemple l'enseignant partage son téléphone ou sa tablette dans la classe). L'enseignant doit aussi signer sa présence. Lorsque l'enseignant partage son device, il choisit la session concernée et clique sur un bouton de partage qui bloque l'interface pour permettre simplement de chercher le nom d'un stagiaire et de signer sa présence et ne permet pas de faire d'autres actions dans l'interface de l'enseignant jusqu'à ce que l'enseignant débloque l'interface (comment ? par un bouton débloquer et un code PIN de l'enseignant qui aura été configuré lors de la création de la session).
+
+Admin :
+Similaire à Enseignants avec plus de droits.
+Peut ajouter des Utilisateurs.
+L'admin peut déclarer et gérer plusieurs organisations.
+ 

@@ -1,0 +1,18 @@
+// Classrooms components barrel export
+export * from './session-manager'
+export * from './classrooms-list'
+export * from './create-classroom-dialog'
+export * from './edit-classroom-dialog'
+export * from './enroll-student-dialog'
+export * from './attendance-exporter'
+export * from './classroom-settings'
+export * from './students-card'
+export * from './teachers-card'
+export * from './share-classroom-dialog'
+export * from './export-section'
+export * from './assign-teacher-dialog'
+export * from './remove-teacher-dialog'
+export * from './remove-student-dialog'
+export * from './public-classroom-view'
+export * from './classroom-detail-view'
+

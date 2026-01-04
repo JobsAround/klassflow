@@ -1,0 +1,27 @@
+{
+    "publicClassroom": {
+        "loading": "Laden...",
+        "classroomNotFound": "Klassenzimmer nicht gefunden",
+        "joinVideo": "Klasse beitreten",
+        "calendar": "Kalender",
+        "upcomingSessions": "Kommende Sitzungen",
+        "resources": "Ressourcen",
+        "participants": "Teilnehmer",
+        "noUpcomingSessions": "Keine kommenden Sitzungen",
+        "classSession": "Unterrichtsstunde",
+        "online": "Online",
+        "onsite": "Vor Ort",
+        "time": "Zeit:",
+        "teacher": "Lehrer:",
+        "noResourcesAvailable": "Keine Ressourcen verfügbar",
+        "sharedOn": "Geteilt am",
+        "openLink": "Link öffnen",
+        "download": "Herunterladen",
+        "teachers": "Lehrer",
+        "students": "Schüler",
+        "noStudentsEnrolled": "Keine Schüler eingeschrieben.",
+        "today": "Heute",
+        "month": "Monat",
+        "week": "Woche"
+    }
+}

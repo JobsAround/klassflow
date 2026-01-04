@@ -1,0 +1,129 @@
+{
+  "name": "@klassflow/core",
+  "version": "0.1.7",
+  "license": "AGPL-3.0",
+  "private": false,
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./server": {
+      "types": "./dist/server.d.ts",
+      "import": "./dist/server.mjs",
+      "require": "./dist/server.js"
+    },
+    "./messages/de.json": {
+      "default": "./messages/de.json"
+    },
+    "./messages/en.json": {
+      "default": "./messages/en.json"
+    },
+    "./messages/es.json": {
+      "default": "./messages/es.json"
+    },
+    "./messages/fr.json": {
+      "default": "./messages/fr.json"
+    },
+    "./messages/ru.json": {
+      "default": "./messages/ru.json"
+    },
+    "./messages/uk.json": {
+      "default": "./messages/uk.json"
+    },
+    "./messages/signature-en.json": {
+      "default": "./messages/signature-en.json"
+    }
+  },
+  "files": [
+    "dist",
+    "messages"
+  ],
+  "peerDependencies": {
+    "@radix-ui/react-dialog": "^1.0.0",
+    "@radix-ui/react-select": "^2.0.0",
+    "lucide-react": "^0.400.0",
+    "react": "^18.0.0 || ^19.0.0",
+    "react-dom": "^18.0.0 || ^19.0.0",
+    "react-hook-form": "^7.0.0",
+    "next-intl": "^4.5.8"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "build:client": "tsup --config tsup.config.ts",
+    "build:server": "tsup --config tsup.server.config.ts",
+    "build:lib": "npm run build:client && npm run build:server",
+    "start": "next start",
+    "lint": "eslint"
+  },
+  "dependencies": {
+    "@auth/prisma-adapter": "^2.11.1",
+    "@hookform/resolvers": "^5.2.2",
+    "@jitsi/react-sdk": "^1.4.4",
+    "@prisma/client": "^5.22.0",
+    "@radix-ui/react-alert-dialog": "^1.1.15",
+    "@radix-ui/react-checkbox": "^1.3.3",
+    "@radix-ui/react-dialog": "^1.0.0",
+    "@radix-ui/react-dropdown-menu": "^2.1.16",
+    "@radix-ui/react-label": "^2.1.8",
+    "@radix-ui/react-popover": "^1.1.15",
+    "@radix-ui/react-select": "^2.0.0",
+    "@radix-ui/react-slot": "^1.2.4",
+    "@radix-ui/react-switch": "^1.2.6",
+    "@radix-ui/react-tabs": "^1.1.13",
+    "@upstash/ratelimit": "^2.0.7",
+    "@upstash/redis": "^1.36.0",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "date-fns": "^4.1.0",
+    "formidable": "^3.5.4",
+    "googleapis": "^167.0.0",
+    "jsonwebtoken": "^9.0.3",
+    "jspdf": "^3.0.4",
+    "jspdf-autotable": "^5.0.2",
+    "lucide-react": "^0.400.0",
+    "next": "16.0.7",
+    "next-auth": "^5.0.0-beta.30",
+    "node-cron": "^4.2.1",
+    "nodemailer": "^6.9.16",
+    "pg": "^8.16.3",
+    "prisma": "^5.22.0",
+    "react": "^18.0.0 || ^19.0.0",
+    "react-day-picker": "^9.12.0",
+    "react-dom": "^18.0.0 || ^19.0.0",
+    "react-hook-form": "^7.0.0",
+    "resend": "^6.6.0",
+    "tailwind-merge": "^3.4.0",
+    "zod": "^4.1.13"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@testing-library/dom": "^10.4.1",
+    "@testing-library/react": "^16.3.0",
+    "@types/formidable": "^3.4.6",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/node": "^20",
+    "@types/node-cron": "^3.0.11",
+    "@types/nodemailer": "^7.0.4",
+    "@types/pg": "^8.15.6",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "@vitejs/plugin-react": "^5.1.1",
+    "esbuild-react18-useclient": "^1.0.8",
+    "eslint": "^9",
+    "eslint-config-next": "16.0.7",
+    "happy-dom": "^20.0.11",
+    "tailwindcss": "^4",
+    "tsup": "^8.5.1",
+    "tsx": "^4.21.0",
+    "tw-animate-css": "^1.4.0",
+    "typescript": "^5",
+    "vitest": "^4.0.15",
+    "next-intl": "^4.5.8"
+  }
+}

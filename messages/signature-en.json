@@ -1,0 +1,22 @@
+{
+    "signature": {
+        "title": "Attendance Signature",
+        "student": "Student",
+        "date": "Date",
+        "schedule": "Schedule",
+        "duration": "Duration",
+        "yourSignature": "Your signature",
+        "signPrompt": "Sign with your finger or mouse in the area above",
+        "confirmPresence": "Confirm my presence",
+        "sending": "Sending...",
+        "declareAbsence": "Declare an absence",
+        "signatureRecorded": "Signature recorded",
+        "presenceRecorded": "Your attendance has been successfully recorded for",
+        "thankYou": "Thank you and see you soon!",
+        "error": "Error",
+        "invalidToken": "This link may be expired or invalid. Contact your teacher to get a new link.",
+        "pleaseSign": "Please sign before validating",
+        "loading": "Loading...",
+        "or": "Or"
+    }
+}
