@@ -36,8 +36,8 @@ SSH into your server and create the production env file:
 
 ```bash
 # Create directory
-mkdir -p /root/open-classroom
-cd /root/open-classroom
+mkdir -p /root/klassflow
+cd /root/klassflow
 
 # Create .env.production
 nano .env.production
@@ -47,9 +47,9 @@ Paste the following content (adjust values!):
 
 ```env
 # Database (Internal Docker Network)
-POSTGRES_USER=openclassroom
+POSTGRES_USER=klassflow
 POSTGRES_PASSWORD=secure_random_production_password
-POSTGRES_DB=openclassroom
+POSTGRES_DB=klassflow
 
 # Domain for Traefik (HTTPS)
 DOMAIN_NAME=app.yourdomain.com

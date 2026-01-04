@@ -1,12 +1,12 @@
 # 📚 KlassFlow
 
 > **Open-source classroom management platform for training centers**  
-> Built with Next.js 14, TypeScript, Prisma, and PostgreSQL
+> Built with Next.js 16, TypeScript, Prisma, and PostgreSQL
 
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
-[![Next.js](https://img.shields.io/badge/Next.js-14+-black)](https://nextjs.org/)
+[![Next.js](https://img.shields.io/badge/Next.js-16+-black)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-blue)](https://www.typescriptlang.org/)
-[![Prisma](https://img.shields.io/badge/Prisma-7.0+-2D3748)](https://www.prisma.io/)
+[![Prisma](https://img.shields.io/badge/Prisma-5.0+-2D3748)](https://www.prisma.io/)
 
 ## ✨ Features
 
@@ -24,14 +24,20 @@
 - **Attendance Tracking**: Present/Absent/Unsigned status
 - **Real-time Updates**: Live presence tracking for teachers
 - **Student Dashboard Notification**: Alerts for pending signatures
-
+- **Absence Declaration**: Students can declare absences with reasons
 
 ### 📧 Email Notifications
 - **Reminder Emails**: Configurable reminders (24h before by default)
-- **Signature Emails**: Automated signature requests for on-site sessions
+- **Signature Emails**: Automated signature requests for sessions
+- **Teacher Signature Requests**: Email-based signature links for teachers
 - **HTML Templates**: Professional, branded email templates
-- **SMTP Configuration**: Bring your own email server
+- **SMTP Configuration**: Bring your own email server or use Resend
 
+### 🎥 Video Conferencing Integration
+- **Jitsi Integration**: Built-in video conferencing with Jitsi Meet
+- **Permanent Room Links**: Each classroom gets a persistent meeting room
+- **No External Dependencies**: Self-hosted or use Jitsi's free service
+- **Graceful Fallback**: Works without configuration
 ### 📁 Document Storage
 - **File Upload**: PDF, images, documents (max 10MB)
 - **External Links**: Share online resources
@@ -39,10 +45,16 @@
 - **Organization Scoped**: Secure, isolated access
 
 ### 🔐 Authentication
-
-- **Dev Login**: Development mode bypass
+- **Magic Link Authentication**: Passwordless email-based login
+- **Dev Login**: Development mode bypass for testing
 - **Session Management**: Secure, HTTP-only cookies
 - **Auth.js (NextAuth v5)**: Industry-standard authentication
+
+### 📊 Compliance & Export
+- **PDF Export**: Generate attendance sheets with signatures
+- **Qualiopi-ready**: Compliant with French training certification standards
+- **Legal Signatures**: Digitally signed attendance records
+- **Organization Branding**: Include organization name in exports
 
 ## 🚀 Quick Start
 
@@ -56,7 +68,7 @@
 ```bash
 # Clone repository
 git clone https://github.com/JobsAround/klassflow.git
-cd open-classroom
+cd klassflow
 
 # Install dependencies
 npm install
@@ -91,7 +103,7 @@ docker-compose up -d mailpit
 ### How It Works
 
 - **In Development**: Emails automatically use MailPit (localhost:1025) when no SMTP is configured
-- **In Production**: Configure SMTP in Settings page for real email delivery
+- **In Production**: Configure SMTP in Settings page or use Resend API for real email delivery
 - **No Configuration Needed**: Works out of the box in dev mode
 
 ### Testing Email Features
@@ -128,15 +140,16 @@ docker-compose logs -f app
 
 ```bash
 # Database
-DATABASE_URL=postgresql://user:pass@db:5432/openclassroom
+DATABASE_URL=postgresql://user:pass@db:5432/klassflow
 
 # Auth
 AUTH_SECRET=$(openssl rand -base64 32)
-AUTH_GOOGLE_ID=your_google_client_id
-AUTH_GOOGLE_SECRET=your_google_client_secret
 
 # Application
 NEXT_PUBLIC_APP_URL=http://localhost:3000
+
+# Email (Optional - uses MailPit in dev by default)
+RESEND_API_KEY=re_xxxxx  # For production
 ```
 
 ### Usage Limits (Optional)
@@ -174,13 +187,12 @@ See [Deployment Guide](docs/deployment-guide.md) for detailed instructions.
 
 ### Technical Documentation
 - [Architecture Overview](docs/architecture.md)
-
 - [Deployment Guide](docs/deployment-guide.md)
 
 ## 🏗️ Tech Stack
 
 ### Frontend
-- **Next.js 14**: React framework with App Router
+- **Next.js 16**: React framework with App Router
 - **TypeScript**: Type-safe development
 - **TailwindCSS**: Utility-first CSS
 - **Shadcn/ui**: Beautiful UI components
@@ -197,15 +209,17 @@ See [Deployment Guide](docs/deployment-guide.md) for detailed instructions.
 - **Docker Compose**: Multi-container orchestration
 - **Node-cron**: Scheduled tasks
 - **Nodemailer**: Email sending
+- **Resend**: Production email delivery
 
 ### External Services
-
-- **SMTP Server**: Email delivery
+- **Jitsi Meet**: Video conferencing
+- **SMTP Server**: Email delivery (optional)
+- **Resend API**: Transactional emails (optional)
 
 ## 📁 Project Structure
 
 ```
-open-classroom/
+klassflow/
 ├── prisma/
 │   ├── schema.prisma          # Database schema
 │   ├── migrations/            # Migration history
@@ -224,7 +238,7 @@ open-classroom/
 │   │   ├── prisma.ts          # Database client
 │   │   ├── email.ts           # Email service
 │   │   ├── cron.ts            # Scheduled jobs
-
+│   │   └── pdf-export.ts      # PDF generation
 │   └── auth.ts                # Auth configuration
 ├── public/
 │   └── uploads/               # User-uploaded files
@@ -274,7 +288,6 @@ npm run format
 5. Generate signature token
 
 
-
 ## 🤝 Contributing
 
 Contributions are welcome! Please read our [Contributing Guide](CONTRIBUTING.md) first.
@@ -295,6 +308,7 @@ This project is licensed under the GNU Affero General Public License v3.0 - see 
 - UI components from [Shadcn/ui](https://ui.shadcn.com/)
 - Icons from [Lucide](https://lucide.dev/)
 - Authentication by [Auth.js](https://authjs.dev/)
+- Video conferencing by [Jitsi](https://jitsi.org/)
 
 ## 📧 Support
 
@@ -304,15 +318,15 @@ This project is licensed under the GNU Affero General Public License v3.0 - see 
 
 ## 🗺️ Roadmap
 
+- [ ] QR Code Attendance: Scan to sign
+- [ ] Automated Certificates: Auto-generated completion certificates
 - [ ] Mobile app (React Native)
 - [ ] Advanced analytics dashboard
 - [x] Multi-language support
-- [ ] Supabase Storage integration
-- [ ] AWS S3 storage adapter
-- [ ] Automated testing suite
 - [ ] API documentation (Swagger)
 - [ ] QR code for signature on tablet in the classroom
 - [ ] IP Address tracking for security
+- [ ] Bulk import for students/teachers
 
 ---
 
