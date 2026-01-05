@@ -1,6 +1,6 @@
 {
   "name": "@klassflow/core",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "license": "AGPL-3.0",
   "private": false,
   "main": "./dist/index.js",
