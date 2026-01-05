@@ -19,6 +19,7 @@ export async function GET(req: NextRequest, { params }: { params: any }) {
                 description: true,
                 locationOnline: true,
                 locationOnline2: true,
+                videoEnabled: true,
                 organization: {
                     select: {
                         name: true

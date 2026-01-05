@@ -168,30 +168,32 @@ export default async function ClassroomPage({ params }: { params: Promise<{ id: 
                         )}
                     </div>
                     <div className="flex flex-col items-end gap-2 ml-4">
-                        <div className="flex items-center gap-2">
-                            <a
-                                href={jitsiUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                            >
-                                <Button className="bg-blue-600 hover:bg-blue-700 text-white">
-                                    <Video className="w-4 h-4 mr-2" />
-                                    {t('joinAsTeacher')} {jitsiUrl2 ? "(1)" : ""}
-                                </Button>
-                            </a>
-                            {jitsiUrl2 && (
+                        {classroom.videoEnabled && (
+                            <div className="flex items-center gap-2">
                                 <a
-                                    href={jitsiUrl2}
+                                    href={jitsiUrl}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                 >
                                     <Button className="bg-blue-600 hover:bg-blue-700 text-white">
                                         <Video className="w-4 h-4 mr-2" />
-                                        {t('joinAsTeacher')} (2)
+                                        {t('joinAsTeacher')} {jitsiUrl2 ? "(1)" : ""}
                                     </Button>
                                 </a>
-                            )}
-                        </div>
+                                {jitsiUrl2 && (
+                                    <a
+                                        href={jitsiUrl2}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        <Button className="bg-blue-600 hover:bg-blue-700 text-white">
+                                            <Video className="w-4 h-4 mr-2" />
+                                            {t('joinAsTeacher')} (2)
+                                        </Button>
+                                    </a>
+                                )}
+                            </div>
+                        )}
                         <div className="flex items-center gap-2">
                             <ShareClassroomDialog
                                 classroomId={classroom.id}

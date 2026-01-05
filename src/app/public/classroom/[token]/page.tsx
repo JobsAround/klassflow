@@ -32,6 +32,7 @@ interface ClassroomData {
     description: string | null
     locationOnline?: string | null
     locationOnline2?: string | null
+    videoEnabled?: boolean
     organization: { name: string }
     teachers: Array<{ name: string | null; email: string }>
     enrollments: Array<{ student: { name: string | null; email: string; image: string | null } }>
@@ -233,23 +234,10 @@ export default function PublicClassroomPage() {
                     <p className="text-sm text-slate-500 mt-4">
                         <strong>{classroom.organization.name}</strong>
                     </p>
-                    <div className="mt-6 flex flex-wrap gap-4">
-                        <Button
-                            onClick={() => handleJoin("")}
-                            disabled={joinLoading}
-                            className="bg-blue-600 hover:bg-blue-700 text-white w-full sm:w-auto"
-                        >
-                            {joinLoading ? (
-                                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                            ) : (
-                                <Video className="w-4 h-4 mr-2" />
-                            )}
-                            {t("joinVideo")} {classroom.locationOnline2 === "ENABLED" ? " (1)" : ""}
-                        </Button>
-
-                        {classroom.locationOnline2 === "ENABLED" && (
+                    {classroom.videoEnabled !== false && (
+                        <div className="mt-6 flex flex-wrap gap-4">
                             <Button
-                                onClick={() => handleJoin("-2")}
+                                onClick={() => handleJoin("")}
                                 disabled={joinLoading}
                                 className="bg-blue-600 hover:bg-blue-700 text-white w-full sm:w-auto"
                             >
@@ -258,10 +246,25 @@ export default function PublicClassroomPage() {
                                 ) : (
                                     <Video className="w-4 h-4 mr-2" />
                                 )}
-                                {t("joinVideo")} (2)
+                                {t("joinVideo")} {classroom.locationOnline2 === "ENABLED" ? " (1)" : ""}
                             </Button>
-                        )}
-                    </div>
+
+                            {classroom.locationOnline2 === "ENABLED" && (
+                                <Button
+                                    onClick={() => handleJoin("-2")}
+                                    disabled={joinLoading}
+                                    className="bg-blue-600 hover:bg-blue-700 text-white w-full sm:w-auto"
+                                >
+                                    {joinLoading ? (
+                                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                                    ) : (
+                                        <Video className="w-4 h-4 mr-2" />
+                                    )}
+                                    {t("joinVideo")} (2)
+                                </Button>
+                            )}
+                        </div>
+                    )}
                 </div>
             </div>
 

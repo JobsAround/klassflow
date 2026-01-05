@@ -43,6 +43,7 @@ const formSchema = z.object({
     locationOnSite: z.string().optional(),
     locationOnline: z.string().optional(),
     locationOnline2: z.string().optional(),
+    videoEnabled: z.boolean().optional(),
 })
 
 interface EditClassroomDialogProps {
@@ -53,6 +54,7 @@ interface EditClassroomDialogProps {
         locationOnSite: string | null
         locationOnline: string | null
         locationOnline2: string | null
+        videoEnabled: boolean
     }
 }
 
@@ -70,6 +72,7 @@ export function EditClassroomDialog({ classroom }: EditClassroomDialogProps) {
             locationOnSite: classroom.locationOnSite || "",
             locationOnline: classroom.locationOnline || "",
             locationOnline2: classroom.locationOnline2 || "",
+            videoEnabled: classroom.videoEnabled,
         },
     })
 
@@ -170,26 +173,49 @@ export function EditClassroomDialog({ classroom }: EditClassroomDialogProps) {
 
                         <FormField
                             control={form.control}
-                            name="locationOnline2"
+                            name="videoEnabled"
                             render={({ field }) => (
                                 <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
                                     <div className="space-y-0.5">
-                                        <FormLabel className="text-base">{t('extraRoom')}</FormLabel>
+                                        <FormLabel className="text-base">{t('enableVideo')}</FormLabel>
                                         <DialogDescription>
-                                            {t('extraRoomDescription')}
+                                            Enable video conferencing for this classroom.
                                         </DialogDescription>
                                     </div>
                                     <FormControl>
                                         <Switch
-                                            checked={field.value === "ENABLED"}
-                                            onCheckedChange={(checked) =>
-                                                field.onChange(checked ? "ENABLED" : "")
-                                            }
+                                            checked={field.value}
+                                            onCheckedChange={field.onChange}
                                         />
                                     </FormControl>
                                 </FormItem>
                             )}
                         />
+
+                        {form.watch("videoEnabled") && (
+                            <FormField
+                                control={form.control}
+                                name="locationOnline2"
+                                render={({ field }) => (
+                                    <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                                        <div className="space-y-0.5">
+                                            <FormLabel className="text-base">Breakout Room</FormLabel>
+                                            <DialogDescription>
+                                                Enable a second video meeting room for splitting the class.
+                                            </DialogDescription>
+                                        </div>
+                                        <FormControl>
+                                            <Switch
+                                                checked={field.value === "ENABLED"}
+                                                onCheckedChange={(checked) =>
+                                                    field.onChange(checked ? "ENABLED" : "")
+                                                }
+                                            />
+                                        </FormControl>
+                                    </FormItem>
+                                )}
+                            />
+                        )}
 
                         <Button type="submit" className="w-full" disabled={form.formState.isSubmitting}>
                             {form.formState.isSubmitting && (
@@ -200,6 +226,6 @@ export function EditClassroomDialog({ classroom }: EditClassroomDialogProps) {
                     </form>
                 </Form>
             </DialogContent>
-        </Dialog>
+        </Dialog >
     )
 }
