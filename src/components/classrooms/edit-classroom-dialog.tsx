@@ -147,7 +147,7 @@ export function EditClassroomDialog({ classroom }: EditClassroomDialogProps) {
                                 name="locationOnSite"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>On-site Location</FormLabel>
+                                        <FormLabel>{t('locationOnSite')}</FormLabel>
                                         <FormControl>
                                             <Input {...field} placeholder="e.g. Europipe company" />
                                         </FormControl>
@@ -161,7 +161,7 @@ export function EditClassroomDialog({ classroom }: EditClassroomDialogProps) {
                                 name="locationOnline"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Online Location</FormLabel>
+                                        <FormLabel>{t('locationOnline')}</FormLabel>
                                         <FormControl>
                                             <Input {...field} placeholder="e.g. Google Meet link" />
                                         </FormControl>
@@ -199,9 +199,9 @@ export function EditClassroomDialog({ classroom }: EditClassroomDialogProps) {
                                 render={({ field }) => (
                                     <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
                                         <div className="space-y-0.5">
-                                            <FormLabel className="text-base">Breakout Room</FormLabel>
+                                            <FormLabel className="text-base">{t('breakoutRoom')}</FormLabel>
                                             <DialogDescription>
-                                                Enable a second video meeting room for splitting the class.
+                                                {t('enableBreakoutRoomDescription')}
                                             </DialogDescription>
                                         </div>
                                         <FormControl>

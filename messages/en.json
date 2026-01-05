@@ -50,7 +50,13 @@
         "adding": "Adding...",
         "add": "Add",
         "optional": "Optional description",
-        "titlePlaceholder": "e.g. Lesson 1 - Grammar"
+        "titlePlaceholder": "e.g. Lesson 1 - Grammar",
+        "locationOnSite": "On-site Location",
+        "locationOnline": "Online Location",
+        "enableVideo": "Enable Video",
+        "enableVideoDescription": "Enable video conferencing for this classroom.",
+        "breakoutRoom": "Breakout Room",
+        "enableBreakoutRoomDescription": "Enable a second video meeting room for splitting the class."
     },
     "session": {
         "new": "New Session",

@@ -31,6 +31,7 @@ export interface PublicClassroomData {
     description: string | null
     locationOnline?: string | null
     locationOnline2?: string | null
+    videoEnabled?: boolean
     organization: { name: string }
     teachers: Array<{ id?: string; name: string | null; email: string }>
     enrollments: Array<{ student: { id?: string; name: string | null; email: string; image?: string | null } }>
@@ -176,7 +177,7 @@ const defaultTranslations: Record<string, Record<string, string>> = {
         calendar: "Календар",
         upcomingSessions: "Майбутні",
         resources: "Ресурси",
-        participants: "Учасники",
+        participants: "Участники",
         teachers: "Викладачі",
         students: "Студенти",
         noUpcomingSessions: "Немає майбутніх сесій",
@@ -278,7 +279,7 @@ export function PublicClassroomView({
                     {classroom.description && (
                         <p className="text-slate-600 dark:text-slate-400 mt-2">{classroom.description}</p>
                     )}
-                    {classroom.locationOnline && (
+                    {(classroom.videoEnabled !== false && classroom.locationOnline) && (
                         <div className="flex items-center gap-2 mt-2 text-slate-500">
                             <Video className="w-4 h-4" />
                             <a href={classroom.locationOnline} target="_blank" rel="noopener noreferrer" className="hover:underline hover:text-blue-600">
@@ -290,7 +291,7 @@ export function PublicClassroomView({
                         <strong>{classroom.organization.name}</strong>
                     </p>
 
-                    {onJoinVideo && (
+                    {(onJoinVideo && classroom.videoEnabled !== false) && (
                         <div className="mt-6 flex flex-wrap gap-4">
                             <Button
                                 onClick={() => onJoinVideo("")}

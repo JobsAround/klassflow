@@ -50,7 +50,13 @@
         "adding": "Ajout...",
         "add": "Ajouter",
         "optional": "Description optionnelle",
-        "titlePlaceholder": "ex: Leçon 1 - Grammaire"
+        "titlePlaceholder": "ex: Leçon 1 - Grammaire",
+        "locationOnSite": "Lieu en présentiel",
+        "locationOnline": "Lieu en ligne",
+        "enableVideo": "Activer la visio",
+        "enableVideoDescription": "Activer la visio-conférence pour cette classe.",
+        "breakoutRoom": "Seconde salle vidéo",
+        "enableBreakoutRoomDescription": "Activer une seconde salle de réunion pour diviser la classe."
     },
     "session": {
         "new": "Nouvelle séance",
