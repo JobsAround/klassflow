@@ -9,6 +9,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Link, FileUp, Loader2 } from "lucide-react"
 import { useRouter } from "next/navigation"
+import { useTranslations } from "next-intl"
 
 interface CreateResourceDialogProps {
     open: boolean
@@ -18,6 +19,9 @@ interface CreateResourceDialogProps {
 
 export function CreateResourceDialog({ open, onOpenChange, classroomId }: CreateResourceDialogProps) {
     const router = useRouter()
+    const t = useTranslations('classroom')
+    const tCommon = useTranslations('common')
+
     const [activeTab, setActiveTab] = useState("link")
     const [title, setTitle] = useState("")
     const [description, setDescription] = useState("")
@@ -81,8 +85,23 @@ export function CreateResourceDialog({ open, onOpenChange, classroomId }: Create
                 })
 
                 if (!res.ok) {
-                    const data = await res.json()
-                    throw new Error(data.error || "Failed to upload file")
+                    // Try to parse JSON, but handle cases where response is empty or not JSON
+                    let errorMessage = "Failed to upload file"
+                    try {
+                        const contentType = res.headers.get("content-type")
+                        if (contentType && contentType.includes("application/json")) {
+                            const data = await res.json()
+                            errorMessage = data.error || errorMessage
+                        } else {
+                            // Response is not JSON, get text instead
+                            const text = await res.text()
+                            errorMessage = text || errorMessage
+                        }
+                    } catch (parseError) {
+                        // If parsing fails, use default error message
+                        console.error("Error parsing response:", parseError)
+                    }
+                    throw new Error(errorMessage)
                 }
             }
 
@@ -98,9 +117,9 @@ export function CreateResourceDialog({ open, onOpenChange, classroomId }: Create
         <Dialog open={open} onOpenChange={handleOpenChange}>
             <DialogContent className="sm:max-w-[500px]">
                 <DialogHeader>
-                    <DialogTitle>Add Resource</DialogTitle>
+                    <DialogTitle>{t('addResource')}</DialogTitle>
                     <DialogDescription>
-                        Share a link or upload a file for your students.
+                        {t('addResourceDialogDescription')}
                     </DialogDescription>
                 </DialogHeader>
 
@@ -108,11 +127,11 @@ export function CreateResourceDialog({ open, onOpenChange, classroomId }: Create
                     <TabsList className="grid w-full grid-cols-2 mb-4">
                         <TabsTrigger value="link">
                             <Link className="w-4 h-4 mr-2" />
-                            Link
+                            {t('link')}
                         </TabsTrigger>
                         <TabsTrigger value="file">
                             <FileUp className="w-4 h-4 mr-2" />
-                            File Upload
+                            {t('fileUpload')}
                         </TabsTrigger>
                     </TabsList>
 
@@ -124,36 +143,36 @@ export function CreateResourceDialog({ open, onOpenChange, classroomId }: Create
                         )}
 
                         <div className="space-y-2">
-                            <Label htmlFor="title">Title</Label>
+                            <Label htmlFor="title">{tCommon('name')}</Label>
                             <Input
                                 id="title"
                                 value={title}
                                 onChange={(e) => setTitle(e.target.value)}
-                                placeholder="Resource title"
+                                placeholder={t('resourceTitlePlaceholder')}
                                 required
                             />
                         </div>
 
                         <div className="space-y-2">
-                            <Label htmlFor="description">Description</Label>
+                            <Label htmlFor="description">{tCommon('description')}</Label>
                             <Textarea
                                 id="description"
                                 value={description}
                                 onChange={(e) => setDescription(e.target.value)}
-                                placeholder="Optional description..."
+                                placeholder={t('descriptionOptional')}
                                 className="resize-none h-20"
                             />
                         </div>
 
                         <TabsContent value="link" className="mt-0 space-y-4">
                             <div className="space-y-2">
-                                <Label htmlFor="url">URL</Label>
+                                <Label htmlFor="url">{t('urlLabel')}</Label>
                                 <Input
                                     id="url"
                                     type="url"
                                     value={url}
                                     onChange={(e) => setUrl(e.target.value)}
-                                    placeholder="https://..."
+                                    placeholder={t('urlPlaceholder')}
                                     required={activeTab === "link"}
                                 />
                             </div>
@@ -161,7 +180,7 @@ export function CreateResourceDialog({ open, onOpenChange, classroomId }: Create
 
                         <TabsContent value="file" className="mt-0 space-y-4">
                             <div className="space-y-2">
-                                <Label htmlFor="file">File</Label>
+                                <Label htmlFor="file">{tCommon('name')}</Label>
                                 <Input
                                     id="file"
                                     type="file"
@@ -170,18 +189,18 @@ export function CreateResourceDialog({ open, onOpenChange, classroomId }: Create
                                     className="cursor-pointer"
                                 />
                                 <p className="text-xs text-slate-500">
-                                    Max size: 10MB. Supported: PDF, Word, Excel, PowerPoint, Images, Zip.
+                                    {t('fileSizeLimit')}
                                 </p>
                             </div>
                         </TabsContent>
 
                         <div className="flex justify-end gap-2 pt-2">
                             <Button type="button" variant="outline" onClick={() => handleOpenChange(false)}>
-                                Cancel
+                                {tCommon('cancel')}
                             </Button>
                             <Button type="submit" disabled={loading}>
                                 {loading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
-                                {activeTab === "link" ? "Add Link" : "Upload File"}
+                                {activeTab === "link" ? t('addLink') : t('uploadFile')}
                             </Button>
                         </div>
                     </form>
