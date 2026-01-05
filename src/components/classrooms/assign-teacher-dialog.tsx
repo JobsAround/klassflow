@@ -15,6 +15,7 @@ import {
 import { Label } from "@/components/ui/label"
 import { UserPlus, Loader2 } from "lucide-react"
 import { Checkbox } from "@/components/ui/checkbox"
+import { useTranslations } from 'next-intl'
 
 interface AssignTeacherDialogProps {
     classroomId: string
@@ -29,6 +30,7 @@ interface Teacher {
 }
 
 export function AssignTeacherDialog({ classroomId, assignedTeacherIds }: AssignTeacherDialogProps) {
+    const t = useTranslations('classroom')
     const [open, setOpen] = useState(false)
     const [loading, setLoading] = useState(false)
     const [teachers, setTeachers] = useState<Teacher[]>([])
@@ -98,25 +100,25 @@ export function AssignTeacherDialog({ classroomId, assignedTeacherIds }: AssignT
             <DialogTrigger asChild>
                 <Button>
                     <UserPlus className="w-4 h-4 mr-2" />
-                    Assign Teachers
+                    {t('assignTeachers')}
                 </Button>
             </DialogTrigger>
             <DialogContent className="max-w-md max-h-[600px] overflow-y-auto">
                 <DialogHeader>
-                    <DialogTitle>Assign Teachers</DialogTitle>
+                    <DialogTitle>{t('assignTeachers')}</DialogTitle>
                     <DialogDescription>
-                        Select teachers to assign to this classroom
+                        {t('selectTeachers')}
                     </DialogDescription>
                 </DialogHeader>
 
                 <div className="space-y-4 py-4">
                     {teachers.length === 0 ? (
                         <p className="text-sm text-slate-500 text-center py-4">
-                            No available teachers to assign
+                            {t('noAvailableTeachers')}
                         </p>
                     ) : (
                         <div className="space-y-2">
-                            <Label>Available Teachers</Label>
+                            <Label>{t('availableTeachers')}</Label>
                             {teachers.map((teacher) => (
                                 <div
                                     key={teacher.id}
@@ -147,14 +149,14 @@ export function AssignTeacherDialog({ classroomId, assignedTeacherIds }: AssignT
 
                 <DialogFooter>
                     <Button variant="outline" onClick={() => setOpen(false)} disabled={loading}>
-                        Cancel
+                        {t('cancel')}
                     </Button>
                     <Button
                         onClick={handleAssign}
                         disabled={loading || selectedIds.length === 0}
                     >
                         {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                        Assign {selectedIds.length > 0 && `(${selectedIds.length})`}
+                        {t('assign')} {selectedIds.length > 0 && `(${selectedIds.length})`}
                     </Button>
                 </DialogFooter>
             </DialogContent>

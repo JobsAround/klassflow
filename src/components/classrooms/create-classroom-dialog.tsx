@@ -78,7 +78,7 @@ export function CreateClassroomDialog() {
                     <DialogHeader>
                         <DialogTitle>{t('new')}</DialogTitle>
                         <DialogDescription>
-                            Create a new classroom for your students
+                            {t('createDescription')}
                         </DialogDescription>
                     </DialogHeader>
                     <div className="space-y-4 py-4">
@@ -103,21 +103,21 @@ export function CreateClassroomDialog() {
 
                         <div className="grid grid-cols-2 gap-4">
                             <div className="space-y-2">
-                                <Label htmlFor="locationOnSite">On-site Location (Optional)</Label>
+                                <Label htmlFor="locationOnSite">{t('locationOnSite')} {t('optional')}</Label>
                                 <Input
                                     id="locationOnSite"
                                     value={formData.locationOnSite}
                                     onChange={(e) => setFormData({ ...formData, locationOnSite: e.target.value })}
-                                    placeholder="e.g. Europipe company"
+                                    placeholder={t('placeholderLocationOnSite')}
                                 />
                             </div>
                             <div className="space-y-2">
-                                <Label htmlFor="locationOnline">Online Location (Optional)</Label>
+                                <Label htmlFor="locationOnline">{t('locationOnline')} {t('optional')}</Label>
                                 <Input
                                     id="locationOnline"
                                     value={formData.locationOnline}
                                     onChange={(e) => setFormData({ ...formData, locationOnline: e.target.value })}
-                                    placeholder="e.g. Google Meet link"
+                                    placeholder={t('placeholderLocationOnline')}
                                 />
                             </div>
                         </div>

@@ -113,18 +113,17 @@ export function EnrollStudentDialog({ classroomId, enrolledStudentIds }: EnrollS
                 <DialogHeader>
                     <DialogTitle>{t('enrollStudents')}</DialogTitle>
                     <DialogDescription>
-                        Select existing students or add by email
+                        {t('selectExisting')}
                     </DialogDescription>
                 </DialogHeader>
 
                 <div className="space-y-6 py-4">
                     {/* Add by Email */}
-                    {/* Add by Email */}
                     <div className="space-y-4">
-                        <Label>Add by Email (New or Existing)</Label>
+                        <Label>{t('addByEmail')}</Label>
                         <div className="grid grid-cols-2 gap-2">
                             <div className="space-y-2">
-                                <Label htmlFor="firstName" className="text-xs">First Name</Label>
+                                <Label htmlFor="firstName" className="text-xs">{t('firstName')}</Label>
                                 <input
                                     id="firstName"
                                     type="text"
@@ -135,7 +134,7 @@ export function EnrollStudentDialog({ classroomId, enrolledStudentIds }: EnrollS
                                 />
                             </div>
                             <div className="space-y-2">
-                                <Label htmlFor="lastName" className="text-xs">Last Name</Label>
+                                <Label htmlFor="lastName" className="text-xs">{t('lastName')}</Label>
                                 <input
                                     id="lastName"
                                     type="text"
@@ -147,7 +146,7 @@ export function EnrollStudentDialog({ classroomId, enrolledStudentIds }: EnrollS
                             </div>
                         </div>
                         <div className="space-y-2">
-                            <Label htmlFor="email" className="text-xs">Email</Label>
+                            <Label htmlFor="email" className="text-xs">{t('email')}</Label>
                             <input
                                 id="email"
                                 type="email"
@@ -158,7 +157,7 @@ export function EnrollStudentDialog({ classroomId, enrolledStudentIds }: EnrollS
                             />
                         </div>
                         <p className="text-xs text-slate-500">
-                            If the user doesn't exist, a student account will be created with this name.
+                            {t('newUserHint')}
                         </p>
                     </div>
 
@@ -167,16 +166,16 @@ export function EnrollStudentDialog({ classroomId, enrolledStudentIds }: EnrollS
                             <span className="w-full border-t" />
                         </div>
                         <div className="relative flex justify-center text-xs uppercase">
-                            <span className="bg-background px-2 text-muted-foreground">Or select existing</span>
+                            <span className="bg-background px-2 text-muted-foreground">{t('orSelectExisting')}</span>
                         </div>
                     </div>
 
                     {/* Select Existing */}
                     <div className="space-y-2">
-                        <Label>Available Students</Label>
+                        <Label>{t('availableStudents')}</Label>
                         {students.length === 0 ? (
                             <p className="text-sm text-slate-500 py-2">
-                                No other existing students found
+                                {t('noStudentsFound')}
                             </p>
                         ) : (
                             <div className="space-y-2 max-h-40 overflow-y-auto">
@@ -208,14 +207,14 @@ export function EnrollStudentDialog({ classroomId, enrolledStudentIds }: EnrollS
 
                 <DialogFooter>
                     <Button variant="outline" onClick={() => setOpen(false)} disabled={loading}>
-                        Cancel
+                        {t('cancel')}
                     </Button>
                     <Button
                         onClick={handleEnroll}
                         disabled={loading || (selectedIds.length === 0 && (!email || !firstName || !lastName))}
                     >
                         {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                        Enroll
+                        {t('enroll')}
                     </Button>
                 </DialogFooter>
             </DialogContent>
