@@ -49,14 +49,17 @@ export function CreateClassroomDialog() {
                 body: JSON.stringify(formData)
             })
 
-            if (!res.ok) throw new Error("Failed to create classroom")
+            if (!res.ok) {
+                const data = await res.json().catch(() => ({}))
+                throw new Error(data.error || "Failed to create classroom")
+            }
 
             setOpen(false)
             setFormData({ name: "", description: "", locationOnSite: "", locationOnline: "" })
             router.refresh()
         } catch (error) {
             console.error("Error creating classroom:", error)
-            alert("Failed to create classroom")
+            alert(error instanceof Error ? error.message : "Failed to create classroom")
         } finally {
             setLoading(false)
         }
