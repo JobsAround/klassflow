@@ -150,13 +150,13 @@ export function CreateSessionDialog({ classrooms, teachers, organizationId }: Cr
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button>Ajouter une séance</Button>
+                <Button>{t('addSession')}</Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
                 <DialogHeader>
                     <DialogTitle>{t('schedule')}</DialogTitle>
                     <DialogDescription>
-                        Create a new class session. Students will be notified automatically.
+                        {t('createSessionDescription')}
                     </DialogDescription>
                 </DialogHeader>
 
@@ -168,11 +168,11 @@ export function CreateSessionDialog({ classrooms, teachers, organizationId }: Cr
                             name="classroomId"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Classroom</FormLabel>
+                                    <FormLabel>{t('classroomLabel')}</FormLabel>
                                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                                         <FormControl>
                                             <SelectTrigger>
-                                                <SelectValue placeholder="Select a classroom" />
+                                                <SelectValue placeholder={t('selectClassroomPlaceholder')} />
                                             </SelectTrigger>
                                         </FormControl>
                                         <SelectContent>
@@ -193,15 +193,15 @@ export function CreateSessionDialog({ classrooms, teachers, organizationId }: Cr
                             name="teacherId"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Teacher (Optional)</FormLabel>
+                                    <FormLabel>{t('teacherOptionalLabel')}</FormLabel>
                                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                                         <FormControl>
                                             <SelectTrigger>
-                                                <SelectValue placeholder="Select a teacher" />
+                                                <SelectValue placeholder={t('selectTeacherPlaceholder')} />
                                             </SelectTrigger>
                                         </FormControl>
                                         <SelectContent>
-                                            <SelectItem value="none">None</SelectItem>
+                                            <SelectItem value="none">{t('none')}</SelectItem>
                                             {teachers.map((teacher) => (
                                                 <SelectItem key={teacher.id} value={teacher.id}>
                                                     {teacher.name || teacher.email}
@@ -220,7 +220,7 @@ export function CreateSessionDialog({ classrooms, teachers, organizationId }: Cr
                                 name="type"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Type</FormLabel>
+                                        <FormLabel>{t('typeLabel')}</FormLabel>
                                         <Select onValueChange={field.onChange} defaultValue={field.value}>
                                             <FormControl>
                                                 <SelectTrigger>
@@ -228,8 +228,8 @@ export function CreateSessionDialog({ classrooms, teachers, organizationId }: Cr
                                                 </SelectTrigger>
                                             </FormControl>
                                             <SelectContent>
-                                                <SelectItem value="ONSITE">🏫 On-site</SelectItem>
-                                                <SelectItem value="ONLINE">🌐 Online</SelectItem>
+                                                <SelectItem value="ONSITE">🏫 {t('onsite')}</SelectItem>
+                                                <SelectItem value="ONLINE">🌐 {t('online')}</SelectItem>
                                             </SelectContent>
                                         </Select>
                                         <FormMessage />
@@ -242,7 +242,7 @@ export function CreateSessionDialog({ classrooms, teachers, organizationId }: Cr
                                 name="date"
                                 render={({ field }) => (
                                     <FormItem className="flex flex-col">
-                                        <FormLabel>Date</FormLabel>
+                                        <FormLabel>{t('dateLabel')}</FormLabel>
                                         <Popover>
                                             <PopoverTrigger asChild>
                                                 <FormControl>
@@ -256,7 +256,7 @@ export function CreateSessionDialog({ classrooms, teachers, organizationId }: Cr
                                                         {field.value ? (
                                                             format(field.value, "dd/MM/yyyy")
                                                         ) : (
-                                                            <span>Pick a date</span>
+                                                            <span>{t('pickDate')}</span>
                                                         )}
                                                         <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                                                     </Button>
@@ -291,7 +291,7 @@ export function CreateSessionDialog({ classrooms, teachers, organizationId }: Cr
 
                                     return (
                                         <FormItem>
-                                            <FormLabel>Start Time</FormLabel>
+                                            <FormLabel>{t('startTimeLabel')}</FormLabel>
                                             <FormControl>
                                                 <TimePicker
                                                     date={timeDate}
@@ -321,7 +321,7 @@ export function CreateSessionDialog({ classrooms, teachers, organizationId }: Cr
 
                                     return (
                                         <FormItem>
-                                            <FormLabel>End Time</FormLabel>
+                                            <FormLabel>{t('endTimeLabel')}</FormLabel>
                                             <FormControl>
                                                 <TimePicker
                                                     date={timeDate}
@@ -345,7 +345,7 @@ export function CreateSessionDialog({ classrooms, teachers, organizationId }: Cr
                                 name="recurrence"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Recurrence</FormLabel>
+                                        <FormLabel>{t('recurrenceLabel')}</FormLabel>
                                         <Select onValueChange={field.onChange} defaultValue={field.value}>
                                             <FormControl>
                                                 <SelectTrigger>
@@ -353,9 +353,9 @@ export function CreateSessionDialog({ classrooms, teachers, organizationId }: Cr
                                                 </SelectTrigger>
                                             </FormControl>
                                             <SelectContent>
-                                                <SelectItem value="NONE">Does not repeat</SelectItem>
-                                                <SelectItem value="DAILY">Daily</SelectItem>
-                                                <SelectItem value="WEEKLY">Weekly</SelectItem>
+                                                <SelectItem value="NONE">{t('recurrenceNone')}</SelectItem>
+                                                <SelectItem value="DAILY">{t('recurrenceDaily')}</SelectItem>
+                                                <SelectItem value="WEEKLY">{t('recurrenceWeekly')}</SelectItem>
                                             </SelectContent>
                                         </Select>
                                         <FormMessage />
@@ -384,12 +384,12 @@ export function CreateSessionDialog({ classrooms, teachers, organizationId }: Cr
 
                                         return (
                                             <FormItem>
-                                                <FormLabel>Occurrences</FormLabel>
+                                                <FormLabel>{t('occurrencesLabel')}</FormLabel>
                                                 <FormControl>
                                                     <Input type="number" min={2} max={20} {...field} />
                                                 </FormControl>
                                                 <FormDescription>
-                                                    Ends on {format(endDate, "dd/MM/yyyy")}
+                                                    {t('endsOn', { date: format(endDate, "dd/MM/yyyy") })}
                                                 </FormDescription>
                                                 <FormMessage />
                                             </FormItem>
@@ -405,7 +405,7 @@ export function CreateSessionDialog({ classrooms, teachers, organizationId }: Cr
                             {form.formState.isSubmitting && (
                                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                             )}
-                            Create Session
+                            {t('createButton')}
                         </Button>
                     </form>
                 </Form>

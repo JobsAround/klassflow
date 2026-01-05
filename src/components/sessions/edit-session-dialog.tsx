@@ -62,6 +62,7 @@ interface EditSessionDialogProps {
 }
 
 export function EditSessionDialog({ session, teachers = [], classroomName = "Classroom" }: EditSessionDialogProps) {
+    const t = useTranslations('session')
     const [open, setOpen] = useState(false)
     const router = useRouter()
 
@@ -129,15 +130,15 @@ export function EditSessionDialog({ session, teachers = [], classroomName = "Cla
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button variant="ghost" size="icon" title="Edit Session">
+                <Button variant="ghost" size="icon" title={t('editSessionTitle')}>
                     <Pencil className="h-4 w-4" />
                 </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[500px]">
                 <DialogHeader>
-                    <DialogTitle>Edit Session</DialogTitle>
+                    <DialogTitle>{t('editSessionTitle')}</DialogTitle>
                     <DialogDescription>
-                        Update session details
+                        {t('editSessionDescription')}
                     </DialogDescription>
                 </DialogHeader>
 
@@ -145,7 +146,7 @@ export function EditSessionDialog({ session, teachers = [], classroomName = "Cla
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
 
                         <div className="space-y-2">
-                            <FormLabel>Classroom</FormLabel>
+                            <FormLabel>{t('classroomLabel')}</FormLabel>
                             <Input disabled value={classroomName} />
                         </div>
 
@@ -154,15 +155,15 @@ export function EditSessionDialog({ session, teachers = [], classroomName = "Cla
                             name="teacherId"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Teacher (Assigned)</FormLabel>
+                                    <FormLabel>{t('teacherAssignedLabel')}</FormLabel>
                                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                                         <FormControl>
                                             <SelectTrigger>
-                                                <SelectValue placeholder="Select a teacher" />
+                                                <SelectValue placeholder={t('selectTeacherPlaceholder')} />
                                             </SelectTrigger>
                                         </FormControl>
                                         <SelectContent>
-                                            <SelectItem value="none">None</SelectItem>
+                                            <SelectItem value="none">{t('none')}</SelectItem>
                                             {teachers.map((teacher) => (
                                                 <SelectItem key={teacher.id} value={teacher.id}>
                                                     {teacher.name || teacher.email}
@@ -181,7 +182,7 @@ export function EditSessionDialog({ session, teachers = [], classroomName = "Cla
                                 name="type"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Type</FormLabel>
+                                        <FormLabel>{t('typeLabel')}</FormLabel>
                                         <Select onValueChange={field.onChange} defaultValue={field.value}>
                                             <FormControl>
                                                 <SelectTrigger>
@@ -189,8 +190,8 @@ export function EditSessionDialog({ session, teachers = [], classroomName = "Cla
                                                 </SelectTrigger>
                                             </FormControl>
                                             <SelectContent>
-                                                <SelectItem value="ONSITE">🏫 On-site</SelectItem>
-                                                <SelectItem value="ONLINE">🌐 Online</SelectItem>
+                                                <SelectItem value="ONSITE">🏫 {t('onsite')}</SelectItem>
+                                                <SelectItem value="ONLINE">🌐 {t('online')}</SelectItem>
                                             </SelectContent>
                                         </Select>
                                         <FormMessage />
@@ -203,7 +204,7 @@ export function EditSessionDialog({ session, teachers = [], classroomName = "Cla
                                 name="date"
                                 render={({ field }) => (
                                     <FormItem className="flex flex-col">
-                                        <FormLabel>Date</FormLabel>
+                                        <FormLabel>{t('dateLabel')}</FormLabel>
                                         <Popover>
                                             <PopoverTrigger asChild>
                                                 <FormControl>
@@ -217,7 +218,7 @@ export function EditSessionDialog({ session, teachers = [], classroomName = "Cla
                                                         {field.value ? (
                                                             format(field.value, "dd/MM/yyyy")
                                                         ) : (
-                                                            <span>Pick a date</span>
+                                                            <span>{t('pickDate')}</span>
                                                         )}
                                                         <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                                                     </Button>
@@ -251,7 +252,7 @@ export function EditSessionDialog({ session, teachers = [], classroomName = "Cla
 
                                     return (
                                         <FormItem>
-                                            <FormLabel>Start Time</FormLabel>
+                                            <FormLabel>{t('startTimeLabel')}</FormLabel>
                                             <FormControl>
                                                 <TimePicker
                                                     date={timeDate}
@@ -280,7 +281,7 @@ export function EditSessionDialog({ session, teachers = [], classroomName = "Cla
 
                                     return (
                                         <FormItem>
-                                            <FormLabel>End Time</FormLabel>
+                                            <FormLabel>{t('endTimeLabel')}</FormLabel>
                                             <FormControl>
                                                 <TimePicker
                                                     date={timeDate}
@@ -302,7 +303,7 @@ export function EditSessionDialog({ session, teachers = [], classroomName = "Cla
                             {form.formState.isSubmitting && (
                                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                             )}
-                            Save Changes
+                            {t('saveButton')}
                         </Button>
                     </form>
                 </Form>
