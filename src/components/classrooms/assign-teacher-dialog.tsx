@@ -96,7 +96,7 @@ export function AssignTeacherDialog({ classroomId, assignedTeacherIds }: AssignT
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button variant="outline">
+                <Button>
                     <UserPlus className="w-4 h-4 mr-2" />
                     Assign Teachers
                 </Button>
