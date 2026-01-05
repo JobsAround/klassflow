@@ -174,9 +174,9 @@ export function EditClassroomDialog({ classroom }: EditClassroomDialogProps) {
                             render={({ field }) => (
                                 <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
                                     <div className="space-y-0.5">
-                                        <FormLabel className="text-base">Breakout Room</FormLabel>
+                                        <FormLabel className="text-base">{t('extraRoom')}</FormLabel>
                                         <DialogDescription>
-                                            Enable a second video meeting room for splitting the class.
+                                            {t('extraRoomDescription')}
                                         </DialogDescription>
                                     </div>
                                     <FormControl>
