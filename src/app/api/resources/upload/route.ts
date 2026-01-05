@@ -67,6 +67,13 @@ export async function POST(req: NextRequest) {
         const buffer = await req.arrayBuffer()
         const readable = Readable.from(Buffer.from(buffer))
 
+        // Mock IncomingMessage for formidable by attaching headers
+        const headers: Record<string, string | string[]> = {}
+        req.headers.forEach((value, key) => {
+            headers[key] = value
+        })
+        Object.assign(readable, { headers })
+
         // Parse form data
         const form = formidable({
             maxFileSize: MAX_FILE_SIZE,
