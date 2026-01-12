@@ -132,12 +132,19 @@ export function SessionListItem({ session, isTeacher, currentUserId, currentUser
                         <>
                             {/* Per-session live button removed in favor of classroom-level button */}
                             {session.type === "ONSITE" && (
-                                <Link href={`/dashboard/sessions/${session.id}/sign`}>
-                                    <Button size="sm" variant="outline" title="Manage Signatures">
-                                        <QrCode className="w-4 h-4 mr-2" />
-                                        Signature apprenants
-                                    </Button>
-                                </Link >
+                                <Button
+                                    size="sm"
+                                    variant="outline"
+                                    disabled
+                                    title="Coming soon"
+                                    className="opacity-60 cursor-not-allowed"
+                                >
+                                    <QrCode className="w-4 h-4 mr-2" />
+                                    Signature apprenants
+                                    <span className="ml-2 text-[10px] bg-amber-100 dark:bg-amber-900 text-amber-700 dark:text-amber-300 px-1.5 py-0.5 rounded-full font-medium">
+                                        Soon
+                                    </span>
+                                </Button>
                             )}
                             <SendAttendanceButton
                                 sessionId={session.id}
