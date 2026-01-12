@@ -74,7 +74,7 @@ export async function POST(req: NextRequest) {
         const count = recurrence && recurrence !== "NONE" ? (parseInt(String(recurrenceCount)) || 1) : 1
 
         // Check session limit (accounting for recurrence)
-        const limitCheck = await checkOrganizationLimit(user.organizationId, "sessionsPerMonth")
+        const limitCheck = await checkOrganizationLimit(prisma, user.organizationId, "sessionsPerMonth")
         if (!limitCheck.allowed || (limitCheck.limit > 0 && limitCheck.current + count > limitCheck.limit)) {
             return NextResponse.json({
                 error: limitCheck.message || `Limite de sessions atteinte (${limitCheck.current}/${limitCheck.limit})`,

@@ -52,7 +52,7 @@ export async function POST(req: NextRequest, { params }: { params: any }) {
 
         // Check student limit before proceeding
         const newStudentsCount = emails.length // Worst case: all emails are new students
-        const limitCheck = await checkOrganizationLimit(user.organizationId, "students")
+        const limitCheck = await checkOrganizationLimit(prisma, user.organizationId, "students")
         if (!limitCheck.allowed || (limitCheck.limit > 0 && limitCheck.current + newStudentsCount > limitCheck.limit)) {
             return NextResponse.json({
                 error: limitCheck.message || `Limite de stagiaires atteinte (${limitCheck.current}/${limitCheck.limit})`,

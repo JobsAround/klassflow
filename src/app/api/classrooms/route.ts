@@ -36,7 +36,7 @@ export async function POST(req: NextRequest) {
         }
 
         // Check classroom limit
-        const limitCheck = await checkOrganizationLimit(user.organizationId, "classrooms")
+        const limitCheck = await checkOrganizationLimit(prisma, user.organizationId, "classrooms")
         if (!limitCheck.allowed) {
             return NextResponse.json({
                 error: limitCheck.message,

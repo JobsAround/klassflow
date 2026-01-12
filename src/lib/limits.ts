@@ -48,8 +48,9 @@ export interface LimitCheckResult {
     allowed: boolean
     current: number
     limit: number
-
     message: string | null
+    canUpgrade?: boolean
+    upgradeUrl?: string
 }
 
 /**
