@@ -115,10 +115,10 @@ export function SendAttendanceButton({
                 size={size}
                 onClick={() => setOpen(true)}
                 className={className}
-                title="Signature apprenants"
+                title={t('requestByEmail')}
             >
                 <Send className="w-4 h-4 mr-2" />
-                Signature apprenants
+                {t('requestByEmail')}
             </Button>
 
             <Dialog open={open} onOpenChange={setOpen}>
