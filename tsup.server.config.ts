@@ -10,7 +10,7 @@ export default defineConfig({
     clean: false, // Don't clean to preserve client build
     splitting: false,
     external: [
-        'react', 'react-dom', 'next', 'next-auth', '@prisma/client'
+        'react', 'react-dom', 'next', 'next-auth', '@prisma/client', 'next-intl'
     ],
     esbuildOptions(options) {
         options.alias = { '@': './src' }

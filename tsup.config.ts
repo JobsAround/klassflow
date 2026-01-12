@@ -18,6 +18,7 @@ export default defineConfig({
         'next/navigation',
         'next-auth',
         '@prisma/client',
+        'next-intl',
     ],
     banner: {
         js: '"use client";',
