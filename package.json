@@ -35,6 +35,9 @@
     "./messages/uk.json": {
       "default": "./messages/uk.json"
     },
+    "./messages/pt.json": {
+      "default": "./messages/pt.json"
+    },
     "./messages/signature-en.json": {
       "default": "./messages/signature-en.json"
     }
