@@ -6,6 +6,7 @@ export default defineConfig({
     plugins: [react()],
     test: {
         environment: 'happy-dom',
+        globals: true,
         alias: {
             '@': path.resolve(__dirname, './src'),
         },

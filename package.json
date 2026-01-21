@@ -62,7 +62,9 @@
     "build:server": "tsup --config tsup.server.config.ts",
     "build:lib": "npm run build:client && npm run build:server",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.11.1",

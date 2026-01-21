@@ -19,6 +19,7 @@
         "share": "Публичный доступ",
         "publicShare": "Публичный доступ",
         "exportAttendance": "Экспорт посещаемости",
+        "joinAsTeacher": "Присоединиться как преподаватель",
         "students": "Студенты",
         "teachers": "Преподаватели",
         "sessions": "Занятия",
@@ -34,7 +35,31 @@
         "noResources": "Пока нет ресурсов",
         "noClassrooms": "Пока нет классов. Создайте свой первый класс, чтобы начать.",
         "createYourFirst": "Создайте свой первый!",
-        "noDescription": "Нет описания"
+        "noDescription": "Нет описания",
+        "addStudent": "Добавить студента",
+        "addDocument": "Добавить документ",
+        "addLink": "Добавить ссылку",
+        "addResource": "Добавить ресурс",
+        "addResourceDialogDescription": "Поделитесь ссылкой или загрузите файл для своих студентов.",
+        "link": "Ссылка",
+        "fileUpload": "Загрузка файла",
+        "resourceTitlePlaceholder": "Название ресурса",
+        "descriptionOptional": "Необязательное описание...",
+        "urlLabel": "URL",
+        "urlPlaceholder": "https://...",
+        "fileSizeLimit": "Макс. размер: 10MB. Поддерживаются: PDF, Word, Excel, PowerPoint, Изображения, Zip.",
+        "uploadFile": "Загрузить файл",
+        "docDescription": "Поделитесь документами (PDF, Word и т.д.) с классом (макс 10MB).",
+        "linkDescription": "Поделитесь ссылками на внешние ресурсы (статьи, видео и т.д.).",
+        "uploading": "Загрузка...",
+        "adding": "Добавление...",
+        "add": "Добавить",
+        "locationOnSite": "Место (очно)",
+        "locationOnline": "Место (онлайн)",
+        "enableVideo": "Включить видео",
+        "enableVideoDescription": "Включить видеоконференцию для этого класса.",
+        "breakoutRoom": "Комната для групп",
+        "enableBreakoutRoomDescription": "Включить вторую комнату для видеоконференций для разделения класса."
     },
     "session": {
         "new": "Новое занятие",
@@ -61,13 +86,17 @@
         "signatures": "Подписи",
         "absences": "Отсутствия",
         "pending": "Не подписано",
+        "unsigned": "Не подписано",
         "signMode": "Режим подписи",
         "sendSigningRequest": "Отправить запрос на подпись",
         "signMyself": "Подписать себя",
         "completed": "Завершено",
         "noUpcoming": "Нет предстоящих занятий",
         "noPast": "Нет прошедших занятий",
-        "manageSessions": "Управление занятиями"
+        "manageSessions": "Управление занятиями",
+        "pendingSignaturesTitle": "{count} ожидающих подписей",
+        "pendingSignaturesDescription": "У вас есть неподписанные занятия.",
+        "signNow": "Подписать сейчас"
     },
     "calendar": {
         "title": "Календарь",
@@ -91,7 +120,9 @@
         "name": "Название",
         "description": "Описание",
         "create": "Создать",
-        "creating": "Создание..."
+        "creating": "Создание...",
+        "customLinks": "Пользовательские ссылки",
+        "customLinksDescription": "Добавьте пользовательские ссылки для отображения на публичной странице класса"
     },
     "signature": {
         "title": "Подпись посещаемости",
@@ -157,5 +188,17 @@
         "automatedPdf": "Автоматизированные PDF",
         "automatedPdfDesc": "Автоматическая генерация соответствующих листов посещаемости.",
         "builtBy": "Разработано"
+    },
+    "landing": {
+        "nav": {
+            "features": "Функции",
+            "pricing": "Цены",
+            "faq": "FAQ"
+        },
+        "cta": {
+            "login": "Войти",
+            "dashboard": "Панель управления",
+            "logout": "Выйти"
+        }
     }
 }

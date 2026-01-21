@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { Calendar, FileText, Users, User, Loader2, Clock, Globe, Video, GraduationCap } from "lucide-react"
 import { format } from "date-fns"
-import { enUS, fr, de, es, ru, uk } from "date-fns/locale"
+import { enUS, fr, de, es, ru, uk, pt } from "date-fns/locale"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -21,6 +21,7 @@ const languages = [
     { code: "fr", name: "Français", locale: fr },
     { code: "de", name: "Deutsch", locale: de },
     { code: "es", name: "Español", locale: es },
+    { code: "pt", name: "Português", locale: pt },
     { code: "ru", name: "Русский", locale: ru },
     { code: "uk", name: "Українська", locale: uk },
 ]
@@ -192,12 +193,33 @@ const defaultTranslations: Record<string, Record<string, string>> = {
         month: "Місяць",
         week: "Тиждень",
     },
+    pt: {
+        loading: "A carregar...",
+        classroomNotFound: "Sala de aula não encontrada",
+        calendar: "Calendário",
+        upcomingSessions: "Próximas",
+        resources: "Recursos",
+        participants: "Participantes",
+        teachers: "Professores",
+        students: "Estudantes",
+        noUpcomingSessions: "Sem sessões agendadas",
+        noStudentsEnrolled: "Nenhum estudante inscrito",
+        classSession: "Aula",
+        online: "Online",
+        onsite: "Presencial",
+        time: "Hora:",
+        teacher: "Professor:",
+        joinVideo: "Entrar no vídeo",
+        today: "Hoje",
+        month: "Mês",
+        week: "Semana",
+    },
 }
 
 function detectBrowserLanguage(): string {
     if (typeof window === "undefined") return "en"
     const browserLang = navigator.language.split("-")[0]
-    return ["en", "fr", "de", "es", "ru", "uk"].includes(browserLang) ? browserLang : "en"
+    return ["en", "fr", "de", "es", "ru", "uk", "pt"].includes(browserLang) ? browserLang : "en"
 }
 
 export function PublicClassroomView({

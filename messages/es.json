@@ -19,6 +19,7 @@
         "share": "Compartir público",
         "publicShare": "Compartir público",
         "exportAttendance": "Exportar asistencia",
+        "joinAsTeacher": "Unirse como profesor",
         "students": "Estudiantes",
         "teachers": "Profesores",
         "sessions": "Sesiones",
@@ -34,7 +35,31 @@
         "noResources": "No hay recursos todavía",
         "noClassrooms": "No hay aulas todavía. Crea tu primera aula para empezar.",
         "createYourFirst": "¡Crea la primera!",
-        "noDescription": "Sin descripción"
+        "noDescription": "Sin descripción",
+        "addStudent": "Añadir estudiante",
+        "addDocument": "Añadir documento",
+        "addLink": "Añadir enlace",
+        "addResource": "Añadir recurso",
+        "addResourceDialogDescription": "Comparte un enlace o sube un archivo para tus estudiantes.",
+        "link": "Enlace",
+        "fileUpload": "Subir archivo",
+        "resourceTitlePlaceholder": "Título del recurso",
+        "descriptionOptional": "Descripción opcional...",
+        "urlLabel": "URL",
+        "urlPlaceholder": "https://...",
+        "fileSizeLimit": "Tamaño máx: 10MB. Soportados: PDF, Word, Excel, PowerPoint, Imágenes, Zip.",
+        "uploadFile": "Subir archivo",
+        "docDescription": "Comparte documentos (PDF, Word, etc.) con la clase (máx 10MB).",
+        "linkDescription": "Comparte enlaces a recursos externos (artículos, videos, etc.).",
+        "uploading": "Subiendo...",
+        "adding": "Añadiendo...",
+        "add": "Añadir",
+        "locationOnSite": "Ubicación presencial",
+        "locationOnline": "Ubicación en línea",
+        "enableVideo": "Activar video",
+        "enableVideoDescription": "Activar videoconferencia para esta clase.",
+        "breakoutRoom": "Sala de grupos",
+        "enableBreakoutRoomDescription": "Activar una segunda sala de reuniones para dividir la clase."
     },
     "session": {
         "new": "Nueva sesión",
@@ -61,6 +86,7 @@
         "signatures": "Firmas",
         "absences": "Ausencias",
         "pending": "No firmados",
+        "unsigned": "Sin firmar",
         "signMode": "Modo de firma",
         "sendSigningRequest": "Enviar solicitud de firma",
         "signMyself": "Firmar yo mismo",
@@ -94,7 +120,9 @@
         "name": "Nombre",
         "description": "Descripción",
         "create": "Crear",
-        "creating": "Creando..."
+        "creating": "Creando...",
+        "customLinks": "Enlaces personalizados",
+        "customLinksDescription": "Añade enlaces personalizados para mostrar en la página pública de la clase"
     },
     "signature": {
         "title": "Firma de asistencia",
@@ -160,5 +188,17 @@
         "automatedPdf": "PDFs Automatizados",
         "automatedPdfDesc": "Generación automática de hojas de asistencia conformes.",
         "builtBy": "Creado por"
+    },
+    "landing": {
+        "nav": {
+            "features": "Características",
+            "pricing": "Precios",
+            "faq": "FAQ"
+        },
+        "cta": {
+            "login": "Iniciar sesión",
+            "dashboard": "Panel de control",
+            "logout": "Cerrar sesión"
+        }
     }
 }

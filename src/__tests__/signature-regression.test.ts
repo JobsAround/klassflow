@@ -123,7 +123,11 @@ describe('Signature API Regression Tests', () => {
                 session: {
                     id: mockSessionId,
                     classroomId: mockClassroomId,
-                    classroom: { id: mockClassroomId, name: 'Current Class' } // Ensure session has classroom
+                    classroom: {
+                        id: mockClassroomId,
+                        name: 'Current Class',
+                        organization: { name: 'Test Organization' }
+                    }
                 }
             } as any)
 

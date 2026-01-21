@@ -19,6 +19,7 @@
         "share": "Публічний доступ",
         "publicShare": "Публічний доступ",
         "exportAttendance": "Експорт відвідуваності",
+        "joinAsTeacher": "Приєднатися як викладач",
         "students": "Студенти",
         "teachers": "Викладачі",
         "sessions": "Заняття",
@@ -34,7 +35,31 @@
         "noResources": "Поки немає ресурсів",
         "noClassrooms": "Поки що немає класів. Створіть свій перший клас, щоб почати.",
         "createYourFirst": "Створіть свій перший!",
-        "noDescription": "Немає опису"
+        "noDescription": "Немає опису",
+        "addStudent": "Додати студента",
+        "addDocument": "Додати документ",
+        "addLink": "Додати посилання",
+        "addResource": "Додати ресурс",
+        "addResourceDialogDescription": "Поділіться посиланням або завантажте файл для своїх студентів.",
+        "link": "Посилання",
+        "fileUpload": "Завантаження файлу",
+        "resourceTitlePlaceholder": "Назва ресурсу",
+        "descriptionOptional": "Необов'язковий опис...",
+        "urlLabel": "URL",
+        "urlPlaceholder": "https://...",
+        "fileSizeLimit": "Макс. розмір: 10MB. Підтримуються: PDF, Word, Excel, PowerPoint, Зображення, Zip.",
+        "uploadFile": "Завантажити файл",
+        "docDescription": "Поділіться документами (PDF, Word тощо) з класом (макс 10MB).",
+        "linkDescription": "Поділіться посиланнями на зовнішні ресурси (статті, відео тощо).",
+        "uploading": "Завантаження...",
+        "adding": "Додавання...",
+        "add": "Додати",
+        "locationOnSite": "Місце (очно)",
+        "locationOnline": "Місце (онлайн)",
+        "enableVideo": "Увімкнути відео",
+        "enableVideoDescription": "Увімкнути відеоконференцію для цього класу.",
+        "breakoutRoom": "Кімната для груп",
+        "enableBreakoutRoomDescription": "Увімкнути другу відеокімнату для поділу класу."
     },
     "session": {
         "new": "Нове заняття",
@@ -61,13 +86,17 @@
         "signatures": "Підписи",
         "absences": "Відсутності",
         "pending": "Не підписано",
+        "unsigned": "Не підписано",
         "signMode": "Режим підпису",
         "sendSigningRequest": "Надіслати запит на підпис",
         "signMyself": "Підписати себе",
         "completed": "Завершено",
         "noUpcoming": "Немає майбутніх занять",
         "noPast": "Немає минулих занять",
-        "manageSessions": "Керування заняттями"
+        "manageSessions": "Керування заняттями",
+        "pendingSignaturesTitle": "{count} очікуваних підписів",
+        "pendingSignaturesDescription": "У вас є непідписані заняття.",
+        "signNow": "Підписати зараз"
     },
     "calendar": {
         "title": "Календар",
@@ -91,7 +120,9 @@
         "name": "Назва",
         "description": "Опис",
         "create": "Створити",
-        "creating": "Створення..."
+        "creating": "Створення...",
+        "customLinks": "Користувацькі посилання",
+        "customLinksDescription": "Додайте користувацькі посилання для відображення на публічній сторінці класу"
     },
     "signature": {
         "title": "Підпис відвідування",
@@ -157,5 +188,17 @@
         "automatedPdf": "Автоматизовані PDF",
         "automatedPdfDesc": "Автоматична генерація відповідних аркушів відвідуваності.",
         "builtBy": "Розроблено"
+    },
+    "landing": {
+        "nav": {
+            "features": "Функції",
+            "pricing": "Ціни",
+            "faq": "FAQ"
+        },
+        "cta": {
+            "login": "Увійти",
+            "dashboard": "Панель керування",
+            "logout": "Вийти"
+        }
     }
 }

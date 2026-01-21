@@ -15,6 +15,7 @@ vi.mock('../lib/prisma', () => ({
         },
         classSession: {
             findUnique: vi.fn(),
+            findMany: vi.fn(),
         },
         signatureToken: {
             findFirst: vi.fn(),
@@ -210,7 +211,16 @@ describe('Scenario Tests', () => {
             }
 
             vi.mocked(prisma.classSession.findUnique).mockResolvedValue(mockSession as any)
+            vi.mocked(prisma.classSession.findMany).mockResolvedValue([])
             vi.mocked(prisma.user.findUnique).mockResolvedValue(mockTeacher as any)
+            vi.mocked(prisma.signatureToken.findFirst).mockResolvedValue(null)
+            vi.mocked(prisma.signatureToken.create).mockResolvedValue({
+                id: 'token-1',
+                token: 'test-token-123',
+                sessionId: 'session-1',
+                studentId: 'teacher-2',
+                expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+            } as any)
 
             const req = new Request('http://localhost/api/sessions/session-1/request-signature', {
                 method: 'POST',
@@ -235,7 +245,9 @@ describe('Scenario Tests', () => {
                     id: 'session-1',
                     title: 'Math',
                     classroomName: 'Class A'
-                })
+                }),
+                [], // pendingSessions
+                expect.stringContaining('teacher-signature/test-token-123') // signature link
             )
         })
     })
