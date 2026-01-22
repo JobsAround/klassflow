@@ -1,35 +1,10 @@
 import { NextRequest, NextResponse } from "next/server"
-import { auth } from "@/auth"
-import { cookies } from "next/headers"
 import { prisma } from "@/lib/prisma"
 import formidable from "formidable"
 import fs from "fs/promises"
 import path from "path"
 import { Readable } from "stream"
-
-async function getUser() {
-    let session = await auth()
-    let user = session?.user
-
-    if (!user && process.env.NODE_ENV === "development") {
-        const cookieStore = await cookies()
-        const devUserId = cookieStore.get("dev-user-id")?.value
-        if (devUserId) {
-            const devUser = await prisma.user.findUnique({
-                where: { id: devUserId }
-            })
-            if (devUser) {
-                user = {
-                    id: devUser.id,
-                    role: devUser.role,
-                    organizationId: devUser.organizationId
-                } as any
-            }
-        }
-    }
-
-    return user
-}
+import { getAuthUser } from "@/lib/auth-utils"
 
 const ALLOWED_TYPES = [
     // Documents
@@ -53,7 +28,7 @@ const MAX_FILE_SIZE = 10 * 1024 * 1024 // 10MB
 
 export async function POST(req: NextRequest) {
     try {
-        const user = await getUser()
+        const user = await getAuthUser()
         if (!user || !user.organizationId) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
         }

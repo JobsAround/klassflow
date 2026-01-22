@@ -24,7 +24,7 @@ interface SessionListItemProps {
         title: string | null
         startTime: Date
         endTime: Date
-        type: "ONSITE" | "ONLINE"
+        type: "ONSITE" | "ONLINE" | "HOMEWORK"
         attendances?: any[]
         teacherSignature?: string | null
         teacherId?: string | null
@@ -94,8 +94,8 @@ export function SessionListItem({ session, isTeacher, currentUserId, currentUser
                 <div>
                     <div className="flex items-center gap-2 mb-1">
                         <h3 className="font-medium text-lg">{session.title || tClassroom('untitledSession')}</h3>
-                        <Badge variant={session.type === "ONLINE" ? "default" : "secondary"}>
-                            {session.type === "ONLINE" ? `🌐 ${t('online')}` : `🏫 ${t('onsite')}`}
+                        <Badge variant={session.type === "ONLINE" ? "default" : session.type === "HOMEWORK" ? "outline" : "secondary"}>
+                            {session.type === "ONLINE" ? `🌐 ${t('online')}` : session.type === "HOMEWORK" ? `📚 ${t('homework')}` : `🏫 ${t('onsite')}`}
                         </Badge>
                     </div>
                     <p className="text-sm text-slate-500">

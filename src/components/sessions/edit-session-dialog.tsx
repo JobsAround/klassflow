@@ -40,7 +40,7 @@ import { cn } from "@/lib/utils"
 import { TimePicker } from "@/components/ui/time-picker"
 
 const formSchema = z.object({
-    type: z.enum(["ONSITE", "ONLINE"]),
+    type: z.enum(["ONSITE", "ONLINE", "HOMEWORK"]),
     date: z.date(),
     startTime: z.string().min(1, "Start time is required"),
     endTime: z.string().min(1, "End time is required"),
@@ -55,7 +55,7 @@ interface EditSessionDialogProps {
         title: string | null
         startTime: Date
         endTime: Date
-        type: "ONSITE" | "ONLINE"
+        type: "ONSITE" | "ONLINE" | "HOMEWORK"
         teacherId?: string | null
     }
     teachers?: { id: string; name: string | null; email: string }[]
@@ -193,6 +193,7 @@ export function EditSessionDialog({ session, teachers = [], classroomName = "Cla
                                             <SelectContent>
                                                 <SelectItem value="ONSITE">🏫 {t('onsite')}</SelectItem>
                                                 <SelectItem value="ONLINE">🌐 {t('online')}</SelectItem>
+                                                <SelectItem value="HOMEWORK">📚 {t('homework')}</SelectItem>
                                             </SelectContent>
                                         </Select>
                                         <FormMessage />

@@ -99,6 +99,13 @@ export async function sendReminderEmail(
 
   const config = org?.smtpConfig as unknown as SMTPConfig
   const isOnline = sessionData.type === "ONLINE"
+  const isHomework = sessionData.type === "HOMEWORK"
+
+  const getTypeLabel = () => {
+    if (isHomework) return "Travail personnel"
+    if (isOnline) return "En ligne (Distanciel)"
+    return "En présentiel"
+  }
 
   const html = `
 <!DOCTYPE html>
@@ -118,22 +125,25 @@ export async function sendReminderEmail(
 <body>
   <div class="container">
     <div class="header">
-      <h1 style="margin: 0;">📚 Rappel de cours</h1>
+      <h1 style="margin: 0;">${isHomework ? '📚 Rappel de travail personnel' : '📚 Rappel de cours'}</h1>
     </div>
     <div class="content">
       <p>Bonjour ${studentName},</p>
-      
-      <p>Ce message vous rappelle que vous avez un cours demain :</p>
-      
+
+      <p>${isHomework ? 'Ce message vous rappelle que vous avez du travail personnel à effectuer :' : 'Ce message vous rappelle que vous avez un cours demain :'}</p>
+
       <div class="info-box">
         <h2 style="margin-top: 0; color: #2563eb;">${sessionData.classroomName}</h2>
         ${sessionData.title ? `<p><strong>Sujet :</strong> ${sessionData.title}</p>` : ""}
         <p><strong>📅 Date :</strong> ${sessionData.startTime.toLocaleDateString("fr-FR", { weekday: "long", year: "numeric", month: "long", day: "numeric", timeZone: "Europe/Paris" })}</p>
         <p><strong>🕐 Horaire :</strong> ${sessionData.startTime.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit", timeZone: "Europe/Paris" })} - ${sessionData.endTime.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit", timeZone: "Europe/Paris" })}</p>
-        <p><strong>📍 Type :</strong> ${isOnline ? "En ligne (Distanciel)" : "En présentiel"}</p>
+        <p><strong>📍 Type :</strong> ${getTypeLabel()}</p>
       </div>
-      
-      ${isOnline && sessionData.meetingLink ? `
+
+      ${isHomework ? `
+        <p>📝 <strong>N'oubliez pas de compléter votre travail !</strong></p>
+        <p>Vous recevrez un email pour confirmer que vous avez effectué le travail demandé.</p>
+      ` : isOnline && sessionData.meetingLink ? `
         <p>Rejoignez le cours en ligne en cliquant sur le lien ci-dessous :</p>
         <a href="${sessionData.meetingLink}" class="button">🎥 Rejoindre le cours</a>
       ` : `

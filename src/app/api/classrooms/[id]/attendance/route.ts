@@ -1,37 +1,14 @@
-import { auth } from "@/auth"
 import { prisma } from "@/lib/prisma"
 import { NextResponse } from "next/server"
 import { startOfWeek, endOfWeek, startOfMonth, endOfMonth } from "date-fns"
-import { cookies } from "next/headers"
+import { getAuthUser } from "@/lib/auth-utils"
 
 export async function GET(
     req: Request,
     { params }: { params: any }
 ) {
     try {
-        let session = await auth()
-        let user = session?.user
-
-        // Dev login support
-        if (!user && process.env.NODE_ENV === "development") {
-            const cookieStore = await cookies()
-            const devUserId = cookieStore.get("dev-user-id")?.value
-            if (devUserId) {
-                const devUser = await prisma.user.findUnique({
-                    where: { id: devUserId }
-                })
-                if (devUser) {
-                    user = {
-                        id: devUser.id,
-                        name: devUser.name,
-                        email: devUser.email,
-                        image: devUser.image,
-                        role: devUser.role,
-                        organizationId: devUser.organizationId
-                    } as any
-                }
-            }
-        }
+        const user = await getAuthUser()
 
         if (!user || user.role === "STUDENT") {
             return new NextResponse("Unauthorized", { status: 401 })
@@ -110,6 +87,8 @@ export async function GET(
                 location = classroom.locationOnSite || "Sur site"
             } else if (session.type === "ONLINE") {
                 location = classroom.locationOnline || "En ligne"
+            } else if (session.type === "HOMEWORK") {
+                location = "Travail personnel"
             }
 
             return {

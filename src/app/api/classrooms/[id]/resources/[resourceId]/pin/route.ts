@@ -1,35 +1,13 @@
 import { NextRequest, NextResponse } from "next/server"
-import { auth } from "@/auth"
 import { prisma } from "@/lib/prisma"
+import { getAuthUser } from "@/lib/auth-utils"
 
 export async function PATCH(
     request: NextRequest,
     { params }: { params: Promise<{ id: string; resourceId: string }> }
 ) {
     try {
-        const session = await auth()
-        let user = session?.user
-
-        if (!user && process.env.NODE_ENV === "development") {
-            const { cookies } = await import("next/headers")
-            const cookieStore = await cookies()
-            const devUserId = cookieStore.get("dev-user-id")?.value
-            if (devUserId) {
-                const devUser = await prisma.user.findUnique({
-                    where: { id: devUserId }
-                })
-                if (devUser) {
-                    user = {
-                        id: devUser.id,
-                        name: devUser.name,
-                        email: devUser.email,
-                        image: devUser.image,
-                        role: devUser.role,
-                        organizationId: devUser.organizationId
-                    } as any
-                }
-            }
-        }
+        const user = await getAuthUser()
 
         if (!user || (user.role !== "ADMIN" && user.role !== "TEACHER" && user.role !== "SUPER_ADMIN")) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 })

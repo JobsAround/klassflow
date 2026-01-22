@@ -186,8 +186,8 @@ export function ScheduleCalendar({ sessions, locale = enUS, translate = (key) =>
                                             <span className="font-semibold truncate text-blue-600 dark:text-blue-400">
                                                 {format(new Date(session.startTime), "HH:mm")}
                                             </span>
-                                            <Badge variant={session.type === "ONLINE" ? "secondary" : "outline"} className="text-[10px] h-4 px-1">
-                                                {session.type === "ONLINE" ? "Online" : "On-site"}
+                                            <Badge variant={session.type === "ONLINE" ? "secondary" : session.type === "HOMEWORK" ? "default" : "outline"} className="text-[10px] h-4 px-1">
+                                                {session.type === "ONLINE" ? "Online" : session.type === "HOMEWORK" ? "Homework" : "On-site"}
                                             </Badge>
                                         </div>
                                         <div className="font-medium truncate" title={session.title || session.classroom.name}>

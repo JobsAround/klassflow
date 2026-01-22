@@ -1,32 +1,13 @@
-import { auth } from "@/auth"
 import { prisma } from "@/lib/prisma"
 import { NextResponse } from "next/server"
+import { getAuthUser } from "@/lib/auth-utils"
 
 export async function DELETE(
     req: Request,
     { params }: { params: any }
 ) {
     try {
-        let session = await auth()
-        let user = session?.user
-
-        // Dev login support
-        if (!user && process.env.NODE_ENV === "development") {
-            const { cookies } = await import("next/headers")
-            const cookieStore = await cookies()
-            const devUserId = cookieStore.get("dev-user-id")?.value
-            if (devUserId) {
-                const devUser = await prisma.user.findUnique({
-                    where: { id: devUserId }
-                })
-                if (devUser) {
-                    user = {
-                        id: devUser.id,
-                        role: devUser.role
-                    } as any
-                }
-            }
-        }
+        const user = await getAuthUser()
 
         if (!user || user.role === "STUDENT") {
             return new NextResponse("Unauthorized", { status: 401 })

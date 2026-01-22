@@ -1,13 +1,13 @@
 import jwt from 'jsonwebtoken'
 
-const JAAS_APP_ID = process.env.JAAS_APP_ID || "vpaas-magic-cookie-59695fbdd7744384bf399a05acaf12d9"
-// Default to dev key if not set, though it should be set in .env
-// Note: In a real scenario, we should not hardcode these, but user provided them in chat.
-// I will use process.env to allow override but fallback to provided keys for convenience in this context if env is missing.
-// However, best practice is to require them in env.
-// For now, I'll use the provided dev keys as defaults for development if env is missing.
-const JAAS_API_KEY = process.env.JAAS_API_KEY_ID || "2a4c18" // The 'kid' (Key ID)
+// JaaS configuration - all values must come from environment variables
+const JAAS_APP_ID = process.env.JAAS_APP_ID
+const JAAS_API_KEY = process.env.JAAS_API_KEY_ID // The 'kid' (Key ID)
 const JAAS_PRIVATE_KEY = process.env.JAAS_PRIVATE_KEY // Takes the full PEM content
+
+function isJaaSConfigured(): boolean {
+    return !!(JAAS_APP_ID && JAAS_API_KEY && JAAS_PRIVATE_KEY)
+}
 
 // Helper to get private key (handle multiline env vars)
 const getPrivateKey = () => {
@@ -26,8 +26,17 @@ interface JaaSUser {
     isModerator: boolean
 }
 
-export function generateJaaSJwt(user: JaaSUser, roomName: string): string {
+export function generateJaaSJwt(user: JaaSUser, roomName: string): string | null {
+    if (!isJaaSConfigured()) {
+        console.warn("JaaS is not configured. Set JAAS_APP_ID, JAAS_API_KEY_ID, and JAAS_PRIVATE_KEY environment variables.")
+        return null
+    }
+
     const privateKey = getPrivateKey()
+    if (!privateKey) {
+        return null
+    }
+
     const now = Math.floor(Date.now() / 1000)
     const exp = now + 7200 // 2 hours validity
     const nbf = now - 10 // 10 seconds leeway
@@ -69,6 +78,12 @@ export function generateJaaSJwt(user: JaaSUser, roomName: string): string {
     return token
 }
 
-export function getJaaSRoomUrl(roomName: string): string {
+export function getJaaSRoomUrl(roomName: string): string | null {
+    if (!JAAS_APP_ID) {
+        console.warn("JAAS_APP_ID is not set. Cannot generate JaaS room URL.")
+        return null
+    }
     return `https://8x8.vc/${JAAS_APP_ID}/${roomName}`
 }
+
+export { isJaaSConfigured }

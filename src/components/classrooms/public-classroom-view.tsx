@@ -414,8 +414,8 @@ export function PublicClassroomView({
                                                     {format(new Date(session.startTime), "EEEE, MMMM d, yyyy", { locale: dateLocale })}
                                                 </CardDescription>
                                             </div>
-                                            <Badge variant={session.type === "ONLINE" ? "default" : "secondary"}>
-                                                {session.type === "ONLINE" ? t("online") : t("onsite")}
+                                            <Badge variant={session.type === "ONLINE" ? "default" : session.type === "HOMEWORK" ? "outline" : "secondary"}>
+                                                {session.type === "ONLINE" ? t("online") : session.type === "HOMEWORK" ? t("homework") : t("onsite")}
                                             </Badge>
                                         </div>
                                     </CardHeader>

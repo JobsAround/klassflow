@@ -39,6 +39,10 @@ export async function POST(
 
         const url = getJaaSRoomUrl(roomName)
 
+        if (!jaasToken || !url) {
+            return new NextResponse("Video conferencing is not configured", { status: 503 })
+        }
+
         return NextResponse.json({
             token: jaasToken,
             url,

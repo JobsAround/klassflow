@@ -1,33 +1,12 @@
-import { auth } from "@/auth"
 import { prisma } from "@/lib/prisma"
-import { cookies } from "next/headers"
 import { redirect } from "next/navigation"
 import { CalendarView } from "@/components/schedule/calendar-view"
 import { startOfMonth, endOfMonth, startOfWeek, endOfWeek } from "date-fns"
-
-async function getUser() {
-    let session = await auth()
-    let user = session?.user
-
-    if (!user && process.env.NODE_ENV === "development") {
-        const cookieStore = await cookies()
-        const devUserId = cookieStore.get("dev-user-id")?.value
-        if (devUserId) {
-            const devUser = await prisma.user.findUnique({
-                where: { id: devUserId }
-            })
-            if (devUser) {
-                user = { id: devUser.id, organizationId: devUser.organizationId } as any
-            }
-        }
-    }
-
-    if (!user) redirect("/")
-    return user
-}
+import { getAuthUser } from "@/lib/auth-utils"
 
 export default async function SchedulePage({ searchParams }: { searchParams: Promise<{ [key: string]: string | string[] | undefined }> }) {
-    const user = await getUser()
+    const user = await getAuthUser()
+    if (!user) redirect("/")
     const params = await searchParams
 
     const view = (params.view as string) || "month"

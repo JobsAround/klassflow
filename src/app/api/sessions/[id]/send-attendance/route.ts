@@ -1,8 +1,8 @@
-import { auth } from "@/auth"
 import { prisma } from "@/lib/prisma"
 import { sendSignatureEmail } from "@/lib/email"
 import { NextResponse, NextRequest } from "next/server"
 import { rateLimit } from "@/lib/ratelimit"
+import { getAuthUser } from "@/lib/auth-utils"
 
 export async function POST(
     req: Request,
@@ -14,30 +14,7 @@ export async function POST(
             return new NextResponse("Too Many Requests", { status: 429 })
         }
 
-        let session = await auth()
-        let user = session?.user
-
-        // Dev login support
-        if (!user && process.env.NODE_ENV === "development") {
-            const { cookies } = await import("next/headers")
-            const cookieStore = await cookies()
-            const devUserId = cookieStore.get("dev-user-id")?.value
-            if (devUserId) {
-                // We'll trust the cookie in dev mode and fetch the user to check role
-                const devUser = await prisma.user.findUnique({
-                    where: { id: devUserId }
-                })
-                if (devUser) {
-                    user = {
-                        id: devUser.id,
-                        name: devUser.name,
-                        email: devUser.email,
-                        image: devUser.image,
-                        role: devUser.role
-                    } as any
-                }
-            }
-        }
+        const user = await getAuthUser()
 
         if (!user || user.role === "STUDENT") {
             return new NextResponse("Unauthorized", { status: 401 })

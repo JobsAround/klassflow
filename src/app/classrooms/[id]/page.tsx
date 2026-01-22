@@ -20,44 +20,16 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge"
 import { Users as UsersIcon, Calendar as CalendarIcon, File as FileIcon, MapPin, Video } from "lucide-react"
 import { prisma } from "@/lib/prisma"
-import { auth } from "@/auth"
-import { cookies } from "next/headers"
 import { getTranslations } from 'next-intl/server'
 import { generateJaaSJwt } from "@/lib/jaas"
 import { AddResourceButton } from "@/components/resources/add-resource-button"
+import { getAuthUser } from "@/lib/auth-utils"
 
 const JAAS_APP_ID = process.env.JAAS_APP_ID || "vpaas-magic-cookie-59695fbdd7744384bf399a05acaf12d9"
 
-async function getUser() {
-    let session = await auth()
-    let user = session?.user
-
-    if (!user && process.env.NODE_ENV === "development") {
-        const cookieStore = await cookies()
-        const devUserId = cookieStore.get("dev-user-id")?.value
-        if (devUserId) {
-            const devUser = await prisma.user.findUnique({
-                where: { id: devUserId }
-            })
-            if (devUser) {
-                user = {
-                    id: devUser.id,
-                    name: devUser.name,
-                    email: devUser.email,
-                    image: devUser.image,
-                    role: devUser.role,
-                    organizationId: devUser.organizationId
-                } as any
-            }
-        }
-    }
-
-    return user
-}
-
 export default async function ClassroomPage({ params }: { params: Promise<{ id: string }> }) {
     const t = await getTranslations('classroom')
-    const user = await getUser()
+    const user = await getAuthUser()
     const { id } = await params
 
     if (!user) {

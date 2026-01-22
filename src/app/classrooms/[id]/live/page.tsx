@@ -1,12 +1,11 @@
 
-import { auth } from "@/auth"
 import { prisma } from "@/lib/prisma"
 import { notFound, redirect } from "next/navigation"
 import { JitsiMeet } from "@/components/sessions/jitsi-meet"
 import { generateJaaSJwt } from "@/lib/jaas"
+import { getAuthUser } from "@/lib/auth-utils"
 
-// JAAS App ID from env or fallback
-const JAAS_APP_ID = process.env.JAAS_APP_ID || "vpaas-magic-cookie-59695fbdd7744384bf399a05acaf12d9"
+const JAAS_APP_ID = process.env.JAAS_APP_ID
 
 export default async function ClassroomLivePage({
     params
@@ -14,30 +13,7 @@ export default async function ClassroomLivePage({
     params: Promise<{ id: string }>
 }) {
     const { id } = await params
-    let session = await auth()
-    let user = session?.user
-
-    // Dev login support
-    if (!user && process.env.NODE_ENV === "development") {
-        const { cookies } = await import("next/headers")
-        const cookieStore = await cookies()
-        const devUserId = cookieStore.get("dev-user-id")?.value
-        if (devUserId) {
-            const devUser = await prisma.user.findUnique({
-                where: { id: devUserId }
-            })
-            if (devUser) {
-                user = {
-                    id: devUser.id,
-                    name: devUser.name,
-                    email: devUser.email,
-                    image: devUser.image,
-                    role: devUser.role,
-                    organizationId: devUser.organizationId
-                } as any
-            }
-        }
-    }
+    const user = await getAuthUser()
 
     if (!user) {
         redirect("/api/auth/signin")

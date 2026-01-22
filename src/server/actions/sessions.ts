@@ -9,7 +9,7 @@ export interface CreateSessionInput {
     organizationId: string
     startTime: string | Date
     endTime: string | Date
-    type?: "ONSITE" | "ONLINE"
+    type?: "ONSITE" | "ONLINE" | "HOMEWORK"
     isOnline?: boolean
     reminderEnabled?: boolean
     reminderHoursBefore?: number | string

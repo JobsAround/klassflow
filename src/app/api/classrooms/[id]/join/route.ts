@@ -1,38 +1,15 @@
 
-import { auth } from "@/auth"
 import { prisma } from "@/lib/prisma"
 import { generateJaaSJwt, getJaaSRoomUrl } from "@/lib/jaas"
 import { NextResponse } from "next/server"
+import { getAuthUser } from "@/lib/auth-utils"
 
 export async function POST(
     req: Request,
     { params }: { params: Promise<{ id: string }> }
 ) {
     try {
-        let session = await auth()
-        let user = session?.user
-
-        // Dev login support
-        if (!user && process.env.NODE_ENV === "development") {
-            const { cookies } = await import("next/headers")
-            const cookieStore = await cookies()
-            const devUserId = cookieStore.get("dev-user-id")?.value
-            if (devUserId) {
-                const devUser = await prisma.user.findUnique({
-                    where: { id: devUserId }
-                })
-                if (devUser) {
-                    user = {
-                        id: devUser.id,
-                        name: devUser.name,
-                        email: devUser.email,
-                        image: devUser.image,
-                        role: devUser.role,
-                        organizationId: devUser.organizationId
-                    } as any
-                }
-            }
-        }
+        const user = await getAuthUser()
 
         if (!user || user.role === "STUDENT") {
             return new NextResponse("Unauthorized", { status: 401 })
@@ -58,6 +35,10 @@ export async function POST(
         }, roomName)
 
         const url = getJaaSRoomUrl(roomName)
+
+        if (!token || !url) {
+            return new NextResponse("Video conferencing is not configured", { status: 503 })
+        }
 
         return NextResponse.json({
             token,

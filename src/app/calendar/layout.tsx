@@ -1,40 +1,14 @@
-import { auth } from "@/auth"
 import { redirect } from "next/navigation"
 import { Sidebar } from "@/components/layout/sidebar"
 import { Header } from "@/components/layout/header"
-import { cookies } from "next/headers"
-import { prisma } from "@/lib/prisma"
+import { getAuthUser } from "@/lib/auth-utils"
 
 export default async function ScheduleLayout({
     children,
 }: {
     children: React.ReactNode
 }) {
-    let session = await auth()
-    let user = session?.user
-
-    // Dev mode fallback
-    if (!user && process.env.NODE_ENV === "development") {
-        const cookieStore = await cookies()
-        const devUserId = cookieStore.get("dev-user-id")?.value
-
-        if (devUserId) {
-            const devUser = await prisma.user.findUnique({
-                where: { id: devUserId }
-            })
-
-            if (devUser) {
-                user = {
-                    id: devUser.id,
-                    name: devUser.name,
-                    email: devUser.email,
-                    image: devUser.image,
-                    role: devUser.role,
-                    organizationId: devUser.organizationId
-                } as any
-            }
-        }
-    }
+    const user = await getAuthUser()
 
     if (!user) {
         redirect("/")

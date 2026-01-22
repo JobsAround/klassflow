@@ -1,43 +1,14 @@
-import { auth } from "@/auth"
 import { prisma } from "@/lib/prisma"
-import { cookies } from "next/headers"
 import { redirect } from "next/navigation"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Plus } from "lucide-react"
 import Link from "next/link"
-
-async function getUser() {
-    let session = await auth()
-    let user = session?.user
-
-    if (!user && process.env.NODE_ENV === "development") {
-        const cookieStore = await cookies()
-        const devUserId = cookieStore.get("dev-user-id")?.value
-        if (devUserId) {
-            const devUser = await prisma.user.findUnique({
-                where: { id: devUserId },
-                include: { organization: true }
-            })
-            if (devUser) {
-                user = {
-                    id: devUser.id,
-                    name: devUser.name,
-                    email: devUser.email,
-                    image: devUser.image,
-                    role: devUser.role,
-                    organizationId: devUser.organizationId
-                } as any
-            }
-        }
-    }
-
-    if (!user) redirect("/")
-    return user
-}
+import { getAuthUser } from "@/lib/auth-utils"
 
 export default async function ClassroomsPage() {
-    const user = await getUser()
+    const user = await getAuthUser()
+    if (!user) redirect("/")
 
     const classrooms = await prisma.classroom.findMany({
         where: { organizationId: user.organizationId! },
