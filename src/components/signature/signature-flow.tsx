@@ -6,6 +6,7 @@ import SignatureCanvas, { SignatureCanvasHandle } from "@/components/signature/s
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { Badge } from "@/components/ui/badge"
 
 export interface SignatureSessionData {
     student: {
@@ -36,6 +37,7 @@ export interface MissedSession {
     startTime: string
     endTime: string
     token: string
+    type?: "ONSITE" | "ONLINE" | "HOMEWORK"
     signed?: boolean
 }
 
@@ -65,6 +67,9 @@ export interface SignatureFlowProps {
         missedSessionsDescription: string
         signButton: string
         signed: string
+        online: string
+        onsite: string
+        homework: string
     }>
 }
 
@@ -88,7 +93,10 @@ const defaultTranslations = {
     missedSessionsTitle: "Sessions manquées",
     missedSessionsDescription: "Vous pouvez également signer pour ces sessions passées",
     signButton: "Signer",
-    signed: "Signé"
+    signed: "Signé",
+    online: "En ligne",
+    onsite: "En présentiel",
+    homework: "Travail personnel"
 }
 
 export function SignatureFlow({
@@ -210,8 +218,15 @@ export function SignatureFlow({
                                     <div className="space-y-3">
                                         {missedSessions.map(session => (
                                             <div key={session.id} className="bg-amber-50 border border-amber-200 rounded-lg p-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                                                <div>
-                                                    <p className="font-medium text-amber-900">{session.title || session.classroomName}</p>
+                                                <div className="space-y-1">
+                                                    <div className="flex items-center gap-2 flex-wrap">
+                                                        <p className="font-medium text-amber-900">{session.title || session.classroomName}</p>
+                                                        {session.type && (
+                                                            <Badge variant={session.type === "ONLINE" ? "default" : session.type === "HOMEWORK" ? "outline" : "secondary"} className="text-xs">
+                                                                {session.type === "ONLINE" ? `🌐 ${t.online}` : session.type === "HOMEWORK" ? `📚 ${t.homework}` : `🏫 ${t.onsite}`}
+                                                            </Badge>
+                                                        )}
+                                                    </div>
                                                     <p className="text-xs text-amber-800">
                                                         {formatDate(session.startTime)} • {formatTime(session.startTime)}
                                                     </p>

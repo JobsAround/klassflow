@@ -143,6 +143,7 @@ export async function GET(
                 classroomName: session.classroom.name,
                 startTime: session.startTime,
                 endTime: session.endTime,
+                type: session.type,
                 token
             }
         }))
@@ -308,6 +309,7 @@ export async function POST(
                 classroomName: session.classroom.name,
                 startTime: session.startTime,
                 endTime: session.endTime,
+                type: session.type,
                 token
             }
         }))
