@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect, useMemo } from "react"
 import { Calendar, FileText, Users, User, Loader2, Clock, Globe, Video, GraduationCap } from "lucide-react"
 import { format } from "date-fns"
 import { enUS, fr, de, es, ru, uk, pt } from "date-fns/locale"
@@ -307,7 +307,17 @@ export function PublicClassroomView({
     }
 
     const dateLocale = getDateLocale()
-    const upcomingSessions = classroom.sessions.filter(s => new Date(s.endTime) >= new Date())
+
+    // Use state for "now" to avoid hydration mismatch (server vs client time)
+    const [now, setNow] = useState<Date | null>(null)
+    useEffect(() => {
+        setNow(new Date())
+    }, [])
+
+    const upcomingSessions = useMemo(() => {
+        if (!now) return classroom.sessions // Show all sessions during SSR/initial render
+        return classroom.sessions.filter(s => new Date(s.endTime) >= now)
+    }, [classroom.sessions, now])
 
     // Prepare sessions for calendar with classroom name
     const calendarSessions = classroom.sessions.map(s => ({
