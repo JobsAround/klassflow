@@ -514,7 +514,7 @@ const Session = ({ session, defaultTeacherName, t, dateLocale }: SessionProps) =
     }
 
     return (
-        <View style={styles.sessionContainer}>
+        <View style={styles.sessionContainer} wrap={false}>
             {/* Session Header */}
             <View style={styles.sessionHeader}>
                 <View>
