@@ -8,21 +8,12 @@ import {
     View,
     Image,
     StyleSheet,
-    Font,
     pdf
 } from '@react-pdf/renderer'
 import { format, type Locale } from 'date-fns'
 import { fr, enUS, de, es, pt, ru, uk } from 'date-fns/locale'
 
-// Register a nice font (Inter)
-Font.register({
-    family: 'Inter',
-    fonts: [
-        { src: 'https://fonts.gstatic.com/s/inter/v13/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hjp-Ek-_EeA.woff2', fontWeight: 400 },
-        { src: 'https://fonts.gstatic.com/s/inter/v13/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuGKYAZ9hjp-Ek-_EeA.woff2', fontWeight: 600 },
-        { src: 'https://fonts.gstatic.com/s/inter/v13/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuFuYAZ9hjp-Ek-_EeA.woff2', fontWeight: 700 },
-    ]
-})
+// Use Helvetica - built into @react-pdf/renderer, no external font loading needed
 
 const colors = {
     primary: '#2563eb',
@@ -41,7 +32,7 @@ const colors = {
 const styles = StyleSheet.create({
     page: {
         padding: 40,
-        fontFamily: 'Inter',
+        fontFamily: 'Helvetica',
         fontSize: 10,
         color: colors.text,
         backgroundColor: colors.white,
@@ -58,7 +49,7 @@ const styles = StyleSheet.create({
     },
     title: {
         fontSize: 24,
-        fontWeight: 700,
+        fontFamily: 'Helvetica-Bold',
         color: colors.primary,
     },
     subtitle: {
@@ -68,7 +59,7 @@ const styles = StyleSheet.create({
     },
     orgName: {
         fontSize: 12,
-        fontWeight: 600,
+        fontFamily: 'Helvetica-Bold',
         textAlign: 'right',
         color: colors.text,
     },
@@ -95,7 +86,7 @@ const styles = StyleSheet.create({
     },
     infoValue: {
         fontSize: 12,
-        fontWeight: 600,
+        fontFamily: 'Helvetica-Bold',
         color: colors.text,
     },
     // Session
@@ -113,7 +104,7 @@ const styles = StyleSheet.create({
     },
     sessionDate: {
         fontSize: 12,
-        fontWeight: 600,
+        fontFamily: 'Helvetica-Bold',
         color: colors.white,
     },
     sessionType: {
@@ -143,7 +134,7 @@ const styles = StyleSheet.create({
     },
     teacherName: {
         fontSize: 10,
-        fontWeight: 600,
+        fontFamily: 'Helvetica-Bold',
     },
     signatureBox: {
         width: 80,
@@ -177,7 +168,7 @@ const styles = StyleSheet.create({
     tableHeaderCell: {
         padding: 10,
         fontSize: 9,
-        fontWeight: 600,
+        fontFamily: 'Helvetica-Bold',
         color: colors.textLight,
         textTransform: 'uppercase',
         letterSpacing: 0.5,
@@ -213,7 +204,7 @@ const styles = StyleSheet.create({
         paddingVertical: 3,
         borderRadius: 4,
         fontSize: 9,
-        fontWeight: 600,
+        fontFamily: 'Helvetica-Bold',
     },
     statusPresent: {
         backgroundColor: '#dcfce7',
@@ -262,7 +253,7 @@ const styles = StyleSheet.create({
     },
     summaryValue: {
         fontSize: 18,
-        fontWeight: 700,
+        fontFamily: 'Helvetica-Bold',
         color: colors.white,
     },
     // Footer
