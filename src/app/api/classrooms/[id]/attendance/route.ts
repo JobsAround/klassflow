@@ -67,8 +67,29 @@ export async function GET(
             orderBy: { startTime: 'asc' }
         })
 
-        const teacherName = classroom.teachers[0]?.name || "Formateur"
         const organizationName = classroom.organization.name
+
+        // Calculate hours per teacher from sessions
+        const teacherHoursMap = new Map<string, { name: string, hours: number }>()
+
+        dbSessions.forEach(session => {
+            const duration = (new Date(session.endTime).getTime() - new Date(session.startTime).getTime()) / (1000 * 60 * 60)
+            const tName = session.teacher?.name || classroom.teachers[0]?.name || "Formateur"
+
+            if (teacherHoursMap.has(tName)) {
+                teacherHoursMap.get(tName)!.hours += duration
+            } else {
+                teacherHoursMap.set(tName, { name: tName, hours: duration })
+            }
+        })
+
+        // Sort teachers by hours (descending) and join names
+        const sortedTeachers = Array.from(teacherHoursMap.values())
+            .sort((a, b) => b.hours - a.hours)
+
+        const teacherName = sortedTeachers.length > 0
+            ? sortedTeachers.map(t => t.name).join(", ")
+            : classroom.teachers[0]?.name || "Formateur"
 
         // Map sessions to include student attendance
         const sessions = dbSessions.map(session => {

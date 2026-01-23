@@ -137,8 +137,8 @@ const styles = StyleSheet.create({
         fontFamily: 'Helvetica-Bold',
     },
     signatureBox: {
-        width: 80,
-        height: 25,
+        width: 120,
+        height: 40,
         borderWidth: 1,
         borderColor: colors.border,
         borderRadius: 4,
@@ -147,8 +147,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     signatureImage: {
-        width: 75,
-        height: 22,
+        width: 115,
+        height: 36,
         objectFit: 'contain',
     },
     // Table
@@ -189,14 +189,22 @@ const styles = StyleSheet.create({
         flex: 3,
     },
     cellStatus: {
-        flex: 1,
+        flex: 1.5,
         alignItems: 'center',
         justifyContent: 'center',
+    },
+    cellStatusHeader: {
+        flex: 1.5,
+        textAlign: 'center',
     },
     cellSignature: {
         flex: 2,
         alignItems: 'center',
         justifyContent: 'center',
+    },
+    cellSignatureHeader: {
+        flex: 2,
+        textAlign: 'center',
     },
     // Status badges
     statusBadge: {
@@ -220,8 +228,8 @@ const styles = StyleSheet.create({
     },
     // Signature
     studentSignature: {
-        width: 60,
-        height: 20,
+        width: 100,
+        height: 35,
         objectFit: 'contain',
     },
     noSignature: {
@@ -230,7 +238,7 @@ const styles = StyleSheet.create({
     },
     // Summary
     summary: {
-        marginTop: 30,
+        marginBottom: 25,
         flexDirection: 'row',
         gap: 15,
     },
@@ -540,8 +548,8 @@ const Session = ({ session, defaultTeacherName, t, dateLocale }: SessionProps) =
             <View style={styles.table}>
                 <View style={styles.tableHeader}>
                     <Text style={[styles.tableHeaderCell, styles.cellStudent]}>{t.student}</Text>
-                    <Text style={[styles.tableHeaderCell, styles.cellStatus]}>{t.status}</Text>
-                    <Text style={[styles.tableHeaderCell, styles.cellSignature]}>{t.signature}</Text>
+                    <Text style={[styles.tableHeaderCell, styles.cellStatusHeader]}>{t.status}</Text>
+                    <Text style={[styles.tableHeaderCell, styles.cellSignatureHeader]}>{t.signature}</Text>
                 </View>
                 {session.students.map((student, idx) => (
                     <View
@@ -608,18 +616,7 @@ const AttendancePDF = ({ data, locale = 'fr' }: AttendancePDFProps) => {
                     </View>
                 </View>
 
-                {/* Sessions */}
-                {data.sessions.map((session, idx) => (
-                    <Session
-                        key={session.id || idx}
-                        session={session}
-                        defaultTeacherName={data.teacherName}
-                        t={t}
-                        dateLocale={dateLocale}
-                    />
-                ))}
-
-                {/* Summary */}
+                {/* Summary - at the top */}
                 <View style={styles.summary}>
                     <View style={[styles.summaryCard, styles.summaryCardPrimary]}>
                         <Text style={styles.summaryLabel}>{t.teacherHours}</Text>
@@ -632,6 +629,17 @@ const AttendancePDF = ({ data, locale = 'fr' }: AttendancePDFProps) => {
                         </Text>
                     </View>
                 </View>
+
+                {/* Sessions */}
+                {data.sessions.map((session, idx) => (
+                    <Session
+                        key={session.id || idx}
+                        session={session}
+                        defaultTeacherName={data.teacherName}
+                        t={t}
+                        dateLocale={dateLocale}
+                    />
+                ))}
 
                 {/* Footer */}
                 <View style={styles.footer} fixed>
