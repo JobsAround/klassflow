@@ -87,6 +87,7 @@ export async function GET(
                 id: session.id,
                 startTime: session.startTime,
                 endTime: session.endTime,
+                type: session.type,
                 teacherSignature: session.teacherSignature,
                 location,
                 teacherName: session.teacher?.name || teacherName,

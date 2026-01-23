@@ -1,7 +1,7 @@
 import jsPDF from "jspdf"
 import autoTable from "jspdf-autotable"
 import { format } from "date-fns"
-import { fr, enUS, de, es, ru, uk } from "date-fns/locale"
+import { fr, enUS, de, es, pt, ru, uk } from "date-fns/locale"
 
 export interface AttendanceData {
     organizationName: string
@@ -14,6 +14,7 @@ export interface AttendanceData {
         id: string
         startTime: string | Date
         endTime: string | Date
+        type?: string
         teacherSignature?: string | null
         location: string
         teacherName?: string
@@ -50,6 +51,7 @@ const translations: Record<string, Record<string, string>> = {
         pending: "Pending",
         online: "Online",
         onsite: "On-site",
+        homework: "Homework",
         notSpecified: "Not specified"
     },
     fr: {
@@ -72,6 +74,7 @@ const translations: Record<string, Record<string, string>> = {
         pending: "En attente",
         online: "En ligne",
         onsite: "Sur site",
+        homework: "Travail personnel",
         notSpecified: "Non spécifié"
     },
     de: {
@@ -94,6 +97,7 @@ const translations: Record<string, Record<string, string>> = {
         pending: "Ausstehend",
         online: "Online",
         onsite: "Vor Ort",
+        homework: "Hausaufgabe",
         notSpecified: "Nicht angegeben"
     },
     es: {
@@ -116,6 +120,7 @@ const translations: Record<string, Record<string, string>> = {
         pending: "Pendiente",
         online: "En línea",
         onsite: "Presencial",
+        homework: "Tarea",
         notSpecified: "No especificado"
     },
     ru: {
@@ -138,6 +143,7 @@ const translations: Record<string, Record<string, string>> = {
         pending: "Ожидание",
         online: "Онлайн",
         onsite: "На месте",
+        homework: "Домашнее задание",
         notSpecified: "Не указано"
     },
     uk: {
@@ -160,7 +166,31 @@ const translations: Record<string, Record<string, string>> = {
         pending: "Очікування",
         online: "Онлайн",
         onsite: "На місці",
+        homework: "Домашнє завдання",
         notSpecified: "Не вказано"
+    },
+    pt: {
+        title: "Folha de Presença",
+        organization: "Organização",
+        period: "Período",
+        from: "De",
+        to: "a",
+        week: "Semana de",
+        month: "Mês de",
+        training: "Formação",
+        teacherHours: "Horas do Formador",
+        studentHours: "Horas dos Formandos",
+        teacher: "Formador",
+        signature: "Assinatura",
+        student: "Formando",
+        status: "Estado",
+        present: "Presente",
+        absent: "Ausente",
+        pending: "Pendente",
+        online: "Online",
+        onsite: "Presencial",
+        homework: "Trabalho pessoal",
+        notSpecified: "Não especificado"
     }
 }
 
@@ -169,6 +199,7 @@ const dateLocaleMap: Record<string, any> = {
     fr: fr,
     de: de,
     es: es,
+    pt: pt,
     ru: ru,
     uk: uk
 }
@@ -235,7 +266,20 @@ export function generateAttendancePDF(data: AttendanceData, locale: string = 'fr
 
         doc.setFontSize(12)
         doc.setFont("helvetica", "bold")
-        doc.text(`${dateStr} ${startStr} à ${endStr}`, 18, currentY + 2)
+
+        // Get session type label
+        let typeLabel = ""
+        if (session.type === "ONLINE") {
+            typeLabel = t.online
+        } else if (session.type === "ONSITE") {
+            typeLabel = t.onsite
+        } else if (session.type === "HOMEWORK") {
+            typeLabel = t.homework
+        }
+
+        // Display date/time with session type
+        const headerText = typeLabel ? `${dateStr} ${startStr} à ${endStr} (${typeLabel})` : `${dateStr} ${startStr} à ${endStr}`
+        doc.text(headerText, 18, currentY + 2)
 
         // Location (Right aligned with icon)
         // Translate common fallback location texts
