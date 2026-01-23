@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Calendar as CalendarIcon, Download, Loader2 } from "lucide-react"
 import { format } from "date-fns"
 import { enUS, fr, de, es, ru, uk, pt } from 'date-fns/locale'
-import { generateAttendancePDF } from "@/lib/pdf-export"
+import { generateAttendancePDFv2 } from "@/lib/pdf-attendance"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Calendar } from "@/components/ui/calendar"
@@ -76,7 +76,7 @@ export function PublicAttendanceExporter({ classroomId, lang, translations: t }:
                 })
             }
 
-            generateAttendancePDF(data, lang)
+            await generateAttendancePDFv2(data, lang)
         } catch (err: any) {
             console.error("Export failed:", err)
             setError(t.exportError)

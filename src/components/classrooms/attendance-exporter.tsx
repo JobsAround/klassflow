@@ -7,7 +7,7 @@ import { Calendar as CalendarIcon } from "lucide-react"
 import { format } from "date-fns"
 import { fr, enUS, uk, ru } from 'date-fns/locale'
 import { useLocale } from 'next-intl'
-import { generateAttendancePDF } from "@/lib/pdf-export"
+import { generateAttendancePDFv2 } from "@/lib/pdf-attendance"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Calendar } from "@/components/ui/calendar"
@@ -53,7 +53,7 @@ export function AttendanceExporter({ classroomId }: AttendanceExporterProps) {
                 })
             }
 
-            generateAttendancePDF(data, locale)
+            await generateAttendancePDFv2(data, locale)
         } catch (error) {
             console.error("Export failed:", error)
             alert("Failed to export PDF")
