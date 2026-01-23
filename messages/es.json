@@ -66,6 +66,8 @@
         "schedule": "Programar nueva sesión",
         "addSession": "Añadir sesión",
         "createSessionDescription": "Crear una nueva sesión para tu aula.",
+        "editSessionTitle": "Editar sesión",
+        "editSessionDescription": "Modificar los detalles de la sesión.",
         "title": "Título",
         "classroom": "Aula",
         "classroomLabel": "Aula",

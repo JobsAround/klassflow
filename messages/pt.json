@@ -66,6 +66,8 @@
         "schedule": "Agendar nova sessão",
         "addSession": "Adicionar sessão",
         "createSessionDescription": "Criar uma nova sessão para a sua turma.",
+        "editSessionTitle": "Editar sessão",
+        "editSessionDescription": "Modificar os detalhes da sessão.",
         "title": "Título",
         "classroom": "Turma",
         "classroomLabel": "Turma",

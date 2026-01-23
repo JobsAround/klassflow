@@ -66,6 +66,8 @@
         "schedule": "Schedule New Session",
         "addSession": "Add Session",
         "createSessionDescription": "Create a new session for your classroom.",
+        "editSessionTitle": "Edit Session",
+        "editSessionDescription": "Modify the session details.",
         "title": "Title",
         "classroom": "Classroom",
         "classroomLabel": "Classroom",

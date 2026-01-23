@@ -4,7 +4,7 @@ import { JitsiMeet } from "@/components/sessions/jitsi-meet"
 import { generateJaaSJwt } from "@/lib/jaas"
 import { getAuthUser } from "@/lib/auth-utils"
 
-const JAAS_APP_ID = process.env.JAAS_APP_ID
+const JAAS_APP_ID = process.env.JAAS_APP_ID || ""
 
 export default async function LiveSessionPage({
     params
@@ -51,6 +51,14 @@ export default async function LiveSessionPage({
         avatar: user.image || "",
         isModerator: true
     }, roomName)
+
+    if (!jwt) {
+        return (
+            <div className="flex items-center justify-center h-screen bg-black text-white">
+                <p className="text-red-600">Video conference is not configured. Please contact administrator.</p>
+            </div>
+        )
+    }
 
     return (
         <div className="flex flex-col h-screen bg-black">

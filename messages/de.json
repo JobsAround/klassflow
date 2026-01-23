@@ -66,6 +66,8 @@
         "schedule": "Neue Sitzung planen",
         "addSession": "Sitzung hinzufügen",
         "createSessionDescription": "Erstellen Sie eine neue Sitzung für Ihre Klasse.",
+        "editSessionTitle": "Sitzung bearbeiten",
+        "editSessionDescription": "Sitzungsdetails ändern.",
         "title": "Titel",
         "classroom": "Klasse",
         "classroomLabel": "Klasse",

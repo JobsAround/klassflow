@@ -66,6 +66,8 @@
         "schedule": "Запланировать новое занятие",
         "addSession": "Добавить занятие",
         "createSessionDescription": "Создать новое занятие для вашего класса.",
+        "editSessionTitle": "Редактировать занятие",
+        "editSessionDescription": "Изменить детали занятия.",
         "title": "Название",
         "classroom": "Класс",
         "classroomLabel": "Класс",

@@ -79,10 +79,8 @@ export async function GET(
             let location = "Non spécifié"
             if (session.type === "ONSITE") {
                 location = classroom.locationOnSite || "Sur site"
-            } else if (session.type === "ONLINE") {
+            } else if (session.type === "ONLINE" || session.type === "HOMEWORK") {
                 location = classroom.locationOnline || "En ligne"
-            } else if (session.type === "HOMEWORK") {
-                location = "Travail personnel"
             }
 
             return {
