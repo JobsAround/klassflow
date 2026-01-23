@@ -279,6 +279,16 @@ function detectBrowserLanguage(): string {
     return ["en", "fr", "de", "es", "ru", "uk", "pt"].includes(browserLang) ? browserLang : "en"
 }
 
+type TabValue = "calendar" | "upcoming" | "resources" | "participants" | "attendance"
+
+const validTabs: TabValue[] = ["calendar", "upcoming", "resources", "participants", "attendance"]
+
+function getTabFromHash(): TabValue {
+    if (typeof window === "undefined") return "calendar"
+    const hash = window.location.hash.slice(1) // Remove the # prefix
+    return validTabs.includes(hash as TabValue) ? (hash as TabValue) : "calendar"
+}
+
 export function PublicClassroomView({
     classroom,
     translations = defaultTranslations,
@@ -287,13 +297,30 @@ export function PublicClassroomView({
     logoText = "KlassFlow",
     badgeText = "Cloud"
 }: PublicClassroomViewProps) {
-    const [activeTab, setActiveTab] = useState<"calendar" | "upcoming" | "resources" | "participants" | "attendance">("calendar")
+    const [activeTab, setActiveTab] = useState<TabValue>(() => getTabFromHash())
     const [lang, setLang] = useState<string>(() => {
         if (typeof window !== "undefined") {
             return localStorage.getItem("publicClassroomLang") || detectBrowserLanguage()
         }
         return "en"
     })
+
+    // Handle URL hash changes (browser back/forward)
+    useEffect(() => {
+        const handleHashChange = () => {
+            setActiveTab(getTabFromHash())
+        }
+        window.addEventListener("hashchange", handleHashChange)
+        return () => window.removeEventListener("hashchange", handleHashChange)
+    }, [])
+
+    // Update URL hash when tab changes
+    const handleTabChange = (tab: TabValue) => {
+        setActiveTab(tab)
+        if (typeof window !== "undefined") {
+            window.history.replaceState(null, "", `#${tab}`)
+        }
+    }
 
     const allTranslations = { ...defaultTranslations, ...translations }
     const t = (key: string) => allTranslations[lang]?.[key] || allTranslations.en[key] || key
@@ -419,35 +446,35 @@ export function PublicClassroomView({
                 <div className="flex gap-2 mb-6 overflow-x-auto pb-2">
                     <Button
                         variant={activeTab === "calendar" ? "default" : "outline"}
-                        onClick={() => setActiveTab("calendar")}
+                        onClick={() => handleTabChange("calendar")}
                     >
                         <Calendar className="w-4 h-4 mr-2" />
                         {t("calendar")}
                     </Button>
                     <Button
                         variant={activeTab === "upcoming" ? "default" : "outline"}
-                        onClick={() => setActiveTab("upcoming")}
+                        onClick={() => handleTabChange("upcoming")}
                     >
                         <Clock className="w-4 h-4 mr-2" />
                         {t("upcomingSessions")} ({upcomingSessions.length})
                     </Button>
                     <Button
                         variant={activeTab === "resources" ? "default" : "outline"}
-                        onClick={() => setActiveTab("resources")}
+                        onClick={() => handleTabChange("resources")}
                     >
                         <FileText className="w-4 h-4 mr-2" />
                         {t("resources")} ({classroom.resources.length})
                     </Button>
                     <Button
                         variant={activeTab === "participants" ? "default" : "outline"}
-                        onClick={() => setActiveTab("participants")}
+                        onClick={() => handleTabChange("participants")}
                     >
                         <Users className="w-4 h-4 mr-2" />
                         {t("participants")}
                     </Button>
                     <Button
                         variant={activeTab === "attendance" ? "default" : "outline"}
-                        onClick={() => setActiveTab("attendance")}
+                        onClick={() => handleTabChange("attendance")}
                     >
                         <FileText className="w-4 h-4 mr-2" />
                         {t("attendance")}
