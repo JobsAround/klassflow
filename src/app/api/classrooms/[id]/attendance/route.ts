@@ -77,7 +77,7 @@ export async function GET(
                 const attendance = session.attendances.find(a => a.studentId === student.id)
                 return {
                     name: student.name || "Inconnu",
-                    status: attendance?.status || "ABSENT",
+                    status: attendance?.status || "PENDING",
                     signature: attendance?.signatureUrl || null
                 }
             })
