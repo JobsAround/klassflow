@@ -236,7 +236,6 @@ const styles = StyleSheet.create({
     noSignature: {
         fontSize: 8,
         color: colors.textLight,
-        fontStyle: 'italic',
     },
     // Summary
     summary: {
