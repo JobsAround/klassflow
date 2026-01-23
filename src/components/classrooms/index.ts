@@ -14,5 +14,6 @@ export * from './assign-teacher-dialog'
 export * from './remove-teacher-dialog'
 export * from './remove-student-dialog'
 export * from './public-classroom-view'
+export * from './public-attendance-exporter'
 export * from './classroom-detail-view'
 

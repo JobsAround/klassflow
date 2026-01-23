@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { ScheduleCalendar } from "@/components/schedule/schedule-calendar"
 import { ResourcesList } from "@/components/resources/resources-list"
+import { PublicAttendanceExporter } from "@/components/classrooms/public-attendance-exporter"
 
 const languages = [
     { code: "en", name: "English", locale: enUS },
@@ -74,6 +75,8 @@ const defaultTranslations: Record<string, Record<string, string>> = {
         upcomingSessions: "Upcoming",
         resources: "Resources",
         participants: "Participants",
+        attendance: "Attendance",
+        attendanceDescription: "Download signed attendance sheets for your records.",
         teachers: "Teachers",
         students: "Students",
         noUpcomingSessions: "No upcoming sessions",
@@ -81,12 +84,18 @@ const defaultTranslations: Record<string, Record<string, string>> = {
         classSession: "Class Session",
         online: "Online",
         onsite: "On-site",
+        homework: "Homework",
         time: "Time:",
         teacher: "Teacher:",
         joinVideo: "Join Video Session",
         today: "Today",
         month: "Month",
         week: "Week",
+        pickDate: "Pick a date",
+        download: "Download PDF",
+        downloading: "Downloading...",
+        exportError: "Failed to export. Please try again.",
+        noSessions: "No sessions found for this period.",
     },
     fr: {
         loading: "Chargement...",
@@ -95,6 +104,8 @@ const defaultTranslations: Record<string, Record<string, string>> = {
         upcomingSessions: "À venir",
         resources: "Ressources",
         participants: "Participants",
+        attendance: "Émargement",
+        attendanceDescription: "Téléchargez les feuilles d'émargement signées pour vos archives.",
         teachers: "Formateurs",
         students: "Stagiaires",
         noUpcomingSessions: "Aucune session à venir",
@@ -102,12 +113,18 @@ const defaultTranslations: Record<string, Record<string, string>> = {
         classSession: "Session de cours",
         online: "En ligne",
         onsite: "Présentiel",
+        homework: "Travail personnel",
         time: "Horaire :",
         teacher: "Formateur :",
         joinVideo: "Rejoindre la visio",
         today: "Aujourd'hui",
         month: "Mois",
         week: "Semaine",
+        pickDate: "Choisir une date",
+        download: "Télécharger PDF",
+        downloading: "Téléchargement...",
+        exportError: "Échec de l'export. Veuillez réessayer.",
+        noSessions: "Aucune session trouvée pour cette période.",
     },
     de: {
         loading: "Laden...",
@@ -116,6 +133,8 @@ const defaultTranslations: Record<string, Record<string, string>> = {
         upcomingSessions: "Kommende",
         resources: "Ressourcen",
         participants: "Teilnehmer",
+        attendance: "Anwesenheit",
+        attendanceDescription: "Laden Sie unterschriebene Anwesenheitslisten herunter.",
         teachers: "Lehrer",
         students: "Schüler",
         noUpcomingSessions: "Keine kommenden Sitzungen",
@@ -123,12 +142,18 @@ const defaultTranslations: Record<string, Record<string, string>> = {
         classSession: "Unterricht",
         online: "Online",
         onsite: "Vor Ort",
+        homework: "Hausaufgabe",
         time: "Zeit:",
         teacher: "Lehrer:",
         joinVideo: "Video beitreten",
         today: "Heute",
         month: "Monat",
         week: "Woche",
+        pickDate: "Datum auswählen",
+        download: "PDF herunterladen",
+        downloading: "Wird heruntergeladen...",
+        exportError: "Export fehlgeschlagen. Bitte erneut versuchen.",
+        noSessions: "Keine Sitzungen für diesen Zeitraum gefunden.",
     },
     es: {
         loading: "Cargando...",
@@ -137,6 +162,8 @@ const defaultTranslations: Record<string, Record<string, string>> = {
         upcomingSessions: "Próximas",
         resources: "Recursos",
         participants: "Participantes",
+        attendance: "Asistencia",
+        attendanceDescription: "Descarga las hojas de asistencia firmadas para tus registros.",
         teachers: "Profesores",
         students: "Estudiantes",
         noUpcomingSessions: "No hay sesiones próximas",
@@ -144,12 +171,18 @@ const defaultTranslations: Record<string, Record<string, string>> = {
         classSession: "Sesión de clase",
         online: "En línea",
         onsite: "Presencial",
+        homework: "Tarea",
         time: "Hora:",
         teacher: "Profesor:",
         joinVideo: "Unirse al video",
         today: "Hoy",
         month: "Mes",
         week: "Semana",
+        pickDate: "Elegir fecha",
+        download: "Descargar PDF",
+        downloading: "Descargando...",
+        exportError: "Error al exportar. Intente de nuevo.",
+        noSessions: "No se encontraron sesiones para este período.",
     },
     ru: {
         loading: "Загрузка...",
@@ -158,6 +191,8 @@ const defaultTranslations: Record<string, Record<string, string>> = {
         upcomingSessions: "Предстоящие",
         resources: "Ресурсы",
         participants: "Участники",
+        attendance: "Посещаемость",
+        attendanceDescription: "Скачайте подписанные листы посещаемости для ваших записей.",
         teachers: "Преподаватели",
         students: "Студенты",
         noUpcomingSessions: "Нет предстоящих сессий",
@@ -165,12 +200,18 @@ const defaultTranslations: Record<string, Record<string, string>> = {
         classSession: "Занятие",
         online: "Онлайн",
         onsite: "Очно",
+        homework: "Домашнее задание",
         time: "Время:",
         teacher: "Преподаватель:",
         joinVideo: "Присоединиться к видео",
         today: "Сегодня",
         month: "Месяц",
         week: "Неделя",
+        pickDate: "Выбрать дату",
+        download: "Скачать PDF",
+        downloading: "Загрузка...",
+        exportError: "Ошибка экспорта. Попробуйте снова.",
+        noSessions: "Сессии за этот период не найдены.",
     },
     uk: {
         loading: "Завантаження...",
@@ -178,7 +219,9 @@ const defaultTranslations: Record<string, Record<string, string>> = {
         calendar: "Календар",
         upcomingSessions: "Майбутні",
         resources: "Ресурси",
-        participants: "Участники",
+        participants: "Учасники",
+        attendance: "Відвідуваність",
+        attendanceDescription: "Завантажте підписані листи відвідуваності для ваших записів.",
         teachers: "Викладачі",
         students: "Студенти",
         noUpcomingSessions: "Немає майбутніх сесій",
@@ -186,12 +229,18 @@ const defaultTranslations: Record<string, Record<string, string>> = {
         classSession: "Заняття",
         online: "Онлайн",
         onsite: "Очно",
+        homework: "Домашнє завдання",
         time: "Час:",
         teacher: "Викладач:",
         joinVideo: "Приєднатися до відео",
         today: "Сьогодні",
         month: "Місяць",
         week: "Тиждень",
+        pickDate: "Вибрати дату",
+        download: "Завантажити PDF",
+        downloading: "Завантаження...",
+        exportError: "Помилка експорту. Спробуйте ще раз.",
+        noSessions: "Сесії за цей період не знайдено.",
     },
     pt: {
         loading: "A carregar...",
@@ -200,6 +249,8 @@ const defaultTranslations: Record<string, Record<string, string>> = {
         upcomingSessions: "Próximas",
         resources: "Recursos",
         participants: "Participantes",
+        attendance: "Presenças",
+        attendanceDescription: "Descarregue as folhas de presença assinadas para os seus registos.",
         teachers: "Professores",
         students: "Estudantes",
         noUpcomingSessions: "Sem sessões agendadas",
@@ -207,12 +258,18 @@ const defaultTranslations: Record<string, Record<string, string>> = {
         classSession: "Aula",
         online: "Online",
         onsite: "Presencial",
+        homework: "Trabalho pessoal",
         time: "Hora:",
         teacher: "Professor:",
         joinVideo: "Entrar no vídeo",
         today: "Hoje",
         month: "Mês",
         week: "Semana",
+        pickDate: "Escolher data",
+        download: "Descarregar PDF",
+        downloading: "A descarregar...",
+        exportError: "Falha ao exportar. Tente novamente.",
+        noSessions: "Nenhuma sessão encontrada para este período.",
     },
 }
 
@@ -230,7 +287,7 @@ export function PublicClassroomView({
     logoText = "KlassFlow",
     badgeText = "Cloud"
 }: PublicClassroomViewProps) {
-    const [activeTab, setActiveTab] = useState<"calendar" | "upcoming" | "resources" | "participants">("calendar")
+    const [activeTab, setActiveTab] = useState<"calendar" | "upcoming" | "resources" | "participants" | "attendance">("calendar")
     const [lang, setLang] = useState<string>(() => {
         if (typeof window !== "undefined") {
             return localStorage.getItem("publicClassroomLang") || detectBrowserLanguage()
@@ -378,6 +435,13 @@ export function PublicClassroomView({
                         <Users className="w-4 h-4 mr-2" />
                         {t("participants")}
                     </Button>
+                    <Button
+                        variant={activeTab === "attendance" ? "default" : "outline"}
+                        onClick={() => setActiveTab("attendance")}
+                    >
+                        <FileText className="w-4 h-4 mr-2" />
+                        {t("attendance")}
+                    </Button>
                 </div>
 
                 {/* Calendar Tab */}
@@ -508,6 +572,25 @@ export function PublicClassroomView({
                             )}
                         </div>
                     </div>
+                )}
+
+                {/* Attendance Tab */}
+                {activeTab === "attendance" && (
+                    <PublicAttendanceExporter
+                        classroomId={classroom.id}
+                        lang={lang}
+                        translations={{
+                            attendance: t("attendance"),
+                            attendanceDescription: t("attendanceDescription"),
+                            week: t("week"),
+                            month: t("month"),
+                            pickDate: t("pickDate"),
+                            download: t("download"),
+                            downloading: t("downloading"),
+                            exportError: t("exportError"),
+                            noSessions: t("noSessions"),
+                        }}
+                    />
                 )}
             </div>
         </div>
