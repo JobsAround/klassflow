@@ -164,7 +164,10 @@
         "missedSessionsTitle": "Sesiones perdidas",
         "missedSessionsDescription": "Te faltan firmas para las siguientes sesiones pasadas. Por favor fírmalas ahora.",
         "signButton": "Firmar",
-        "signed": "Firmado"
+        "signed": "Firmado",
+        "online": "En línea",
+        "onsite": "Presencial",
+        "homework": "Tarea"
     },
     "publicClassroom": {
         "loading": "Cargando...",

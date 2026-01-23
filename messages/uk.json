@@ -164,7 +164,10 @@
         "missedSessionsTitle": "Пропущені заняття",
         "missedSessionsDescription": "У вас відсутні підписи за наступні минулі заняття. Будь ласка, підпишіть їх зараз.",
         "signButton": "Підписати",
-        "signed": "Підписано"
+        "signed": "Підписано",
+        "online": "Онлайн",
+        "onsite": "Очно",
+        "homework": "Домашнє завдання"
     },
     "publicClassroom": {
         "loading": "Завантаження...",

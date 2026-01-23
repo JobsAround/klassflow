@@ -164,7 +164,10 @@
         "missedSessionsTitle": "Séances manquées",
         "missedSessionsDescription": "Vous avez manqué la signature pour les séances passées suivantes. Veuillez les signer maintenant.",
         "signButton": "Signer",
-        "signed": "Signé"
+        "signed": "Signé",
+        "online": "En ligne",
+        "onsite": "En présentiel",
+        "homework": "Travail personnel"
     },
     "publicClassroom": {
         "loading": "Chargement...",
