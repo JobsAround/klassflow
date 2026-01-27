@@ -1,7 +1,7 @@
 "use client"
 
-import { useState, useEffect, useMemo } from "react"
-import { Calendar, FileText, Users, User, Loader2, Clock, Globe, Video, GraduationCap } from "lucide-react"
+import { useState, useEffect, useMemo, useCallback } from "react"
+import { Calendar, FileText, Users, User, Loader2, Clock, Globe, Video, GraduationCap, CheckCircle2, AlertCircle } from "lucide-react"
 import { format } from "date-fns"
 import { enUS, fr, de, es, ru, uk, pt } from "date-fns/locale"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -67,6 +67,20 @@ export interface PublicClassroomViewProps {
     badgeText?: string
 }
 
+interface PendingSession {
+    id: string
+    title: string | null
+    startTime: string
+    endTime: string
+    pendingStudents: { id: string; name: string | null; email: string }[]
+}
+
+interface PendingAttendanceData {
+    pendingSessions: PendingSession[]
+    pendingCount: number
+    completedCount: number
+}
+
 const defaultTranslations: Record<string, Record<string, string>> = {
     en: {
         loading: "Loading...",
@@ -96,6 +110,13 @@ const defaultTranslations: Record<string, Record<string, string>> = {
         downloading: "Downloading...",
         exportError: "Failed to export. Please try again.",
         noSessions: "No sessions found for this period.",
+        pendingAttendance: "Pending attendance",
+        allUpToDate: "All attendance records are up to date",
+        completedAttendance: "completed attendance records",
+        inMinutes: "in {minutes} min",
+        daysAgo: "{days} days ago",
+        startsIn: "starts in",
+        exportAttendance: "Export attendance sheets",
     },
     fr: {
         loading: "Chargement...",
@@ -125,6 +146,13 @@ const defaultTranslations: Record<string, Record<string, string>> = {
         downloading: "Téléchargement...",
         exportError: "Échec de l'export. Veuillez réessayer.",
         noSessions: "Aucune session trouvée pour cette période.",
+        pendingAttendance: "Émargements en attente",
+        allUpToDate: "Tous les émargements sont à jour",
+        completedAttendance: "émargements complétés",
+        inMinutes: "dans {minutes} min",
+        daysAgo: "il y a {days} jours",
+        startsIn: "commence dans",
+        exportAttendance: "Exporter les feuilles d'émargement",
     },
     de: {
         loading: "Laden...",
@@ -154,6 +182,13 @@ const defaultTranslations: Record<string, Record<string, string>> = {
         downloading: "Wird heruntergeladen...",
         exportError: "Export fehlgeschlagen. Bitte erneut versuchen.",
         noSessions: "Keine Sitzungen für diesen Zeitraum gefunden.",
+        pendingAttendance: "Ausstehende Anwesenheit",
+        allUpToDate: "Alle Anwesenheitseinträge sind aktuell",
+        completedAttendance: "abgeschlossene Anwesenheitseinträge",
+        inMinutes: "in {minutes} Min",
+        daysAgo: "vor {days} Tagen",
+        startsIn: "beginnt in",
+        exportAttendance: "Anwesenheitslisten exportieren",
     },
     es: {
         loading: "Cargando...",
@@ -183,6 +218,13 @@ const defaultTranslations: Record<string, Record<string, string>> = {
         downloading: "Descargando...",
         exportError: "Error al exportar. Intente de nuevo.",
         noSessions: "No se encontraron sesiones para este período.",
+        pendingAttendance: "Asistencia pendiente",
+        allUpToDate: "Todos los registros de asistencia están al día",
+        completedAttendance: "registros de asistencia completados",
+        inMinutes: "en {minutes} min",
+        daysAgo: "hace {days} días",
+        startsIn: "comienza en",
+        exportAttendance: "Exportar hojas de asistencia",
     },
     ru: {
         loading: "Загрузка...",
@@ -212,6 +254,13 @@ const defaultTranslations: Record<string, Record<string, string>> = {
         downloading: "Загрузка...",
         exportError: "Ошибка экспорта. Попробуйте снова.",
         noSessions: "Сессии за этот период не найдены.",
+        pendingAttendance: "Ожидающие записи",
+        allUpToDate: "Все записи посещаемости актуальны",
+        completedAttendance: "завершённых записей посещаемости",
+        inMinutes: "через {minutes} мин",
+        daysAgo: "{days} дней назад",
+        startsIn: "начинается через",
+        exportAttendance: "Экспортировать листы посещаемости",
     },
     uk: {
         loading: "Завантаження...",
@@ -241,6 +290,13 @@ const defaultTranslations: Record<string, Record<string, string>> = {
         downloading: "Завантаження...",
         exportError: "Помилка експорту. Спробуйте ще раз.",
         noSessions: "Сесії за цей період не знайдено.",
+        pendingAttendance: "Очікувані записи",
+        allUpToDate: "Усі записи відвідуваності актуальні",
+        completedAttendance: "завершених записів відвідуваності",
+        inMinutes: "через {minutes} хв",
+        daysAgo: "{days} днів тому",
+        startsIn: "починається через",
+        exportAttendance: "Експортувати листи відвідуваності",
     },
     pt: {
         loading: "A carregar...",
@@ -270,6 +326,13 @@ const defaultTranslations: Record<string, Record<string, string>> = {
         downloading: "A descarregar...",
         exportError: "Falha ao exportar. Tente novamente.",
         noSessions: "Nenhuma sessão encontrada para este período.",
+        pendingAttendance: "Presenças pendentes",
+        allUpToDate: "Todos os registos de presença estão atualizados",
+        completedAttendance: "registos de presença concluídos",
+        inMinutes: "em {minutes} min",
+        daysAgo: "há {days} dias",
+        startsIn: "começa em",
+        exportAttendance: "Exportar folhas de presença",
     },
 }
 
@@ -340,6 +403,48 @@ export function PublicClassroomView({
     useEffect(() => {
         setNow(new Date())
     }, [])
+
+    // Pending attendance state
+    const [pendingData, setPendingData] = useState<PendingAttendanceData | null>(null)
+    const [pendingLoading, setPendingLoading] = useState(false)
+
+    const fetchPendingAttendance = useCallback(async () => {
+        setPendingLoading(true)
+        try {
+            const res = await fetch(`/api/public/classroom/${classroom.id}/pending-attendance`)
+            if (res.ok) {
+                const data = await res.json()
+                setPendingData(data)
+            }
+        } catch (error) {
+            console.error("Failed to fetch pending attendance:", error)
+        } finally {
+            setPendingLoading(false)
+        }
+    }, [classroom.id])
+
+    // Fetch pending attendance when tab is attendance
+    useEffect(() => {
+        if (activeTab === "attendance") {
+            fetchPendingAttendance()
+        }
+    }, [activeTab, fetchPendingAttendance])
+
+    // Helper to format relative time
+    const formatRelativeTime = (dateStr: string): string => {
+        if (!now) return ""
+        const date = new Date(dateStr)
+        const diffMs = date.getTime() - now.getTime()
+        const diffMinutes = Math.round(diffMs / (1000 * 60))
+        const diffDays = Math.round(-diffMs / (1000 * 60 * 60 * 24))
+
+        if (diffMinutes > 0 && diffMinutes <= 60) {
+            return t("inMinutes").replace("{minutes}", String(diffMinutes))
+        } else if (diffDays > 0) {
+            return t("daysAgo").replace("{days}", String(diffDays))
+        }
+        return ""
+    }
 
     const upcomingSessions = useMemo(() => {
         if (!now) return classroom.sessions // Show all sessions during SSR/initial render
@@ -613,21 +718,152 @@ export function PublicClassroomView({
 
                 {/* Attendance Tab */}
                 {activeTab === "attendance" && (
-                    <PublicAttendanceExporter
-                        classroomId={classroom.id}
-                        lang={lang}
-                        translations={{
-                            attendance: t("attendance"),
-                            attendanceDescription: t("attendanceDescription"),
-                            week: t("week"),
-                            month: t("month"),
-                            pickDate: t("pickDate"),
-                            download: t("download"),
-                            downloading: t("downloading"),
-                            exportError: t("exportError"),
-                            noSessions: t("noSessions"),
-                        }}
-                    />
+                    <div className="space-y-6">
+                        {/* Pending Attendance Section */}
+                        <Card>
+                            <CardHeader>
+                                <CardTitle className="flex items-center gap-2">
+                                    <AlertCircle className="w-5 h-5 text-amber-500" />
+                                    {t("pendingAttendance")}
+                                </CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                {pendingLoading ? (
+                                    <div className="flex items-center justify-center py-8">
+                                        <Loader2 className="w-6 h-6 animate-spin text-slate-400" />
+                                    </div>
+                                ) : pendingData && pendingData.pendingCount > 0 ? (
+                                    <div className="space-y-4">
+                                        {/* Group by student */}
+                                        {(() => {
+                                            // Transform data: group sessions by student
+                                            const studentMap = new Map<string, {
+                                                id: string
+                                                name: string | null
+                                                email: string
+                                                sessions: { id: string; title: string | null; startTime: string }[]
+                                            }>()
+
+                                            pendingData.pendingSessions.forEach(session => {
+                                                session.pendingStudents.forEach(student => {
+                                                    const existing = studentMap.get(student.id)
+                                                    if (existing) {
+                                                        existing.sessions.push({
+                                                            id: session.id,
+                                                            title: session.title,
+                                                            startTime: session.startTime
+                                                        })
+                                                    } else {
+                                                        studentMap.set(student.id, {
+                                                            ...student,
+                                                            sessions: [{
+                                                                id: session.id,
+                                                                title: session.title,
+                                                                startTime: session.startTime
+                                                            }]
+                                                        })
+                                                    }
+                                                })
+                                            })
+
+                                            // Sort by number of pending sessions (most first)
+                                            const studentsWithPending = Array.from(studentMap.values())
+                                                .sort((a, b) => b.sessions.length - a.sessions.length)
+
+                                            return (
+                                                <>
+                                                    <div className="text-sm font-medium text-amber-600 dark:text-amber-400">
+                                                        {studentsWithPending.length} {studentsWithPending.length === 1 ? "stagiaire" : "stagiaires"} {t("pendingAttendance").toLowerCase()}
+                                                    </div>
+                                                    {studentsWithPending.map((student) => (
+                                                        <div
+                                                            key={student.id}
+                                                            className="p-4 rounded-lg bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800"
+                                                        >
+                                                            <div className="flex items-start justify-between mb-2">
+                                                                <div className="flex items-center gap-3">
+                                                                    <div className="w-10 h-10 rounded-full bg-amber-100 dark:bg-amber-800 flex items-center justify-center">
+                                                                        <User className="w-5 h-5 text-amber-600 dark:text-amber-400" />
+                                                                    </div>
+                                                                    <div>
+                                                                        <p className="font-medium text-slate-900 dark:text-slate-100">
+                                                                            {student.name || student.email}
+                                                                        </p>
+                                                                        {student.name && (
+                                                                            <p className="text-sm text-slate-500">
+                                                                                {student.email}
+                                                                            </p>
+                                                                        )}
+                                                                    </div>
+                                                                </div>
+                                                                <Badge variant="outline" className="text-amber-600 border-amber-300">
+                                                                    {student.sessions.length} session{student.sessions.length > 1 ? "s" : ""}
+                                                                </Badge>
+                                                            </div>
+                                                            <div className="ml-13 mt-2 text-sm text-slate-600 dark:text-slate-400">
+                                                                {student.sessions
+                                                                    .sort((a, b) => new Date(b.startTime).getTime() - new Date(a.startTime).getTime())
+                                                                    .map((session, idx) => (
+                                                                        <span key={session.id}>
+                                                                            {format(new Date(session.startTime), "d MMM", { locale: dateLocale })}
+                                                                            {idx < student.sessions.length - 1 ? ", " : ""}
+                                                                        </span>
+                                                                    ))
+                                                                }
+                                                            </div>
+                                                        </div>
+                                                    ))}
+                                                </>
+                                            )
+                                        })()}
+                                        <div className="pt-4 border-t text-sm text-slate-500 flex items-center gap-2">
+                                            <CheckCircle2 className="w-4 h-4 text-green-500" />
+                                            {pendingData.completedCount} {t("completedAttendance")}
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div className="flex flex-col items-center justify-center py-8 text-center">
+                                        <CheckCircle2 className="w-12 h-12 text-green-500 mb-3" />
+                                        <p className="text-green-600 dark:text-green-400 font-medium">
+                                            {t("allUpToDate")}
+                                        </p>
+                                        {pendingData && (
+                                            <p className="text-sm text-slate-500 mt-1">
+                                                {pendingData.completedCount} {t("completedAttendance")}
+                                            </p>
+                                        )}
+                                    </div>
+                                )}
+                            </CardContent>
+                        </Card>
+
+                        {/* PDF Export Section */}
+                        <Card>
+                            <CardHeader>
+                                <CardTitle className="flex items-center gap-2">
+                                    <FileText className="w-5 h-5 text-slate-500" />
+                                    {t("exportAttendance")}
+                                </CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <PublicAttendanceExporter
+                                    classroomId={classroom.id}
+                                    lang={lang}
+                                    translations={{
+                                        attendance: t("attendance"),
+                                        attendanceDescription: t("attendanceDescription"),
+                                        week: t("week"),
+                                        month: t("month"),
+                                        pickDate: t("pickDate"),
+                                        download: t("download"),
+                                        downloading: t("downloading"),
+                                        exportError: t("exportError"),
+                                        noSessions: t("noSessions"),
+                                    }}
+                                />
+                            </CardContent>
+                        </Card>
+                    </div>
                 )}
             </div>
         </div>
