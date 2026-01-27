@@ -59,7 +59,11 @@
         "enableVideo": "Activar video",
         "enableVideoDescription": "Activar videoconferencia para esta clase.",
         "breakoutRoom": "Sala de grupos",
-        "enableBreakoutRoomDescription": "Activar una segunda sala de reuniones para dividir la clase."
+        "enableBreakoutRoomDescription": "Activar una segunda sala de reuniones para dividir la clase.",
+        "signatureMode": "Modo de firma",
+        "signatureModeDescription": "Activar firmas digitales para esta clase.",
+        "autoSignatureEmail": "Emails de firma automáticos",
+        "autoSignatureEmailDescription": "Enviar emails de solicitud de firma automáticamente 5 min antes de cada sesión."
     },
     "session": {
         "new": "Nueva sesión",

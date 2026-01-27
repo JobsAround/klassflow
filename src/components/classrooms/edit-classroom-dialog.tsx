@@ -44,6 +44,8 @@ const formSchema = z.object({
     locationOnline: z.string().optional(),
     locationOnline2: z.string().optional(),
     videoEnabled: z.boolean().optional(),
+    signatureEnabled: z.boolean().optional(),
+    autoSignatureEmailEnabled: z.boolean().optional(),
 })
 
 interface EditClassroomDialogProps {
@@ -55,6 +57,8 @@ interface EditClassroomDialogProps {
         locationOnline: string | null
         locationOnline2: string | null
         videoEnabled: boolean
+        signatureEnabled: boolean
+        autoSignatureEmailEnabled: boolean
     }
 }
 
@@ -73,6 +77,8 @@ export function EditClassroomDialog({ classroom }: EditClassroomDialogProps) {
             locationOnline: classroom.locationOnline || "",
             locationOnline2: classroom.locationOnline2 || "",
             videoEnabled: classroom.videoEnabled,
+            signatureEnabled: classroom.signatureEnabled,
+            autoSignatureEmailEnabled: classroom.autoSignatureEmailEnabled,
         },
     })
 
@@ -210,6 +216,56 @@ export function EditClassroomDialog({ classroom }: EditClassroomDialogProps) {
                                                 onCheckedChange={(checked) =>
                                                     field.onChange(checked ? "ENABLED" : "")
                                                 }
+                                            />
+                                        </FormControl>
+                                    </FormItem>
+                                )}
+                            />
+                        )}
+
+                        <FormField
+                            control={form.control}
+                            name="signatureEnabled"
+                            render={({ field }) => (
+                                <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                                    <div className="space-y-0.5">
+                                        <FormLabel className="text-base">{t('signatureMode')}</FormLabel>
+                                        <DialogDescription>
+                                            {t('signatureModeDescription')}
+                                        </DialogDescription>
+                                    </div>
+                                    <FormControl>
+                                        <Switch
+                                            checked={field.value}
+                                            onCheckedChange={(checked) => {
+                                                field.onChange(checked)
+                                                // Disable auto email when signature is disabled
+                                                if (!checked) {
+                                                    form.setValue("autoSignatureEmailEnabled", false)
+                                                }
+                                            }}
+                                        />
+                                    </FormControl>
+                                </FormItem>
+                            )}
+                        />
+
+                        {form.watch("signatureEnabled") && (
+                            <FormField
+                                control={form.control}
+                                name="autoSignatureEmailEnabled"
+                                render={({ field }) => (
+                                    <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                                        <div className="space-y-0.5">
+                                            <FormLabel className="text-base">{t('autoSignatureEmail')}</FormLabel>
+                                            <DialogDescription>
+                                                {t('autoSignatureEmailDescription')}
+                                            </DialogDescription>
+                                        </div>
+                                        <FormControl>
+                                            <Switch
+                                                checked={field.value}
+                                                onCheckedChange={field.onChange}
                                             />
                                         </FormControl>
                                     </FormItem>

@@ -59,7 +59,11 @@
         "enableVideo": "Activer la visio",
         "enableVideoDescription": "Activer la visio-conférence pour cette classe.",
         "breakoutRoom": "Seconde salle vidéo",
-        "enableBreakoutRoomDescription": "Activer une seconde salle de réunion pour diviser la classe."
+        "enableBreakoutRoomDescription": "Activer une seconde salle de réunion pour diviser la classe.",
+        "signatureMode": "Mode signature",
+        "signatureModeDescription": "Activer les signatures numériques pour cette classe.",
+        "autoSignatureEmail": "Emails de signature automatiques",
+        "autoSignatureEmailDescription": "Envoyer automatiquement les demandes de signature 5 min avant chaque séance."
     },
     "session": {
         "new": "Nouvelle séance",

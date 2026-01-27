@@ -59,7 +59,11 @@
         "enableVideo": "Enable Video",
         "enableVideoDescription": "Enable video conferencing for this classroom.",
         "breakoutRoom": "Breakout Room",
-        "enableBreakoutRoomDescription": "Enable a second video meeting room for splitting the class."
+        "enableBreakoutRoomDescription": "Enable a second video meeting room for splitting the class.",
+        "signatureMode": "Signature Mode",
+        "signatureModeDescription": "Enable digital signatures for this classroom.",
+        "autoSignatureEmail": "Automatic Signature Emails",
+        "autoSignatureEmailDescription": "Automatically send signature request emails 5 min before each session."
     },
     "session": {
         "new": "New Session",

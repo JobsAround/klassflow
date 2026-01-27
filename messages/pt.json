@@ -59,7 +59,11 @@
         "enableVideo": "Ativar vídeo",
         "enableVideoDescription": "Ativar videoconferência para esta turma.",
         "breakoutRoom": "Sala secundária",
-        "enableBreakoutRoomDescription": "Ativar uma segunda sala de vídeo para dividir a turma."
+        "enableBreakoutRoomDescription": "Ativar uma segunda sala de vídeo para dividir a turma.",
+        "signatureMode": "Modo de assinatura",
+        "signatureModeDescription": "Ativar assinaturas digitais para esta turma.",
+        "autoSignatureEmail": "Emails de assinatura automáticos",
+        "autoSignatureEmailDescription": "Enviar emails de pedido de assinatura automaticamente 5 min antes de cada sessão."
     },
     "session": {
         "new": "Nova sessão",

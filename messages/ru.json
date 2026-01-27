@@ -59,7 +59,11 @@
         "enableVideo": "Включить видео",
         "enableVideoDescription": "Включить видеоконференцию для этого класса.",
         "breakoutRoom": "Комната для групп",
-        "enableBreakoutRoomDescription": "Включить вторую комнату для видеоконференций для разделения класса."
+        "enableBreakoutRoomDescription": "Включить вторую комнату для видеоконференций для разделения класса.",
+        "signatureMode": "Режим подписи",
+        "signatureModeDescription": "Включить цифровые подписи для этого класса.",
+        "autoSignatureEmail": "Автоматические письма для подписи",
+        "autoSignatureEmailDescription": "Автоматически отправлять запросы на подпись за 5 мин до каждого занятия."
     },
     "session": {
         "new": "Новое занятие",

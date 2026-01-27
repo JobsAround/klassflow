@@ -59,7 +59,11 @@
         "enableVideo": "Video aktivieren",
         "enableVideoDescription": "Videokonferenzen für diese Klasse aktivieren.",
         "breakoutRoom": "Breakout-Raum",
-        "enableBreakoutRoomDescription": "Einen zweiten Videokonferenzraum zum Aufteilen der Klasse aktivieren."
+        "enableBreakoutRoomDescription": "Einen zweiten Videokonferenzraum zum Aufteilen der Klasse aktivieren.",
+        "signatureMode": "Signaturmodus",
+        "signatureModeDescription": "Digitale Signaturen für diese Klasse aktivieren.",
+        "autoSignatureEmail": "Automatische Signatur-E-Mails",
+        "autoSignatureEmailDescription": "Signaturanfrage-E-Mails automatisch 5 Min. vor jeder Sitzung senden."
     },
     "session": {
         "new": "Neue Sitzung",

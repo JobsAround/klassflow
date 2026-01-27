@@ -18,7 +18,7 @@ export async function PATCH(
 
         const { id } = await params
         const body = await req.json()
-        const { name, description, locationOnSite, locationOnline, locationOnline2, videoEnabled } = body
+        const { name, description, locationOnSite, locationOnline, locationOnline2, videoEnabled, signatureEnabled, autoSignatureEmailEnabled } = body
 
         if (!name) {
             return NextResponse.json({ error: "Name is required" }, { status: 400 })
@@ -44,7 +44,9 @@ export async function PATCH(
                 locationOnSite,
                 locationOnline,
                 locationOnline2,
-                ...(videoEnabled !== undefined && { videoEnabled })
+                ...(videoEnabled !== undefined && { videoEnabled }),
+                ...(signatureEnabled !== undefined && { signatureEnabled }),
+                ...(autoSignatureEmailEnabled !== undefined && { autoSignatureEmailEnabled })
             }
         })
 

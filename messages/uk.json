@@ -59,7 +59,11 @@
         "enableVideo": "Увімкнути відео",
         "enableVideoDescription": "Увімкнути відеоконференцію для цього класу.",
         "breakoutRoom": "Кімната для груп",
-        "enableBreakoutRoomDescription": "Увімкнути другу відеокімнату для поділу класу."
+        "enableBreakoutRoomDescription": "Увімкнути другу відеокімнату для поділу класу.",
+        "signatureMode": "Режим підпису",
+        "signatureModeDescription": "Увімкнути цифрові підписи для цього класу.",
+        "autoSignatureEmail": "Автоматичні листи для підпису",
+        "autoSignatureEmailDescription": "Автоматично надсилати запити на підпис за 5 хв до кожного заняття."
     },
     "session": {
         "new": "Нове заняття",
