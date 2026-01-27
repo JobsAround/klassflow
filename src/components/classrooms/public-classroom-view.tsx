@@ -816,10 +816,12 @@ export function PublicClassroomView({
                                                 </>
                                             )
                                         })()}
-                                        <div className="pt-4 border-t text-sm text-slate-500 flex items-center gap-2">
-                                            <CheckCircle2 className="w-4 h-4 text-green-500" />
-                                            {pendingData.completedCount} {t("completedAttendance")}
-                                        </div>
+                                        {pendingData.completedCount > 0 && (
+                                            <div className="pt-4 border-t text-sm text-slate-500 flex items-center gap-2">
+                                                <CheckCircle2 className="w-4 h-4 text-green-500" />
+                                                {pendingData.completedCount} {t("completedAttendance")}
+                                            </div>
+                                        )}
                                     </div>
                                 ) : (
                                     <div className="flex flex-col items-center justify-center py-8 text-center">
@@ -827,7 +829,7 @@ export function PublicClassroomView({
                                         <p className="text-green-600 dark:text-green-400 font-medium">
                                             {t("allUpToDate")}
                                         </p>
-                                        {pendingData && (
+                                        {pendingData && pendingData.completedCount > 0 && (
                                             <p className="text-sm text-slate-500 mt-1">
                                                 {pendingData.completedCount} {t("completedAttendance")}
                                             </p>
