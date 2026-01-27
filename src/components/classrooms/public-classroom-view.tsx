@@ -111,6 +111,8 @@ const defaultTranslations: Record<string, Record<string, string>> = {
         exportError: "Failed to export. Please try again.",
         noSessions: "No sessions found for this period.",
         pendingAttendance: "Pending attendance",
+        pendingSignature: "pending signature",
+        pendingSignatures: "pending signatures",
         allUpToDate: "All attendance records are up to date",
         completedAttendance: "completed attendance records",
         inMinutes: "in {minutes} min",
@@ -147,6 +149,8 @@ const defaultTranslations: Record<string, Record<string, string>> = {
         exportError: "Échec de l'export. Veuillez réessayer.",
         noSessions: "Aucune session trouvée pour cette période.",
         pendingAttendance: "Émargements en attente",
+        pendingSignature: "émargement en attente",
+        pendingSignatures: "émargements en attente",
         allUpToDate: "Tous les émargements sont à jour",
         completedAttendance: "émargements complétés",
         inMinutes: "dans {minutes} min",
@@ -183,6 +187,8 @@ const defaultTranslations: Record<string, Record<string, string>> = {
         exportError: "Export fehlgeschlagen. Bitte erneut versuchen.",
         noSessions: "Keine Sitzungen für diesen Zeitraum gefunden.",
         pendingAttendance: "Ausstehende Anwesenheit",
+        pendingSignature: "ausstehende Unterschrift",
+        pendingSignatures: "ausstehende Unterschriften",
         allUpToDate: "Alle Anwesenheitseinträge sind aktuell",
         completedAttendance: "abgeschlossene Anwesenheitseinträge",
         inMinutes: "in {minutes} Min",
@@ -219,6 +225,8 @@ const defaultTranslations: Record<string, Record<string, string>> = {
         exportError: "Error al exportar. Intente de nuevo.",
         noSessions: "No se encontraron sesiones para este período.",
         pendingAttendance: "Asistencia pendiente",
+        pendingSignature: "firma pendiente",
+        pendingSignatures: "firmas pendientes",
         allUpToDate: "Todos los registros de asistencia están al día",
         completedAttendance: "registros de asistencia completados",
         inMinutes: "en {minutes} min",
@@ -255,6 +263,8 @@ const defaultTranslations: Record<string, Record<string, string>> = {
         exportError: "Ошибка экспорта. Попробуйте снова.",
         noSessions: "Сессии за этот период не найдены.",
         pendingAttendance: "Ожидающие записи",
+        pendingSignature: "ожидающая подпись",
+        pendingSignatures: "ожидающих подписей",
         allUpToDate: "Все записи посещаемости актуальны",
         completedAttendance: "завершённых записей посещаемости",
         inMinutes: "через {minutes} мин",
@@ -291,6 +301,8 @@ const defaultTranslations: Record<string, Record<string, string>> = {
         exportError: "Помилка експорту. Спробуйте ще раз.",
         noSessions: "Сесії за цей період не знайдено.",
         pendingAttendance: "Очікувані записи",
+        pendingSignature: "очікуваний підпис",
+        pendingSignatures: "очікуваних підписів",
         allUpToDate: "Усі записи відвідуваності актуальні",
         completedAttendance: "завершених записів відвідуваності",
         inMinutes: "через {minutes} хв",
@@ -327,6 +339,8 @@ const defaultTranslations: Record<string, Record<string, string>> = {
         exportError: "Falha ao exportar. Tente novamente.",
         noSessions: "Nenhuma sessão encontrada para este período.",
         pendingAttendance: "Presenças pendentes",
+        pendingSignature: "assinatura pendente",
+        pendingSignatures: "assinaturas pendentes",
         allUpToDate: "Todos os registos de presença estão atualizados",
         completedAttendance: "registos de presença concluídos",
         inMinutes: "em {minutes} min",
@@ -776,7 +790,7 @@ export function PublicClassroomView({
                                             return (
                                                 <>
                                                     <div className="text-sm font-medium text-amber-600 dark:text-amber-400">
-                                                        {studentsWithPending.length} {studentsWithPending.length === 1 ? "stagiaire" : "stagiaires"} {t("pendingAttendance").toLowerCase()}
+                                                        {studentsWithPending.length} {studentsWithPending.length === 1 ? t("pendingSignature") : t("pendingSignatures")}
                                                     </div>
                                                     {studentsWithPending.map((student) => (
                                                         <div
