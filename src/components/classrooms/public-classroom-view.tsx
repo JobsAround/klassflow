@@ -827,16 +827,18 @@ export function PublicClassroomView({
                                         )}
                                     </div>
                                 ) : (
-                                    <div className="flex flex-col items-center justify-center py-8 text-center">
-                                        <CheckCircle2 className="w-12 h-12 text-green-500 mb-3" />
-                                        <p className="text-green-600 dark:text-green-400 font-medium">
-                                            {t("allUpToDate")}
-                                        </p>
-                                        {pendingData && pendingData.completedCount > 0 && (
-                                            <p className="text-sm text-slate-500 mt-1">
-                                                {pendingData.completedCount} {t("completedAttendance")}
+                                    <div className="flex items-center gap-3 p-3 rounded-lg bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800">
+                                        <CheckCircle2 className="w-5 h-5 text-green-500 flex-shrink-0" />
+                                        <div>
+                                            <p className="text-green-700 dark:text-green-400 font-medium text-sm">
+                                                {t("allUpToDate")}
                                             </p>
-                                        )}
+                                            {pendingData && pendingData.completedCount > 0 && (
+                                                <p className="text-xs text-green-600/70 dark:text-green-500/70">
+                                                    {pendingData.completedCount} {t("completedAttendance")}
+                                                </p>
+                                            )}
+                                        </div>
                                     </div>
                                 )}
                             </CardContent>
