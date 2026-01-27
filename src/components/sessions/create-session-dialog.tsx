@@ -297,9 +297,25 @@ export function CreateSessionDialog({ classrooms, teachers, organizationId }: Cr
                                                 <TimePicker
                                                     date={timeDate}
                                                     setDate={(newDate) => {
+                                                        // Calculate current duration
+                                                        const currentStartTime = field.value
+                                                        const currentEndTime = form.getValues("endTime")
+                                                        const [startH, startM] = currentStartTime.split(":").map(Number)
+                                                        const [endH, endM] = currentEndTime.split(":").map(Number)
+                                                        const durationMinutes = (endH * 60 + endM) - (startH * 60 + startM)
+
+                                                        // Update start time
                                                         const h = newDate.getHours().toString().padStart(2, '0')
                                                         const m = newDate.getMinutes().toString().padStart(2, '0')
                                                         field.onChange(`${h}:${m}`)
+
+                                                        // Update end time to maintain duration
+                                                        if (durationMinutes > 0) {
+                                                            const newEndDate = addMinutes(newDate, durationMinutes)
+                                                            const newEndH = newEndDate.getHours().toString().padStart(2, '0')
+                                                            const newEndM = newEndDate.getMinutes().toString().padStart(2, '0')
+                                                            form.setValue("endTime", `${newEndH}:${newEndM}`)
+                                                        }
                                                     }}
                                                 />
                                             </FormControl>
