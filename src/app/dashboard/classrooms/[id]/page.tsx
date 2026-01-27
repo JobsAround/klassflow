@@ -161,12 +161,12 @@ export default async function ClassroomDetailPage({ params }: { params: any }) {
                 </Card>
             </div>
 
-            {/* Settings (Disabled) */}
-            {/* <ClassroomSettings
+            {/* Settings */}
+            <ClassroomSettings
                 classroomId={classroom.id}
                 initialSignatureEnabled={classroom.signatureEnabled}
-            /> */}
-
+                initialAutoSignatureEmailEnabled={classroom.autoSignatureEmailEnabled}
+            />
 
             {/* Session Manager */}
             <SessionManager

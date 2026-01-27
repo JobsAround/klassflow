@@ -224,5 +224,13 @@
             "dashboard": "Dashboard",
             "logout": "Logout"
         }
+    },
+    "ClassroomSettings": {
+        "title": "Settings",
+        "description": "Manage classroom configuration",
+        "signatureMode": "Signature Mode",
+        "signatureModeDescription": "Enable or disable digital signatures for this classroom. Disabling will notify administrators.",
+        "autoSignatureEmail": "Automatic Signature Emails",
+        "autoSignatureEmailDescription": "Automatically send signature request emails 5 minutes before each session starts."
     }
 }

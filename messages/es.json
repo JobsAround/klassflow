@@ -224,5 +224,13 @@
             "dashboard": "Panel de control",
             "logout": "Cerrar sesión"
         }
+    },
+    "ClassroomSettings": {
+        "title": "Configuración",
+        "description": "Gestionar la configuración del aula",
+        "signatureMode": "Modo de firma",
+        "signatureModeDescription": "Activar o desactivar las firmas digitales para esta aula. La desactivación notificará a los administradores.",
+        "autoSignatureEmail": "Emails de firma automáticos",
+        "autoSignatureEmailDescription": "Enviar automáticamente emails de solicitud de firma 5 minutos antes del inicio de cada sesión."
     }
 }

@@ -1,30 +1,42 @@
 "use client"
 
 import { useState } from "react"
+import { useTranslations } from "next-intl"
 import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 
 export function ClassroomSettings({
     classroomId,
-    initialSignatureEnabled
+    initialSignatureEnabled,
+    initialAutoSignatureEmailEnabled = false
 }: {
     classroomId: string
     initialSignatureEnabled: boolean
+    initialAutoSignatureEmailEnabled?: boolean
 }) {
-    const [enabled, setEnabled] = useState(initialSignatureEnabled)
+    const t = useTranslations("ClassroomSettings")
+    const [signatureEnabled, setSignatureEnabled] = useState(initialSignatureEnabled)
+    const [autoEmailEnabled, setAutoEmailEnabled] = useState(initialAutoSignatureEmailEnabled)
     const [loading, setLoading] = useState(false)
 
-    const handleToggle = async (checked: boolean) => {
+    const handleSignatureToggle = async (checked: boolean) => {
         setLoading(true)
-        // Optimistic update
-        setEnabled(checked)
+        setSignatureEnabled(checked)
+
+        // If disabling signatures, also disable auto-emails
+        if (!checked && autoEmailEnabled) {
+            setAutoEmailEnabled(false)
+        }
 
         try {
             const res = await fetch(`/api/classrooms/${classroomId}/settings`, {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ signatureEnabled: checked })
+                body: JSON.stringify({
+                    signatureEnabled: checked,
+                    ...((!checked && autoEmailEnabled) && { autoSignatureEmailEnabled: false })
+                })
             })
 
             if (!res.ok) {
@@ -32,8 +44,33 @@ export function ClassroomSettings({
             }
         } catch (error) {
             console.error("Update failed:", error)
-            // Revert
-            setEnabled(!checked)
+            setSignatureEnabled(!checked)
+            if (!checked && autoEmailEnabled) {
+                setAutoEmailEnabled(true)
+            }
+            alert("Failed to update settings")
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    const handleAutoEmailToggle = async (checked: boolean) => {
+        setLoading(true)
+        setAutoEmailEnabled(checked)
+
+        try {
+            const res = await fetch(`/api/classrooms/${classroomId}/settings`, {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ autoSignatureEmailEnabled: checked })
+            })
+
+            if (!res.ok) {
+                throw new Error("Failed to update settings")
+            }
+        } catch (error) {
+            console.error("Update failed:", error)
+            setAutoEmailEnabled(!checked)
             alert("Failed to update settings")
         } finally {
             setLoading(false)
@@ -43,23 +80,37 @@ export function ClassroomSettings({
     return (
         <Card>
             <CardHeader>
-                <CardTitle>Settings</CardTitle>
-                <CardDescription>Manage classroom configuration</CardDescription>
+                <CardTitle>{t("title")}</CardTitle>
+                <CardDescription>{t("description")}</CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="space-y-6">
                 <div className="flex items-center justify-between space-x-2">
                     <div className="space-y-0.5">
-                        <Label htmlFor="signature-mode">Signature Mode</Label>
+                        <Label htmlFor="signature-mode">{t("signatureMode")}</Label>
                         <p className="text-sm text-slate-500">
-                            Enable or disable digital signatures for this classroom.
-                            Disabling will notify administrators.
+                            {t("signatureModeDescription")}
                         </p>
                     </div>
                     <Switch
                         id="signature-mode"
-                        checked={enabled}
-                        onCheckedChange={handleToggle}
+                        checked={signatureEnabled}
+                        onCheckedChange={handleSignatureToggle}
                         disabled={loading}
+                    />
+                </div>
+
+                <div className="flex items-center justify-between space-x-2">
+                    <div className="space-y-0.5">
+                        <Label htmlFor="auto-signature-email">{t("autoSignatureEmail")}</Label>
+                        <p className="text-sm text-slate-500">
+                            {t("autoSignatureEmailDescription")}
+                        </p>
+                    </div>
+                    <Switch
+                        id="auto-signature-email"
+                        checked={autoEmailEnabled}
+                        onCheckedChange={handleAutoEmailToggle}
+                        disabled={loading || !signatureEnabled}
                     />
                 </div>
             </CardContent>

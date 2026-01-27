@@ -15,7 +15,7 @@ export async function PATCH(
         }
 
         const { id } = await params
-        const { signatureEnabled, isPublic } = await req.json()
+        const { signatureEnabled, isPublic, autoSignatureEmailEnabled } = await req.json()
 
         const classroom = await prisma.classroom.findUnique({
             where: { id },
@@ -34,6 +34,7 @@ export async function PATCH(
         const data: any = {}
         if (typeof signatureEnabled !== 'undefined') data.signatureEnabled = signatureEnabled
         if (typeof isPublic !== 'undefined') data.shareEnabled = isPublic
+        if (typeof autoSignatureEmailEnabled !== 'undefined') data.autoSignatureEmailEnabled = autoSignatureEmailEnabled
 
         // Update settings
         const updatedClassroom = await prisma.classroom.update({

@@ -88,8 +88,9 @@ model Classroom {
   enrollments    ClassroomEnrollment[]
   
   // Settings
-  signatureEnabled Boolean @default(true)
-  videoEnabled     Boolean @default(true)
+  signatureEnabled          Boolean @default(true)
+  videoEnabled              Boolean @default(true)
+  autoSignatureEmailEnabled Boolean @default(false)
   locationOnSite   String?
   locationOnline   String?
   locationOnline2  String?
@@ -110,12 +111,13 @@ model ClassSession {
   calendarEventId    String?
   
   // Notification settings
-  reminderEnabled       Boolean @default(true)
-  reminderHoursBefore   Int     @default(24) // Hours before class to send reminder
-  reminderMinutesBefore Int     @default(0)  // Minutes before class to send reminder
-  signatureMinutesBefore Int    @default(5)  // Minutes before class to send signature email
-  pin                    String?      // PIN for teacher to unlock device sharing mode
-  teacherSignature       String?      // Base64 signature data for the teacher
+  reminderEnabled            Boolean   @default(true)
+  reminderHoursBefore        Int       @default(24) // Hours before class to send reminder
+  reminderMinutesBefore      Int       @default(0)  // Minutes before class to send reminder
+  signatureMinutesBefore     Int       @default(5)  // Minutes before class to send signature email
+  autoSignatureEmailSentAt   DateTime?              // When automatic signature emails were sent
+  pin                        String?                // PIN for teacher to unlock device sharing mode
+  teacherSignature           String?                // Base64 signature data for the teacher
 
   classroomId String
   classroom   Classroom @relation(fields: [classroomId], references: [id])

@@ -180,12 +180,12 @@ export default async function ClassroomPage({ params }: { params: Promise<{ id: 
             </div>
 
 
-            {/* Settings (Disabled) */}
-            {/* <ClassroomSettings
+            {/* Settings */}
+            <ClassroomSettings
                 classroomId={classroom.id}
                 initialSignatureEnabled={classroom.signatureEnabled}
-            /> */}
-
+                initialAutoSignatureEmailEnabled={classroom.autoSignatureEmailEnabled}
+            />
 
             {/* Session Manager */}
             <SessionManager

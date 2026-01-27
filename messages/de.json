@@ -224,5 +224,13 @@
             "dashboard": "Dashboard",
             "logout": "Abmelden"
         }
+    },
+    "ClassroomSettings": {
+        "title": "Einstellungen",
+        "description": "Klassenraumkonfiguration verwalten",
+        "signatureMode": "Signaturmodus",
+        "signatureModeDescription": "Aktivieren oder deaktivieren Sie digitale Signaturen für diesen Klassenraum. Bei Deaktivierung werden Administratoren benachrichtigt.",
+        "autoSignatureEmail": "Automatische Signatur-E-Mails",
+        "autoSignatureEmailDescription": "Senden Sie automatisch Signaturanfrage-E-Mails 5 Minuten vor Beginn jeder Sitzung."
     }
 }
