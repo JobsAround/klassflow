@@ -361,12 +361,15 @@ export function PublicClassroomView({
     badgeText = "Cloud"
 }: PublicClassroomViewProps) {
     const [activeTab, setActiveTab] = useState<TabValue>(() => getTabFromHash())
-    const [lang, setLang] = useState<string>(() => {
-        if (typeof window !== "undefined") {
-            return localStorage.getItem("publicClassroomLang") || detectBrowserLanguage()
-        }
-        return "en"
-    })
+    // Start with "en" to match server render, then update on client
+    const [lang, setLang] = useState<string>("en")
+    const [langInitialized, setLangInitialized] = useState(false)
+
+    useEffect(() => {
+        const savedLang = localStorage.getItem("publicClassroomLang") || detectBrowserLanguage()
+        setLang(savedLang)
+        setLangInitialized(true)
+    }, [])
 
     // Handle URL hash changes (browser back/forward)
     useEffect(() => {
