@@ -656,7 +656,13 @@ export async function generateAttendancePDFv2(data: AttendanceData, locale: stri
     const url = URL.createObjectURL(blob)
     const link = document.createElement('a')
     link.href = url
-    link.download = `presence_${data.classroomName.replace(/\s+/g, '_')}_${format(new Date(), "yyyyMMdd")}.pdf`
+
+    // Format: presence_ClassroomName_20260101_20260131.pdf
+    const startStr = format(new Date(data.startDate), "yyyyMMdd")
+    const endStr = format(new Date(data.endDate), "yyyyMMdd")
+    const classroomSlug = data.classroomName.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_-]/g, '')
+    link.download = `presence_${classroomSlug}_${startStr}_${endStr}.pdf`
+
     document.body.appendChild(link)
     link.click()
     document.body.removeChild(link)
