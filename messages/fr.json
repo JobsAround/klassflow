@@ -127,7 +127,9 @@
         "description": "Gérer les séances et voir les cours à venir",
         "week": "Semaine",
         "month": "Mois",
-        "exportAttendance": "Exporter les présences"
+        "exportAttendance": "Exporter les présences",
+        "selectDates": "Sélectionner les dates",
+        "exporting": "Export en cours..."
     },
     "common": {
         "loading": "Chargement...",

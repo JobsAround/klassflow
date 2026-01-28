@@ -127,7 +127,9 @@
         "description": "Manage class sessions and view upcoming classes",
         "week": "Week",
         "month": "Month",
-        "exportAttendance": "Export attendance"
+        "exportAttendance": "Export attendance",
+        "selectDates": "Select dates",
+        "exporting": "Exporting..."
     },
     "common": {
         "loading": "Loading...",

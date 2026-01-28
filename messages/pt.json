@@ -127,7 +127,9 @@
         "description": "Gerir sessões e ver aulas futuras",
         "week": "Semana",
         "month": "Mês",
-        "exportAttendance": "Exportar presenças"
+        "exportAttendance": "Exportar presenças",
+        "selectDates": "Selecionar datas",
+        "exporting": "A exportar..."
     },
     "common": {
         "loading": "A carregar...",

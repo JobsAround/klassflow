@@ -3,14 +3,14 @@
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Calendar as CalendarIcon, Download, Loader2 } from "lucide-react"
-import { format } from "date-fns"
+import { format, startOfMonth, endOfMonth } from "date-fns"
 import { enUS, fr, de, es, ru, uk, pt } from 'date-fns/locale'
 import { generateAttendancePDFv2 } from "@/lib/pdf-attendance"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Calendar } from "@/components/ui/calendar"
 import { cn } from "@/lib/utils"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import type { DateRange } from "react-day-picker"
 
 interface PublicAttendanceExporterProps {
     classroomId: string
@@ -18,9 +18,7 @@ interface PublicAttendanceExporterProps {
     translations: {
         attendance: string
         attendanceDescription: string
-        week: string
-        month: string
-        pickDate: string
+        selectDates: string
         download: string
         downloading: string
         exportError: string
@@ -41,19 +39,25 @@ const dateLocaleMap: Record<string, any> = {
 export function PublicAttendanceExporter({ classroomId, lang, translations: t }: PublicAttendanceExporterProps) {
     const dateLocale = dateLocaleMap[lang] || enUS
 
-    const [range, setRange] = useState<"week" | "month">("week")
-    const [date, setDate] = useState<Date>(new Date())
+    // Initialize with current month
+    const [dateRange, setDateRange] = useState<DateRange | undefined>({
+        from: startOfMonth(new Date()),
+        to: endOfMonth(new Date())
+    })
     const [isCalendarOpen, setIsCalendarOpen] = useState(false)
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
 
     const handleExport = async () => {
+        if (!dateRange?.from || !dateRange?.to) return
+
         setLoading(true)
         setError(null)
         try {
-            const res = await fetch(`/api/public/classroom/${classroomId}/attendance?range=${range}&date=${date.toISOString()}`, {
-                cache: 'no-store'
-            })
+            const res = await fetch(
+                `/api/public/classroom/${classroomId}/attendance?startDate=${dateRange.from.toISOString()}&endDate=${dateRange.to.toISOString()}`,
+                { cache: 'no-store' }
+            )
             if (!res.ok) {
                 const errorData = await res.json().catch(() => ({}))
                 throw new Error(errorData.error || "Failed to fetch data")
@@ -85,6 +89,12 @@ export function PublicAttendanceExporter({ classroomId, lang, translations: t }:
         }
     }
 
+    const formatDateRange = () => {
+        if (!dateRange?.from) return t.selectDates
+        if (!dateRange.to) return format(dateRange.from, "PP", { locale: dateLocale })
+        return `${format(dateRange.from, "PP", { locale: dateLocale })} - ${format(dateRange.to, "PP", { locale: dateLocale })}`
+    }
+
     return (
         <Card>
             <CardHeader>
@@ -98,47 +108,34 @@ export function PublicAttendanceExporter({ classroomId, lang, translations: t }:
             </CardHeader>
             <CardContent className="space-y-4">
                 <div className="flex flex-col sm:flex-row gap-3">
-                    <Select value={range} onValueChange={(v) => setRange(v as "week" | "month")}>
-                        <SelectTrigger className="w-full sm:w-[140px]">
-                            <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="week">{t.week}</SelectItem>
-                            <SelectItem value="month">{t.month}</SelectItem>
-                        </SelectContent>
-                    </Select>
-
                     <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
                         <PopoverTrigger asChild>
                             <Button
                                 variant="outline"
                                 className={cn(
-                                    "w-full sm:w-[240px] justify-start text-left font-normal",
-                                    !date && "text-muted-foreground"
+                                    "w-full sm:w-[300px] justify-start text-left font-normal",
+                                    !dateRange && "text-muted-foreground"
                                 )}
                             >
                                 <CalendarIcon className="mr-2 h-4 w-4" />
-                                {date ? format(date, "PPP", { locale: dateLocale }) : <span>{t.pickDate}</span>}
+                                {formatDateRange()}
                             </Button>
                         </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0">
+                        <PopoverContent className="w-auto p-0" align="start">
                             <Calendar
-                                mode="single"
-                                selected={date}
-                                onSelect={(d) => {
-                                    if (d) {
-                                        setDate(d)
-                                        setIsCalendarOpen(false)
-                                    }
-                                }}
-                                initialFocus
+                                mode="range"
+                                defaultMonth={dateRange?.from}
+                                selected={dateRange}
+                                onSelect={setDateRange}
+                                numberOfMonths={2}
+                                locale={dateLocale}
                             />
                         </PopoverContent>
                     </Popover>
 
                     <Button
                         onClick={handleExport}
-                        disabled={loading}
+                        disabled={loading || !dateRange?.from || !dateRange?.to}
                         className="w-full sm:w-auto"
                     >
                         {loading ? (

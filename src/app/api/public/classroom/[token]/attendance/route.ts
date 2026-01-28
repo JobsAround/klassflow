@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prisma"
 import { NextRequest, NextResponse } from "next/server"
-import { startOfWeek, endOfWeek, startOfMonth, endOfMonth } from "date-fns"
+import { startOfWeek, endOfWeek, startOfMonth, endOfMonth, startOfDay, endOfDay } from "date-fns"
 
 export async function GET(
     req: NextRequest,
@@ -9,9 +9,10 @@ export async function GET(
     try {
         const { token } = await params
         const url = new URL(req.url)
-        const range = url.searchParams.get("range") || "week"
-        const dateParam = url.searchParams.get("date")
-        const referenceDate = dateParam ? new Date(dateParam) : new Date()
+
+        // New: support direct startDate/endDate params
+        const startDateParam = url.searchParams.get("startDate")
+        const endDateParam = url.searchParams.get("endDate")
 
         // Find classroom by share token or ID
         const classroom = await prisma.classroom.findFirst({
@@ -37,12 +38,23 @@ export async function GET(
 
         let startDate, endDate
 
-        if (range === "month") {
-            startDate = startOfMonth(referenceDate)
-            endDate = endOfMonth(referenceDate)
+        if (startDateParam && endDateParam) {
+            // Direct date range mode
+            startDate = startOfDay(new Date(startDateParam))
+            endDate = endOfDay(new Date(endDateParam))
         } else {
-            startDate = startOfWeek(referenceDate, { weekStartsOn: 1 })
-            endDate = endOfWeek(referenceDate, { weekStartsOn: 1 })
+            // Legacy mode: range + date
+            const range = url.searchParams.get("range") || "week"
+            const dateParam = url.searchParams.get("date")
+            const referenceDate = dateParam ? new Date(dateParam) : new Date()
+
+            if (range === "month") {
+                startDate = startOfMonth(referenceDate)
+                endDate = endOfMonth(referenceDate)
+            } else {
+                startDate = startOfWeek(referenceDate, { weekStartsOn: 1 })
+                endDate = endOfWeek(referenceDate, { weekStartsOn: 1 })
+            }
         }
 
         // Fetch sessions in range
@@ -140,7 +152,6 @@ export async function GET(
             teacherName,
             startDate,
             endDate,
-            range,
             sessions,
             teacherTotalHours,
             totalStudentHours,

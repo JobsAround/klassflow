@@ -127,7 +127,9 @@
         "description": "Sitzungen verwalten und kommende Klassen anzeigen",
         "week": "Woche",
         "month": "Monat",
-        "exportAttendance": "Anwesenheit exportieren"
+        "exportAttendance": "Anwesenheit exportieren",
+        "selectDates": "Daten auswählen",
+        "exporting": "Exportieren..."
     },
     "common": {
         "loading": "Laden...",

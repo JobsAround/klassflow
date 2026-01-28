@@ -127,7 +127,9 @@
         "description": "Gestionar sesiones y ver próximas clases",
         "week": "Semana",
         "month": "Mes",
-        "exportAttendance": "Exportar asistencia"
+        "exportAttendance": "Exportar asistencia",
+        "selectDates": "Seleccionar fechas",
+        "exporting": "Exportando..."
     },
     "common": {
         "loading": "Cargando...",

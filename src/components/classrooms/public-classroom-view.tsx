@@ -119,6 +119,7 @@ const defaultTranslations: Record<string, Record<string, string>> = {
         daysAgo: "{days} days ago",
         startsIn: "starts in",
         exportAttendance: "Export attendance sheets",
+        selectDates: "Select dates",
     },
     fr: {
         loading: "Chargement...",
@@ -157,6 +158,7 @@ const defaultTranslations: Record<string, Record<string, string>> = {
         daysAgo: "il y a {days} jours",
         startsIn: "commence dans",
         exportAttendance: "Exporter les feuilles d'émargement",
+        selectDates: "Sélectionner les dates",
     },
     de: {
         loading: "Laden...",
@@ -195,6 +197,7 @@ const defaultTranslations: Record<string, Record<string, string>> = {
         daysAgo: "vor {days} Tagen",
         startsIn: "beginnt in",
         exportAttendance: "Anwesenheitslisten exportieren",
+        selectDates: "Daten auswählen",
     },
     es: {
         loading: "Cargando...",
@@ -233,6 +236,7 @@ const defaultTranslations: Record<string, Record<string, string>> = {
         daysAgo: "hace {days} días",
         startsIn: "comienza en",
         exportAttendance: "Exportar hojas de asistencia",
+        selectDates: "Seleccionar fechas",
     },
     ru: {
         loading: "Загрузка...",
@@ -271,6 +275,7 @@ const defaultTranslations: Record<string, Record<string, string>> = {
         daysAgo: "{days} дней назад",
         startsIn: "начинается через",
         exportAttendance: "Экспортировать листы посещаемости",
+        selectDates: "Выбрать даты",
     },
     uk: {
         loading: "Завантаження...",
@@ -309,6 +314,7 @@ const defaultTranslations: Record<string, Record<string, string>> = {
         daysAgo: "{days} днів тому",
         startsIn: "починається через",
         exportAttendance: "Експортувати листи відвідуваності",
+        selectDates: "Вибрати дати",
     },
     pt: {
         loading: "A carregar...",
@@ -347,6 +353,7 @@ const defaultTranslations: Record<string, Record<string, string>> = {
         daysAgo: "há {days} dias",
         startsIn: "começa em",
         exportAttendance: "Exportar folhas de presença",
+        selectDates: "Selecionar datas",
     },
 }
 
@@ -873,9 +880,7 @@ export function PublicClassroomView({
                                     translations={{
                                         attendance: t("attendance"),
                                         attendanceDescription: t("attendanceDescription"),
-                                        week: t("week"),
-                                        month: t("month"),
-                                        pickDate: t("pickDate"),
+                                        selectDates: t("selectDates"),
                                         download: t("download"),
                                         downloading: t("downloading"),
                                         exportError: t("exportError"),

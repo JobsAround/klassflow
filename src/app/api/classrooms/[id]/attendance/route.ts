@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prisma"
 import { NextResponse } from "next/server"
-import { startOfWeek, endOfWeek, startOfMonth, endOfMonth } from "date-fns"
+import { startOfWeek, endOfWeek, startOfMonth, endOfMonth, startOfDay, endOfDay } from "date-fns"
 import { getAuthUser } from "@/lib/auth-utils"
 
 export async function GET(
@@ -16,18 +16,30 @@ export async function GET(
 
         const { id } = await params
         const url = new URL(req.url)
-        const range = url.searchParams.get("range") || "week" // week or month
-        const dateParam = url.searchParams.get("date")
-        const referenceDate = dateParam ? new Date(dateParam) : new Date()
+
+        // New: support direct startDate/endDate params
+        const startDateParam = url.searchParams.get("startDate")
+        const endDateParam = url.searchParams.get("endDate")
 
         let startDate, endDate
 
-        if (range === "month") {
-            startDate = startOfMonth(referenceDate)
-            endDate = endOfMonth(referenceDate)
+        if (startDateParam && endDateParam) {
+            // Direct date range mode
+            startDate = startOfDay(new Date(startDateParam))
+            endDate = endOfDay(new Date(endDateParam))
         } else {
-            startDate = startOfWeek(referenceDate, { weekStartsOn: 1 }) // Monday
-            endDate = endOfWeek(referenceDate, { weekStartsOn: 1 })
+            // Legacy mode: range + date
+            const range = url.searchParams.get("range") || "week"
+            const dateParam = url.searchParams.get("date")
+            const referenceDate = dateParam ? new Date(dateParam) : new Date()
+
+            if (range === "month") {
+                startDate = startOfMonth(referenceDate)
+                endDate = endOfMonth(referenceDate)
+            } else {
+                startDate = startOfWeek(referenceDate, { weekStartsOn: 1 })
+                endDate = endOfWeek(referenceDate, { weekStartsOn: 1 })
+            }
         }
 
         const classroom = await prisma.classroom.findUnique({
@@ -150,7 +162,6 @@ export async function GET(
             teacherName,
             startDate,
             endDate,
-            range,
             sessions,
             teacherTotalHours,
             totalStudentHours,
