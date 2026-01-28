@@ -128,7 +128,9 @@
         "week": "Woche",
         "month": "Monat",
         "exportAttendance": "Anwesenheit exportieren",
-        "selectDates": "Daten auswählen",
+        "from": "Von",
+        "to": "Bis",
+        "pickDate": "Datum wählen",
         "exporting": "Exportieren..."
     },
     "common": {

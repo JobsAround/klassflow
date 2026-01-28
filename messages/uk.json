@@ -128,7 +128,9 @@
         "week": "Тиждень",
         "month": "Місяць",
         "exportAttendance": "Експорт відвідуваності",
-        "selectDates": "Вибрати дати",
+        "from": "З",
+        "to": "По",
+        "pickDate": "Вибрати дату",
         "exporting": "Експорт..."
     },
     "common": {

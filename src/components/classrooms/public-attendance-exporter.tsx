@@ -10,7 +10,6 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Calendar } from "@/components/ui/calendar"
 import { cn } from "@/lib/utils"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import type { DateRange } from "react-day-picker"
 
 interface PublicAttendanceExporterProps {
     classroomId: string
@@ -18,7 +17,9 @@ interface PublicAttendanceExporterProps {
     translations: {
         attendance: string
         attendanceDescription: string
-        selectDates: string
+        from: string
+        to: string
+        pickDate: string
         download: string
         downloading: string
         exportError: string
@@ -40,22 +41,21 @@ export function PublicAttendanceExporter({ classroomId, lang, translations: t }:
     const dateLocale = dateLocaleMap[lang] || enUS
 
     // Initialize with current month
-    const [dateRange, setDateRange] = useState<DateRange | undefined>({
-        from: startOfMonth(new Date()),
-        to: endOfMonth(new Date())
-    })
-    const [isCalendarOpen, setIsCalendarOpen] = useState(false)
+    const [startDate, setStartDate] = useState<Date>(startOfMonth(new Date()))
+    const [endDate, setEndDate] = useState<Date>(endOfMonth(new Date()))
+    const [isStartOpen, setIsStartOpen] = useState(false)
+    const [isEndOpen, setIsEndOpen] = useState(false)
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
 
     const handleExport = async () => {
-        if (!dateRange?.from || !dateRange?.to) return
+        if (!startDate || !endDate) return
 
         setLoading(true)
         setError(null)
         try {
             const res = await fetch(
-                `/api/public/classroom/${classroomId}/attendance?startDate=${dateRange.from.toISOString()}&endDate=${dateRange.to.toISOString()}`,
+                `/api/public/classroom/${classroomId}/attendance?startDate=${startDate.toISOString()}&endDate=${endDate.toISOString()}`,
                 { cache: 'no-store' }
             )
             if (!res.ok) {
@@ -89,12 +89,6 @@ export function PublicAttendanceExporter({ classroomId, lang, translations: t }:
         }
     }
 
-    const formatDateRange = () => {
-        if (!dateRange?.from) return t.selectDates
-        if (!dateRange.to) return format(dateRange.from, "PP", { locale: dateLocale })
-        return `${format(dateRange.from, "PP", { locale: dateLocale })} - ${format(dateRange.to, "PP", { locale: dateLocale })}`
-    }
-
     return (
         <Card>
             <CardHeader>
@@ -107,35 +101,78 @@ export function PublicAttendanceExporter({ classroomId, lang, translations: t }:
                 </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-                <div className="flex flex-col sm:flex-row gap-3">
-                    <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
-                        <PopoverTrigger asChild>
-                            <Button
-                                variant="outline"
-                                className={cn(
-                                    "w-full sm:w-[300px] justify-start text-left font-normal",
-                                    !dateRange && "text-muted-foreground"
-                                )}
-                            >
-                                <CalendarIcon className="mr-2 h-4 w-4" />
-                                {formatDateRange()}
-                            </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0" align="start">
-                            <Calendar
-                                mode="range"
-                                defaultMonth={dateRange?.from}
-                                selected={dateRange}
-                                onSelect={setDateRange}
-                                numberOfMonths={2}
-                                locale={dateLocale}
-                            />
-                        </PopoverContent>
-                    </Popover>
+                <div className="flex flex-col sm:flex-row gap-3 flex-wrap">
+                    <div className="flex items-center gap-2">
+                        <span className="text-sm text-muted-foreground">{t.from}</span>
+                        <Popover open={isStartOpen} onOpenChange={setIsStartOpen}>
+                            <PopoverTrigger asChild>
+                                <Button
+                                    variant="outline"
+                                    className={cn(
+                                        "w-[140px] justify-start text-left font-normal",
+                                        !startDate && "text-muted-foreground"
+                                    )}
+                                >
+                                    <CalendarIcon className="mr-2 h-4 w-4" />
+                                    {startDate ? format(startDate, "PP", { locale: dateLocale }) : t.pickDate}
+                                </Button>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-auto p-0" align="start">
+                                <Calendar
+                                    mode="single"
+                                    selected={startDate}
+                                    onSelect={(date) => {
+                                        if (date) {
+                                            setStartDate(date)
+                                            if (endDate && date > endDate) {
+                                                setEndDate(date)
+                                            }
+                                            setIsStartOpen(false)
+                                        }
+                                    }}
+                                    locale={dateLocale}
+                                    initialFocus
+                                />
+                            </PopoverContent>
+                        </Popover>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                        <span className="text-sm text-muted-foreground">{t.to}</span>
+                        <Popover open={isEndOpen} onOpenChange={setIsEndOpen}>
+                            <PopoverTrigger asChild>
+                                <Button
+                                    variant="outline"
+                                    className={cn(
+                                        "w-[140px] justify-start text-left font-normal",
+                                        !endDate && "text-muted-foreground"
+                                    )}
+                                >
+                                    <CalendarIcon className="mr-2 h-4 w-4" />
+                                    {endDate ? format(endDate, "PP", { locale: dateLocale }) : t.pickDate}
+                                </Button>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-auto p-0" align="start">
+                                <Calendar
+                                    mode="single"
+                                    selected={endDate}
+                                    onSelect={(date) => {
+                                        if (date) {
+                                            setEndDate(date)
+                                            setIsEndOpen(false)
+                                        }
+                                    }}
+                                    disabled={(date) => startDate ? date < startDate : false}
+                                    locale={dateLocale}
+                                    initialFocus
+                                />
+                            </PopoverContent>
+                        </Popover>
+                    </div>
 
                     <Button
                         onClick={handleExport}
-                        disabled={loading || !dateRange?.from || !dateRange?.to}
+                        disabled={loading || !startDate || !endDate}
                         className="w-full sm:w-auto"
                     >
                         {loading ? (

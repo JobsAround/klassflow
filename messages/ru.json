@@ -128,7 +128,9 @@
         "week": "Неделя",
         "month": "Месяц",
         "exportAttendance": "Экспорт посещаемости",
-        "selectDates": "Выбрать даты",
+        "from": "С",
+        "to": "По",
+        "pickDate": "Выбрать дату",
         "exporting": "Экспорт..."
     },
     "common": {

@@ -128,7 +128,9 @@
         "week": "Semana",
         "month": "Mes",
         "exportAttendance": "Exportar asistencia",
-        "selectDates": "Seleccionar fechas",
+        "from": "Desde",
+        "to": "Hasta",
+        "pickDate": "Elegir fecha",
         "exporting": "Exportando..."
     },
     "common": {

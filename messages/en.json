@@ -128,7 +128,9 @@
         "week": "Week",
         "month": "Month",
         "exportAttendance": "Export attendance",
-        "selectDates": "Select dates",
+        "from": "From",
+        "to": "To",
+        "pickDate": "Pick a date",
         "exporting": "Exporting..."
     },
     "common": {
