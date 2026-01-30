@@ -58,20 +58,20 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>
 
-interface Classroom {
-    id: string
-    name: string
-}
-
 interface Teacher {
     id: string
     name: string | null
     email: string
 }
 
+interface Classroom {
+    id: string
+    name: string
+    teachers?: Teacher[]
+}
+
 interface CreateSessionDialogProps {
     classrooms: Classroom[]
-    teachers: Teacher[]
     organizationId?: string
     initialDate?: Date
     open?: boolean
@@ -81,7 +81,6 @@ interface CreateSessionDialogProps {
 
 export function CreateSessionDialog({
     classrooms,
-    teachers,
     organizationId,
     initialDate,
     open: controlledOpen,
@@ -219,27 +218,33 @@ export function CreateSessionDialog({
                         <FormField
                             control={form.control}
                             name="teacherId"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>{t('teacherOptionalLabel')}</FormLabel>
-                                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                        <FormControl>
-                                            <SelectTrigger>
-                                                <SelectValue placeholder={t('selectTeacherPlaceholder')} />
-                                            </SelectTrigger>
-                                        </FormControl>
-                                        <SelectContent>
-                                            <SelectItem value="none">{t('none')}</SelectItem>
-                                            {teachers.map((teacher) => (
-                                                <SelectItem key={teacher.id} value={teacher.id}>
-                                                    {teacher.name || teacher.email}
-                                                </SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
+                            render={({ field }) => {
+                                const selectedClassroomId = form.watch("classroomId")
+                                const selectedClassroom = classrooms.find(c => c.id === selectedClassroomId)
+                                const teachers = selectedClassroom?.teachers || []
+
+                                return (
+                                    <FormItem>
+                                        <FormLabel>{t('teacherOptionalLabel')}</FormLabel>
+                                        <Select onValueChange={field.onChange} value={field.value}>
+                                            <FormControl>
+                                                <SelectTrigger>
+                                                    <SelectValue placeholder={t('selectTeacherPlaceholder')} />
+                                                </SelectTrigger>
+                                            </FormControl>
+                                            <SelectContent>
+                                                <SelectItem value="none">{t('none')}</SelectItem>
+                                                {teachers.map((teacher) => (
+                                                    <SelectItem key={teacher.id} value={teacher.id}>
+                                                        {teacher.name || teacher.email}
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                        <FormMessage />
+                                    </FormItem>
+                                )
+                            }}
                         />
 
                         <div className="grid grid-cols-2 gap-4">

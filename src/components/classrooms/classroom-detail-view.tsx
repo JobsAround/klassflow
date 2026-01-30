@@ -148,9 +148,8 @@ export function ClassroomDetailView({
                 sessions={classroom.sessions as any}
                 isTeacher={canManage}
                 currentUserId={currentUser.id}
-                classroom={{ id: classroom.id, name: classroom.name }}
+                classroom={{ id: classroom.id, name: classroom.name, teachers: classroom.teachers }}
                 enrollments={classroom.enrollments}
-                teachers={classroom.teachers}
                 currentUserName={currentUser.name}
             />
 

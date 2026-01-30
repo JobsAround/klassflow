@@ -13,13 +13,12 @@ interface SessionManagerProps {
     isTeacher: boolean
     currentUserId: string
     currentUserName?: string | null
-    classroom: { id: string; name: string }
+    classroom: { id: string; name: string; teachers?: { id: string; name: string | null; email: string }[] }
     enrollments?: any[]
-    teachers?: any[]
     organizationId?: string
 }
 
-export function SessionManager({ sessions, isTeacher, currentUserId, currentUserName, classroom, enrollments = [], teachers = [], organizationId }: SessionManagerProps) {
+export function SessionManager({ sessions, isTeacher, currentUserId, currentUserName, classroom, enrollments = [], organizationId }: SessionManagerProps) {
     const tSession = useTranslations('session')
     const tClassroom = useTranslations('classroom')
     const now = new Date()
@@ -55,7 +54,7 @@ export function SessionManager({ sessions, isTeacher, currentUserId, currentUser
                     <CardDescription>{tSession('manageSessions')}</CardDescription>
                 </div>
                 {isTeacher && (
-                    <CreateSessionDialog classrooms={[classroom]} teachers={teachers} organizationId={organizationId} />
+                    <CreateSessionDialog classrooms={[classroom]} organizationId={organizationId} />
                 )}
             </CardHeader>
             <CardContent>
@@ -77,7 +76,7 @@ export function SessionManager({ sessions, isTeacher, currentUserId, currentUser
                                     currentUserId={currentUserId}
                                     currentUserName={currentUserName}
                                     enrollments={enrollments}
-                                    teachers={teachers}
+                                    teachers={classroom.teachers || []}
                                     classroomName={classroom.name}
                                 />
                             ))
@@ -96,7 +95,7 @@ export function SessionManager({ sessions, isTeacher, currentUserId, currentUser
                                     currentUserId={currentUserId}
                                     currentUserName={currentUserName}
                                     enrollments={enrollments}
-                                    teachers={teachers}
+                                    teachers={classroom.teachers || []}
                                     classroomName={classroom.name}
                                 />
                             ))

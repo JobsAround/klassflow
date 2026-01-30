@@ -1,20 +1,21 @@
 "use client"
 
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { Button } from "../ui/button"
 import { CreateSessionDialog } from "../sessions/create-session-dialog"
 import { ScheduleCalendar } from "./schedule-calendar"
 
-interface Classroom {
-    id: string
-    name: string
-}
-
 interface Teacher {
     id: string
     name: string | null
     email: string
+}
+
+interface Classroom {
+    id: string
+    name: string
+    teachers?: Teacher[]
 }
 
 interface Session {
@@ -35,15 +36,25 @@ interface Session {
 interface CalendarViewProps {
     classrooms: Classroom[]
     sessions: Session[]
-    teachers?: Teacher[]
     isTeacher?: boolean
 }
 
-export function CalendarView({ classrooms, sessions, teachers = [], isTeacher = false }: CalendarViewProps) {
+export function CalendarView({ classrooms, sessions, isTeacher = false }: CalendarViewProps) {
     const t = useTranslations('calendar')
     const tSession = useTranslations('session')
     const [selectedDate, setSelectedDate] = useState<Date | null>(null)
     const [createDialogOpen, setCreateDialogOpen] = useState(false)
+
+    // Extract all unique teachers from all classrooms for the calendar display
+    const allTeachers = useMemo(() => {
+        const teacherMap = new Map<string, Teacher>()
+        classrooms.forEach(classroom => {
+            classroom.teachers?.forEach(teacher => {
+                teacherMap.set(teacher.id, teacher)
+            })
+        })
+        return Array.from(teacherMap.values())
+    }, [classrooms])
 
     const handleDayClick = (date: Date) => {
         setSelectedDate(date)
@@ -70,7 +81,6 @@ export function CalendarView({ classrooms, sessions, teachers = [], isTeacher = 
             {/* Single controlled dialog - opens from button or calendar click */}
             <CreateSessionDialog
                 classrooms={classrooms}
-                teachers={teachers}
                 initialDate={selectedDate || undefined}
                 open={createDialogOpen}
                 onOpenChange={setCreateDialogOpen}
@@ -81,7 +91,7 @@ export function CalendarView({ classrooms, sessions, teachers = [], isTeacher = 
                 sessions={sessions}
                 onDayClick={handleDayClick}
                 isTeacher={isTeacher}
-                teachers={teachers}
+                teachers={allTeachers}
             />
         </div>
     )
