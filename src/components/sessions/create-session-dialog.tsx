@@ -53,6 +53,7 @@ const formSchema = z.object({
     signatureMinutesBefore: z.string().default("5"),
     recurrence: z.enum(["NONE", "DAILY", "WEEKLY"]).default("NONE"),
     recurrenceCount: z.string().default("1"),
+    skipWeekends: z.boolean().default(false),
     teacherId: z.string().optional(),
 })
 
@@ -110,6 +111,7 @@ export function CreateSessionDialog({
             signatureMinutesBefore: "5",
             recurrence: "NONE",
             recurrenceCount: "1",
+            skipWeekends: false,
             teacherId: "none",
         },
     })
@@ -448,6 +450,29 @@ export function CreateSessionDialog({
                                 />
                             )}
                         </div>
+
+                        {form.watch("recurrence") === "DAILY" && (
+                            <FormField
+                                control={form.control}
+                                name="skipWeekends"
+                                render={({ field }) => (
+                                    <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3">
+                                        <div className="space-y-0.5">
+                                            <FormLabel>{t('skipWeekends')}</FormLabel>
+                                            <FormDescription>
+                                                {t('skipWeekendsDescription')}
+                                            </FormDescription>
+                                        </div>
+                                        <FormControl>
+                                            <Switch
+                                                checked={field.value}
+                                                onCheckedChange={field.onChange}
+                                            />
+                                        </FormControl>
+                                    </FormItem>
+                                )}
+                            />
+                        )}
 
                         {/* Notifications section removed */}
 

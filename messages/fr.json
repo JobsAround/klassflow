@@ -101,6 +101,8 @@
         "occurrences": "Occurrences",
         "occurrencesLabel": "Nombre d'occurrences",
         "endsOn": "Se termine le",
+        "skipWeekends": "Exclure les week-ends",
+        "skipWeekendsDescription": "Ne pas créer de séances les samedis et dimanches",
         "sendReminder": "Envoyer un rappel",
         "hoursBefore": "Heures avant",
         "minutesBefore": "Minutes avant",
