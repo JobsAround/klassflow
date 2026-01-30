@@ -101,6 +101,8 @@
         "occurrences": "Ocorrências",
         "occurrencesLabel": "Número de ocorrências",
         "endsOn": "Termina em",
+        "skipWeekends": "Ignorar fins de semana",
+        "skipWeekendsDescription": "Não criar sessões aos sábados e domingos",
         "sendReminder": "Enviar lembrete",
         "hoursBefore": "Horas antes",
         "minutesBefore": "Minutos antes",

@@ -101,6 +101,8 @@
         "occurrences": "Повторений",
         "occurrencesLabel": "Количество повторений",
         "endsOn": "Заканчивается",
+        "skipWeekends": "Пропустить выходные",
+        "skipWeekendsDescription": "Не создавать занятия в субботу и воскресенье",
         "sendReminder": "Отправить напоминание",
         "hoursBefore": "Часов до",
         "minutesBefore": "Минут до",

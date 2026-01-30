@@ -101,6 +101,8 @@
         "occurrences": "Ereignisse",
         "occurrencesLabel": "Anzahl der Ereignisse",
         "endsOn": "Endet am",
+        "skipWeekends": "Wochenenden überspringen",
+        "skipWeekendsDescription": "Keine Sitzungen an Samstagen und Sonntagen erstellen",
         "sendReminder": "Erinnerung senden",
         "hoursBefore": "Stunden vorher",
         "minutesBefore": "Minuten vorher",

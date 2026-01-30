@@ -101,6 +101,8 @@
         "occurrences": "Повторень",
         "occurrencesLabel": "Кількість повторень",
         "endsOn": "Закінчується",
+        "skipWeekends": "Пропустити вихідні",
+        "skipWeekendsDescription": "Не створювати заняття в суботу та неділю",
         "sendReminder": "Надіслати нагадування",
         "hoursBefore": "Годин до",
         "minutesBefore": "Хвилин до",
