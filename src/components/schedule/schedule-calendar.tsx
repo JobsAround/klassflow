@@ -240,12 +240,14 @@ export function ScheduleCalendar({
                                                 )}
                                             </div>
                                         </div>
-                                        <div className="font-medium truncate" title={session.title || session.classroom.name}>
-                                            {session.title || session.classroom.name}
-                                        </div>
-                                        <div className="text-slate-500 truncate text-[10px]">
+                                        <div className="font-medium truncate" title={session.classroom.name}>
                                             {session.classroom.name}
                                         </div>
+                                        {session.teacherId && (
+                                            <div className="text-slate-500 truncate text-[10px]">
+                                                {teachers.find(t => t.id === session.teacherId)?.name || teachers.find(t => t.id === session.teacherId)?.email}
+                                            </div>
+                                        )}
                                     </div>
                                 ))}
                             </div>
