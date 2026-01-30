@@ -20,12 +20,26 @@ import {
 } from "date-fns"
 import { Locale } from "date-fns"
 import { enUS } from "date-fns/locale"
-import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, Clock } from "lucide-react"
+import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, Clock, MoreVertical, Pencil, Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { cn } from "@/lib/utils"
 import { Badge } from "@/components/ui/badge"
 import { Card } from "@/components/ui/card"
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { EditSessionDialog } from "../sessions/edit-session-dialog"
+import { DeleteSessionDialog } from "../sessions/delete-session-dialog"
+
+interface Teacher {
+    id: string
+    name: string | null
+    email: string
+}
 
 interface Session {
     id: string
@@ -33,6 +47,7 @@ interface Session {
     startTime: string | Date
     endTime: string | Date
     type: string
+    teacherId?: string | null
     classroom: {
         name: string
     }
@@ -42,9 +57,19 @@ interface ScheduleCalendarProps {
     sessions: Session[]
     locale?: Locale
     translate?: (key: string) => string
+    onDayClick?: (date: Date) => void
+    isTeacher?: boolean
+    teachers?: Teacher[]
 }
 
-export function ScheduleCalendar({ sessions, locale = enUS, translate = (key) => key }: ScheduleCalendarProps) {
+export function ScheduleCalendar({
+    sessions,
+    locale = enUS,
+    translate = (key) => key,
+    onDayClick,
+    isTeacher = false,
+    teachers = []
+}: ScheduleCalendarProps) {
     const router = useRouter()
     const searchParams = useSearchParams()
 
@@ -159,8 +184,10 @@ export function ScheduleCalendar({ sessions, locale = enUS, translate = (key) =>
                             className={cn(
                                 "min-h-[120px] p-2 border-b border-r relative transition-colors hover:bg-slate-50 dark:hover:bg-slate-900",
                                 !isCurrentMonth && currentView === "month" && "bg-slate-50/50 dark:bg-slate-900/50 text-slate-400",
-                                isToday(day) && "bg-blue-50/30 dark:bg-blue-900/10"
+                                isToday(day) && "bg-blue-50/30 dark:bg-blue-900/10",
+                                onDayClick && "cursor-pointer"
                             )}
+                            onClick={() => onDayClick?.(day)}
                         >
                             <div className="flex justify-between items-start mb-2">
                                 <span className={cn(
@@ -180,15 +207,38 @@ export function ScheduleCalendar({ sessions, locale = enUS, translate = (key) =>
                                 {daySessions.map(session => (
                                     <div
                                         key={session.id}
-                                        className="text-xs p-1.5 rounded border bg-white dark:bg-slate-800 shadow-sm hover:shadow-md transition-shadow cursor-pointer group"
+                                        className="text-xs p-1.5 rounded border bg-white dark:bg-slate-800 shadow-sm hover:shadow-md transition-shadow cursor-pointer group relative"
+                                        onClick={(e) => e.stopPropagation()}
                                     >
                                         <div className="flex items-center justify-between mb-1">
                                             <span className="font-semibold truncate text-blue-600 dark:text-blue-400">
                                                 {format(new Date(session.startTime), "HH:mm")}
                                             </span>
-                                            <Badge variant={session.type === "ONLINE" ? "secondary" : session.type === "HOMEWORK" ? "default" : "outline"} className="text-[10px] h-4 px-1">
-                                                {session.type === "ONLINE" ? "Online" : session.type === "HOMEWORK" ? "Homework" : "On-site"}
-                                            </Badge>
+                                            <div className="flex items-center gap-1">
+                                                <Badge variant={session.type === "ONLINE" ? "secondary" : session.type === "HOMEWORK" ? "default" : "outline"} className="text-[10px] h-4 px-1">
+                                                    {session.type === "ONLINE" ? "Online" : session.type === "HOMEWORK" ? "Homework" : "On-site"}
+                                                </Badge>
+                                                {isTeacher && (
+                                                    <div className="opacity-0 group-hover:opacity-100 transition-opacity flex items-center">
+                                                        <EditSessionDialog
+                                                            session={{
+                                                                id: session.id,
+                                                                title: session.title,
+                                                                startTime: new Date(session.startTime),
+                                                                endTime: new Date(session.endTime),
+                                                                type: session.type as "ONSITE" | "ONLINE" | "HOMEWORK",
+                                                                teacherId: session.teacherId
+                                                            }}
+                                                            teachers={teachers}
+                                                            classroomName={session.classroom.name}
+                                                        />
+                                                        <DeleteSessionDialog
+                                                            sessionId={session.id}
+                                                            sessionTitle={session.title}
+                                                        />
+                                                    </div>
+                                                )}
+                                            </div>
                                         </div>
                                         <div className="font-medium truncate" title={session.title || session.classroom.name}>
                                             {session.title || session.classroom.name}

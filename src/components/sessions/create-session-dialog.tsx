@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
@@ -73,19 +73,36 @@ interface CreateSessionDialogProps {
     classrooms: Classroom[]
     teachers: Teacher[]
     organizationId?: string
+    initialDate?: Date
+    open?: boolean
+    onOpenChange?: (open: boolean) => void
+    trigger?: React.ReactNode
 }
 
-export function CreateSessionDialog({ classrooms, teachers, organizationId }: CreateSessionDialogProps) {
+export function CreateSessionDialog({
+    classrooms,
+    teachers,
+    organizationId,
+    initialDate,
+    open: controlledOpen,
+    onOpenChange,
+    trigger
+}: CreateSessionDialogProps) {
     const t = useTranslations('session')
-    const [open, setOpen] = useState(false)
+    const [internalOpen, setInternalOpen] = useState(false)
     const router = useRouter()
+
+    // Support both controlled and uncontrolled modes
+    const isControlled = controlledOpen !== undefined
+    const open = isControlled ? controlledOpen : internalOpen
+    const setOpen = isControlled ? (onOpenChange || (() => {})) : setInternalOpen
 
     const form = useForm({
         resolver: zodResolver(formSchema),
         defaultValues: {
             classroomId: classrooms.length === 1 ? classrooms[0].id : "",
             type: "ONSITE",
-            date: new Date(),
+            date: initialDate || new Date(),
             startTime: "09:00",
             endTime: "10:00",
             reminderEnabled: false,
@@ -97,6 +114,13 @@ export function CreateSessionDialog({ classrooms, teachers, organizationId }: Cr
             teacherId: "none",
         },
     })
+
+    // Update date when dialog opens with a new initialDate
+    useEffect(() => {
+        if (open && initialDate) {
+            form.setValue('date', initialDate)
+        }
+    }, [open, initialDate, form])
 
     async function onSubmit(values: FormValues) {
         try {
@@ -149,9 +173,13 @@ export function CreateSessionDialog({ classrooms, teachers, organizationId }: Cr
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild>
-                <Button>{t('addSession')}</Button>
-            </DialogTrigger>
+            {trigger !== undefined ? (
+                trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>
+            ) : (
+                <DialogTrigger asChild>
+                    <Button>{t('addSession')}</Button>
+                </DialogTrigger>
+            )}
             <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
                 <DialogHeader>
                     <DialogTitle>{t('schedule')}</DialogTitle>

@@ -1,12 +1,20 @@
 "use client"
 
+import { useState } from 'react'
 import { useTranslations } from 'next-intl'
+import { Button } from "../ui/button"
 import { CreateSessionDialog } from "../sessions/create-session-dialog"
 import { ScheduleCalendar } from "./schedule-calendar"
 
 interface Classroom {
     id: string
     name: string
+}
+
+interface Teacher {
+    id: string
+    name: string | null
+    email: string
 }
 
 interface Session {
@@ -24,8 +32,28 @@ interface Session {
     teacherId?: string | null
 }
 
-export function CalendarView({ classrooms, sessions, teachers = [] }: { classrooms: Classroom[], sessions: Session[], teachers?: any[] }) {
+interface CalendarViewProps {
+    classrooms: Classroom[]
+    sessions: Session[]
+    teachers?: Teacher[]
+    isTeacher?: boolean
+}
+
+export function CalendarView({ classrooms, sessions, teachers = [], isTeacher = false }: CalendarViewProps) {
     const t = useTranslations('calendar')
+    const tSession = useTranslations('session')
+    const [selectedDate, setSelectedDate] = useState<Date | null>(null)
+    const [createDialogOpen, setCreateDialogOpen] = useState(false)
+
+    const handleDayClick = (date: Date) => {
+        setSelectedDate(date)
+        setCreateDialogOpen(true)
+    }
+
+    const handleButtonClick = () => {
+        setSelectedDate(null)
+        setCreateDialogOpen(true)
+    }
 
     return (
         <div className="space-y-6">
@@ -35,9 +63,26 @@ export function CalendarView({ classrooms, sessions, teachers = [] }: { classroo
                     <p className="text-slate-500">{t('description')}</p>
                 </div>
             </div>
-            <CreateSessionDialog classrooms={classrooms} teachers={teachers} />
 
-            <ScheduleCalendar sessions={sessions} />
+            {/* Single button that opens the dialog */}
+            <Button onClick={handleButtonClick}>{tSession('addSession')}</Button>
+
+            {/* Single controlled dialog - opens from button or calendar click */}
+            <CreateSessionDialog
+                classrooms={classrooms}
+                teachers={teachers}
+                initialDate={selectedDate || undefined}
+                open={createDialogOpen}
+                onOpenChange={setCreateDialogOpen}
+                trigger={null}
+            />
+
+            <ScheduleCalendar
+                sessions={sessions}
+                onDayClick={handleDayClick}
+                isTeacher={isTeacher}
+                teachers={teachers}
+            />
         </div>
     )
 }
