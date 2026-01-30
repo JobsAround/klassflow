@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
-import { addMinutes, format } from "date-fns"
+import { addMinutes, addDays, format, isWeekend } from "date-fns"
 import { Loader2, CalendarIcon } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useTranslations } from 'next-intl'
@@ -421,6 +421,7 @@ export function CreateSessionDialog({
                                     name="recurrenceCount"
                                     render={({ field }) => {
                                         const recurrence = form.watch("recurrence")
+                                        const skipWeekends = form.watch("skipWeekends")
                                         const count = parseInt(field.value || "") || 1
                                         const startDate = form.watch("date")
 
@@ -429,7 +430,18 @@ export function CreateSessionDialog({
                                         let endDate = new Date(safeStartDate)
 
                                         if (recurrence === "DAILY") {
-                                            endDate.setDate(endDate.getDate() + (count - 1))
+                                            if (skipWeekends) {
+                                                // Calculate end date skipping weekends
+                                                let sessionsAdded = 1
+                                                while (sessionsAdded < count) {
+                                                    endDate = addDays(endDate, 1)
+                                                    if (!isWeekend(endDate)) {
+                                                        sessionsAdded++
+                                                    }
+                                                }
+                                            } else {
+                                                endDate.setDate(endDate.getDate() + (count - 1))
+                                            }
                                         } else if (recurrence === "WEEKLY") {
                                             endDate.setDate(endDate.getDate() + (count - 1) * 7)
                                         }
