@@ -46,6 +46,7 @@ export interface PublicClassroomData {
         meetingLink?: string | null
         isOnline?: boolean
         classroom?: { name: string }
+        teacher?: { id: string; name: string | null; email: string } | null
     }>
     resources: Array<{
         id: string
@@ -665,11 +666,11 @@ export function PublicClassroomView({
                                                     {format(new Date(session.endTime), lang === "fr" || lang === "de" ? "HH:mm" : "h:mm a", { locale: dateLocale })}
                                                 </span>
                                             </div>
-                                            {classroom.teachers.length > 0 && (
+                                            {session.teacher && (
                                                 <div className="flex items-center gap-2">
                                                     <span className="text-slate-500">{t("teacher")}</span>
                                                     <span className="font-medium">
-                                                        {classroom.teachers.map(t => t.name).join(", ")}
+                                                        {session.teacher.name || session.teacher.email}
                                                     </span>
                                                 </div>
                                             )}
