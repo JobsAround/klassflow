@@ -180,6 +180,7 @@ export async function sendSignatureEmail(
     classroomName: string
     startTime: Date
     endTime: Date
+    type?: string
   }
 ) {
   const transport = await getEmailTransport(organizationId)
@@ -189,6 +190,14 @@ export async function sendSignatureEmail(
   })
 
   const config = org?.smtpConfig as unknown as SMTPConfig
+  const isHomework = sessionData.type === "HOMEWORK"
+  const isOnline = sessionData.type === "ONLINE"
+
+  const getTypeLabel = () => {
+    if (isHomework) return "Travail personnel"
+    if (isOnline) return "En ligne"
+    return "En présentiel"
+  }
 
   const html = `
 <!DOCTYPE html>
@@ -204,34 +213,40 @@ export async function sendSignatureEmail(
     .button { display: inline-block; background: #059669; color: #ffffff !important; padding: 16px 32px; text-decoration: none; border-radius: 6px; margin: 20px 0; font-size: 18px; font-weight: bold; }
     .warning { background: #fef3c7; border-left: 4px solid #f59e0b; padding: 15px; border-radius: 6px; margin: 20px 0; }
     .footer { text-align: center; color: #6b7280; font-size: 12px; margin-top: 30px; }
+    .type-badge { display: inline-block; background: ${isHomework ? '#8b5cf6' : isOnline ? '#3b82f6' : '#10b981'}; color: white; padding: 4px 12px; border-radius: 12px; font-size: 14px; font-weight: 500; }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="header">
-      <h1 style="margin: 0;">✍️ Signature de présence</h1>
+      <h1 style="margin: 0;">${isHomework ? '📚 Confirmation de travail personnel' : '✍️ Signature de présence'}</h1>
     </div>
     <div class="content">
       <p>Bonjour ${studentName},</p>
-      
-      <p>Veuillez confirmer votre présence à votre formation chez <strong>${org?.name || "Klass Flow"}</strong>.</p>
+
+      <p>${isHomework
+        ? `Veuillez confirmer que vous avez effectué votre travail personnel pour votre formation chez <strong>${org?.name || "Klass Flow"}</strong>.`
+        : `Veuillez confirmer votre présence à votre formation chez <strong>${org?.name || "Klass Flow"}</strong>.`
+      }</p>
 
       <center>
-        <a href="${signatureUrl}" class="button">✍️ Signer ma présence</a>
+        <a href="${signatureUrl}" class="button">${isHomework ? '📚 Confirmer mon travail' : '✍️ Signer ma présence'}</a>
       </center>
-      
+
       <div class="info-box">
         <h2 style="margin-top: 0; color: #059669;">${sessionData.classroomName}</h2>
         ${sessionData.title ? `<p><strong>Sujet :</strong> ${sessionData.title}</p>` : ""}
+        <p><strong>📍 Type :</strong> <span class="type-badge">${getTypeLabel()}</span></p>
         <p><strong>📅 Date :</strong> ${sessionData.startTime.toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long", year: "numeric", timeZone: "Europe/Paris" })}</p>
         <p><strong>🕐 Horaire :</strong> ${sessionData.startTime.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit", timeZone: "Europe/Paris" })} - ${sessionData.endTime.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit", timeZone: "Europe/Paris" })}</p>
         <p><strong>⏱️ Durée :</strong> ${Math.round((sessionData.endTime.getTime() - sessionData.startTime.getTime()) / (1000 * 60))} minutes</p>
       </div>
-      
 
-      
       <p style="margin-top: 30px; font-size: 14px; color: #6b7280;">
-        Si vous ne pouvez pas assister au cours, vous pourrez télécharger un justificatif d'absence via le même lien.
+        ${isHomework
+          ? "Si vous n'avez pas pu effectuer le travail demandé, vous pourrez l'indiquer via le même lien."
+          : "Si vous ne pouvez pas assister au cours, vous pourrez télécharger un justificatif d'absence via le même lien."
+        }
       </p>
     </div>
     <div class="footer">
@@ -246,7 +261,7 @@ export async function sendSignatureEmail(
   await transport.sendMail({
     from: config?.from || process.env.SMTP_FROM || '"KlassFlow" <noreply@klassflow.app>',
     to,
-    subject: `✍️ Signature requise : ${sessionData.classroomName} (${sessionData.startTime.toLocaleDateString("fr-FR", { day: "2-digit", month: "2-digit", year: "numeric", timeZone: "Europe/Paris" })} ${sessionData.startTime.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit", timeZone: "Europe/Paris" })}-${sessionData.endTime.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit", timeZone: "Europe/Paris" })})`,
+    subject: `${isHomework ? '📚 Travail personnel' : '✍️ Signature requise'} : ${sessionData.classroomName} (${sessionData.startTime.toLocaleDateString("fr-FR", { day: "2-digit", month: "2-digit", year: "numeric", timeZone: "Europe/Paris" })} ${sessionData.startTime.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit", timeZone: "Europe/Paris" })}-${sessionData.endTime.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit", timeZone: "Europe/Paris" })})`,
     html
   })
 }
@@ -408,6 +423,7 @@ export async function sendTeacherSignatureRequestEmail(
     classroomName: string
     startTime: Date
     endTime: Date
+    type?: string
   },
   pendingSessions?: {
     id: string
@@ -431,6 +447,15 @@ export async function sendTeacherSignatureRequestEmail(
     signLink = `${appUrl}/dashboard/classrooms/${sessionData.classroomId}?signSessionId=${sessionData.id}`
   }
 
+  const isHomework = sessionData.type === "HOMEWORK"
+  const isOnline = sessionData.type === "ONLINE"
+
+  const getTypeLabel = () => {
+    if (isHomework) return "Travail personnel"
+    if (isOnline) return "En ligne"
+    return "En présentiel"
+  }
+
   const html = `
 <!DOCTYPE html>
 <html>
@@ -444,31 +469,36 @@ export async function sendTeacherSignatureRequestEmail(
     .info-box { background: white; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #059669; }
     .button { display: inline-block; background: #059669; color: white !important; padding: 16px 32px; text-decoration: none; border-radius: 6px; margin: 20px 0; font-size: 18px; font-weight: bold; }
     .footer { text-align: center; color: #6b7280; font-size: 12px; margin-top: 30px; }
+    .type-badge { display: inline-block; background: ${isHomework ? '#8b5cf6' : isOnline ? '#3b82f6' : '#10b981'}; color: white; padding: 4px 12px; border-radius: 12px; font-size: 14px; font-weight: 500; }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="header">
-      <h1 style="margin: 0;">✍️ Signature Formateur</h1>
+      <h1 style="margin: 0;">${isHomework ? '📚 Validation Travail Personnel' : '✍️ Signature Formateur'}</h1>
     </div>
     <div class="content">
       <p>Bonjour ${teacherName},</p>
-      
-      <p>Vous êtes invité à signer la feuille de présence <strong>en tant que formateur</strong> pour le cours suivant chez <strong>${org?.name || "Klass Flow"}</strong> :</p>
-      
+
+      <p>${isHomework
+        ? `Vous êtes invité à valider le travail personnel <strong>en tant que formateur</strong> pour la session suivante chez <strong>${org?.name || "Klass Flow"}</strong> :`
+        : `Vous êtes invité à signer la feuille de présence <strong>en tant que formateur</strong> pour le cours suivant chez <strong>${org?.name || "Klass Flow"}</strong> :`
+      }</p>
+
       <div class="info-box">
         <h2 style="margin-top: 0; color: #059669;">${sessionData.classroomName}</h2>
         ${sessionData.title ? `<p><strong>Sujet :</strong> ${sessionData.title}</p>` : ""}
+        <p><strong>📍 Type :</strong> <span class="type-badge">${getTypeLabel()}</span></p>
         <p><strong>📅 Date :</strong> ${sessionData.startTime.toLocaleDateString("fr-FR", { weekday: "long", year: "numeric", month: "long", day: "numeric", timeZone: "Europe/Paris" })}</p>
         <p><strong>🕐 Horaire :</strong> ${sessionData.startTime.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit", timeZone: "Europe/Paris" })} - ${sessionData.endTime.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit", timeZone: "Europe/Paris" })}</p>
       </div>
-      
-      <p>Merci de cliquer sur le bouton ci-dessous pour accéder au cours et signer :</p>
-      
+
+      <p>Merci de cliquer sur le bouton ci-dessous pour accéder ${isHomework ? 'à la session' : 'au cours'} et signer :</p>
+
       <center>
-        <a href="${signLink}" class="button">✍️ Accéder et Signer</a>
+        <a href="${signLink}" class="button">${isHomework ? '📚 Accéder et Valider' : '✍️ Accéder et Signer'}</a>
       </center>
-      
+
       ${pendingSessions && pendingSessions.length > 0 ? `
         <div style="margin-top: 30px; border-top: 1px solid #e5e7eb; pt-4;">
           <h3 style="color: #b91c1c;">⚠️ Sessions précédentes non signées</h3>
@@ -477,7 +507,7 @@ export async function sendTeacherSignatureRequestEmail(
             ${pendingSessions.map(s => `
               <li style="margin-bottom: 10px; padding: 10px; background: #fff1f2; border-radius: 4px; border-left: 3px solid #b91c1c;">
                 <strong>${s.classroomName}</strong><br>
-                ${s.startTime.toLocaleDateString("fr-FR", { day: "2-digit", month: "2-digit", year: "numeric" })} 
+                ${s.startTime.toLocaleDateString("fr-FR", { day: "2-digit", month: "2-digit", year: "numeric" })}
                 ${s.startTime.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" })}
               </li>
             `).join('')}
@@ -501,7 +531,7 @@ export async function sendTeacherSignatureRequestEmail(
   await transport.sendMail({
     from: config?.from || process.env.SMTP_FROM || '"KlassFlow" <noreply@klassflow.app>',
     to,
-    subject: `✍️ Signature Formateur requise : ${sessionData.classroomName}`,
+    subject: `${isHomework ? '📚 Validation Travail Personnel' : '✍️ Signature Formateur requise'} : ${sessionData.classroomName}`,
     html
   })
 }

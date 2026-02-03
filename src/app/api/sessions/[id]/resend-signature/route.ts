@@ -101,7 +101,8 @@ export async function POST(
                 title: classSession.title,
                 classroomName: classSession.classroom.name,
                 startTime: classSession.startTime,
-                endTime: classSession.endTime
+                endTime: classSession.endTime,
+                type: classSession.type
             }
         )
 

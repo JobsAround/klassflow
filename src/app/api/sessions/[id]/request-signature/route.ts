@@ -91,7 +91,8 @@ export async function POST(
                 classroomId: sessionData.classroomId,
                 classroomName: sessionData.classroom.name,
                 startTime: sessionData.startTime,
-                endTime: sessionData.endTime
+                endTime: sessionData.endTime,
+                type: sessionData.type
             },
             pendingSessions.map(s => ({
                 id: s.id,

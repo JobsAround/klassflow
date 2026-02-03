@@ -617,12 +617,8 @@ const AttendancePDF = ({ data, locale = 'fr' }: AttendancePDFProps) => {
                 </View>
 
                 {/* Summary - at the top */}
-                <View style={styles.summary}>
-                    <View style={[styles.summaryCard, styles.summaryCardPrimary]}>
-                        <Text style={styles.summaryLabel}>{t.teacherHours}</Text>
-                        <Text style={styles.summaryValue}>{data.teacherTotalHours.toFixed(1)}h</Text>
-                    </View>
-                    <View style={[styles.summaryCard, styles.summaryCardSecondary]}>
+                <View style={[styles.summary, { justifyContent: 'flex-start' }]}>
+                    <View style={[styles.summaryCard, styles.summaryCardPrimary, { flex: 0, minWidth: 180, paddingHorizontal: 25 }]}>
                         <Text style={styles.summaryLabel}>{t.studentHours}</Text>
                         <Text style={styles.summaryValue}>
                             {data.totalStudentHours.toFixed(1)}h / {data.totalExpectedStudentHours.toFixed(1)}h
