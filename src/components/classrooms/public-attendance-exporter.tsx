@@ -55,7 +55,7 @@ export function PublicAttendanceExporter({ classroomId, lang, translations: t }:
         setError(null)
         try {
             const res = await fetch(
-                `/api/public/classroom/${classroomId}/attendance?startDate=${startDate.toISOString()}&endDate=${endDate.toISOString()}`,
+                `/api/public/classroom/${classroomId}/attendance?startDate=${format(startDate, 'yyyy-MM-dd')}&endDate=${format(endDate, 'yyyy-MM-dd')}`,
                 { cache: 'no-store' }
             )
             if (!res.ok) {

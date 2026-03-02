@@ -45,7 +45,7 @@ export function AttendanceExporter({ classroomId }: AttendanceExporterProps) {
         setLoading(true)
         try {
             const res = await fetch(
-                `/api/classrooms/${classroomId}/attendance?startDate=${startDate.toISOString()}&endDate=${endDate.toISOString()}`
+                `/api/classrooms/${classroomId}/attendance?startDate=${format(startDate, 'yyyy-MM-dd')}&endDate=${format(endDate, 'yyyy-MM-dd')}`
             )
             if (!res.ok) throw new Error("Failed to fetch data")
             const data = await res.json()
