@@ -122,7 +122,10 @@
         "manageSessions": "Manage class sessions",
         "pendingSignaturesTitle": "{count} pending signatures",
         "pendingSignaturesDescription": "You have unsigned sessions.",
-        "signNow": "Sign Now"
+        "signNow": "Sign Now",
+        "markAbsent": "Mark absent?",
+        "removeSignature": "Remove signature?",
+        "removeAbsence": "Remove absence?"
     },
     "calendar": {
         "title": "Calendar",

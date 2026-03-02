@@ -122,7 +122,10 @@
         "manageSessions": "Sitzungen verwalten",
         "pendingSignaturesTitle": "{count} ausstehende Unterschriften",
         "pendingSignaturesDescription": "Sie haben nicht unterschriebene Sitzungen.",
-        "signNow": "Jetzt unterschreiben"
+        "signNow": "Jetzt unterschreiben",
+        "markAbsent": "Als abwesend markieren?",
+        "removeSignature": "Unterschrift entfernen?",
+        "removeAbsence": "Abwesenheit entfernen?"
     },
     "calendar": {
         "title": "Kalender",

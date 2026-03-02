@@ -122,7 +122,10 @@
         "manageSessions": "Gerir sessões",
         "pendingSignaturesTitle": "{count} assinaturas pendentes",
         "pendingSignaturesDescription": "Tem sessões por assinar.",
-        "signNow": "Assinar agora"
+        "signNow": "Assinar agora",
+        "markAbsent": "Marcar ausente?",
+        "removeSignature": "Remover assinatura?",
+        "removeAbsence": "Remover ausência?"
     },
     "calendar": {
         "title": "Calendário",

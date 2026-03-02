@@ -122,7 +122,10 @@
         "manageSessions": "Gérer les séances",
         "pendingSignaturesTitle": "{count} signatures en attente",
         "pendingSignaturesDescription": "Vous avez des séances non signées.",
-        "signNow": "Signer maintenant"
+        "signNow": "Signer maintenant",
+        "markAbsent": "Marquer absent ?",
+        "removeSignature": "Retirer la signature ?",
+        "removeAbsence": "Retirer l'absence ?"
     },
     "calendar": {
         "title": "Calendrier",

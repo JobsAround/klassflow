@@ -122,7 +122,10 @@
         "manageSessions": "Керування заняттями",
         "pendingSignaturesTitle": "{count} очікуваних підписів",
         "pendingSignaturesDescription": "У вас є непідписані заняття.",
-        "signNow": "Підписати зараз"
+        "signNow": "Підписати зараз",
+        "markAbsent": "Позначити відсутнім?",
+        "removeSignature": "Видалити підпис?",
+        "removeAbsence": "Видалити відсутність?"
     },
     "calendar": {
         "title": "Календар",

@@ -39,6 +39,7 @@ interface SessionListItemProps {
 
 export function SessionListItem({ session, isTeacher, currentUserId, currentUserName, enrollments = [], teachers = [], classroomName = "Classroom" }: SessionListItemProps) {
     const t = useTranslations('session')
+    const tCommon = useTranslations('common')
     const tClassroom = useTranslations('classroom')
     const dateLocale = useDateLocale()
     const router = useRouter()
@@ -54,6 +55,27 @@ export function SessionListItem({ session, isTeacher, currentUserId, currentUser
 
             if (!res.ok) {
                 throw new Error("Failed to remove signature")
+            }
+
+            router.refresh()
+        } catch (error) {
+            console.error(error)
+        } finally {
+            setIsRemoving(null)
+        }
+    }
+
+    const handleMarkAbsent = async (sessionId: string, studentId: string) => {
+        setIsRemoving(studentId)
+        try {
+            const res = await fetch(`/api/sessions/${sessionId}/attendance/${studentId}`, {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ status: "ABSENT" })
+            })
+
+            if (!res.ok) {
+                throw new Error("Failed to mark absent")
             }
 
             router.refresh()
@@ -206,7 +228,7 @@ export function SessionListItem({ session, isTeacher, currentUserId, currentUser
                                                                         </PopoverTrigger>
                                                                         <PopoverContent className="w-48 p-2">
                                                                             <div className="space-y-2">
-                                                                                <p className="text-xs font-medium text-center">Remove signature?</p>
+                                                                                <p className="text-xs font-medium text-center">{t('removeSignature')}</p>
                                                                                 <Button
                                                                                     size="sm"
                                                                                     variant="destructive"
@@ -216,7 +238,7 @@ export function SessionListItem({ session, isTeacher, currentUserId, currentUser
                                                                                 >
                                                                                     {isRemoving === attendance.studentId ? (
                                                                                         <Loader2 className="w-3 h-3 animate-spin" />
-                                                                                    ) : "Confirm"}
+                                                                                    ) : tCommon('confirm')}
                                                                                 </Button>
                                                                             </div>
                                                                         </PopoverContent>
@@ -262,7 +284,7 @@ export function SessionListItem({ session, isTeacher, currentUserId, currentUser
                                                                         </PopoverTrigger>
                                                                         <PopoverContent className="w-48 p-2">
                                                                             <div className="space-y-2">
-                                                                                <p className="text-xs font-medium text-center">Remove absence?</p>
+                                                                                <p className="text-xs font-medium text-center">{t('removeAbsence')}</p>
                                                                                 <Button
                                                                                     size="sm"
                                                                                     variant="destructive"
@@ -272,7 +294,7 @@ export function SessionListItem({ session, isTeacher, currentUserId, currentUser
                                                                                 >
                                                                                     {isRemoving === attendance.studentId ? (
                                                                                         <Loader2 className="w-3 h-3 animate-spin" />
-                                                                                    ) : "Confirm"}
+                                                                                    ) : tCommon('confirm')}
                                                                                 </Button>
                                                                             </div>
                                                                         </PopoverContent>
@@ -300,8 +322,35 @@ export function SessionListItem({ session, isTeacher, currentUserId, currentUser
                                                 <h4 className="font-medium text-sm mb-2">{t('unsigned')}</h4>
                                                 <div className="space-y-1 max-h-48 overflow-y-auto">
                                                     {pendingStudents.map(enrollment => (
-                                                        <div key={enrollment.student.id} className="text-sm px-2 py-1 rounded hover:bg-slate-100">
-                                                            {enrollment.student.name || enrollment.student.email}
+                                                        <div key={enrollment.student.id} className="flex items-center justify-between text-sm px-2 py-1 rounded hover:bg-slate-100 group">
+                                                            <span>{enrollment.student.name || enrollment.student.email}</span>
+                                                            <Popover>
+                                                                <PopoverTrigger asChild>
+                                                                    <Button
+                                                                        variant="ghost"
+                                                                        size="icon"
+                                                                        className="h-6 w-6 opacity-0 group-hover:opacity-100 text-red-500 hover:text-red-700 hover:bg-red-50"
+                                                                    >
+                                                                        <XCircle className="w-3 h-3" />
+                                                                    </Button>
+                                                                </PopoverTrigger>
+                                                                <PopoverContent className="w-48 p-2">
+                                                                    <div className="space-y-2">
+                                                                        <p className="text-xs font-medium text-center">{t('markAbsent')}</p>
+                                                                        <Button
+                                                                            size="sm"
+                                                                            variant="destructive"
+                                                                            className="w-full text-xs h-7"
+                                                                            onClick={() => handleMarkAbsent(session.id, enrollment.student.id)}
+                                                                            disabled={isRemoving === enrollment.student.id}
+                                                                        >
+                                                                            {isRemoving === enrollment.student.id ? (
+                                                                                <Loader2 className="w-3 h-3 animate-spin" />
+                                                                            ) : tCommon('confirm')}
+                                                                        </Button>
+                                                                    </div>
+                                                                </PopoverContent>
+                                                            </Popover>
                                                         </div>
                                                     ))}
                                                 </div>

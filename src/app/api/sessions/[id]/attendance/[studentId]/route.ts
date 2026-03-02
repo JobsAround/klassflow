@@ -2,6 +2,63 @@ import { prisma } from "@/lib/prisma"
 import { NextResponse } from "next/server"
 import { getAuthUser } from "@/lib/auth-utils"
 
+export async function PATCH(
+    req: Request,
+    { params }: { params: any }
+) {
+    try {
+        const user = await getAuthUser()
+
+        if (!user || user.role === "STUDENT") {
+            return new NextResponse("Unauthorized", { status: 401 })
+        }
+
+        const { id, studentId } = await params
+        const body = await req.json()
+
+        if (body.status !== "ABSENT") {
+            return new NextResponse("Only ABSENT status is supported", { status: 400 })
+        }
+
+        // Upsert attendance record as ABSENT
+        await prisma.attendance.upsert({
+            where: {
+                sessionId_studentId: {
+                    sessionId: id,
+                    studentId: studentId
+                }
+            },
+            update: {
+                status: "ABSENT",
+                signatureUrl: null,
+                signedAt: null
+            },
+            create: {
+                sessionId: id,
+                studentId: studentId,
+                status: "ABSENT"
+            }
+        })
+
+        // Mark signature token as used so the email link can't re-sign
+        await prisma.signatureToken.updateMany({
+            where: {
+                sessionId: id,
+                studentId: studentId,
+                usedAt: null
+            },
+            data: {
+                usedAt: new Date()
+            }
+        })
+
+        return NextResponse.json({ success: true })
+    } catch (error) {
+        console.error("Error marking absent:", error)
+        return new NextResponse("Internal Server Error", { status: 500 })
+    }
+}
+
 export async function DELETE(
     req: Request,
     { params }: { params: any }
