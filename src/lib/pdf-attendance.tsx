@@ -295,6 +295,7 @@ const translations: Record<string, Record<string, string>> = {
         homework: 'Homework',
         teacherHours: 'Teacher Hours',
         studentHours: 'Student Hours',
+        location: 'Location',
         page: 'Page',
         of: 'of',
     },
@@ -314,6 +315,7 @@ const translations: Record<string, Record<string, string>> = {
         homework: 'Travail personnel',
         teacherHours: 'Heures formateur',
         studentHours: 'Heures stagiaires',
+        location: 'Lieu',
         page: 'Page',
         of: 'sur',
     },
@@ -333,6 +335,7 @@ const translations: Record<string, Record<string, string>> = {
         homework: 'Hausaufgabe',
         teacherHours: 'Dozentenstunden',
         studentHours: 'Teilnehmerstunden',
+        location: 'Ort',
         page: 'Seite',
         of: 'von',
     },
@@ -352,6 +355,7 @@ const translations: Record<string, Record<string, string>> = {
         homework: 'Tarea',
         teacherHours: 'Horas del profesor',
         studentHours: 'Horas de estudiantes',
+        location: 'Lugar',
         page: 'Página',
         of: 'de',
     },
@@ -371,6 +375,7 @@ const translations: Record<string, Record<string, string>> = {
         homework: 'Trabalho pessoal',
         teacherHours: 'Horas do formador',
         studentHours: 'Horas dos formandos',
+        location: 'Local',
         page: 'Página',
         of: 'de',
     },
@@ -390,6 +395,7 @@ const translations: Record<string, Record<string, string>> = {
         homework: 'Домашнее задание',
         teacherHours: 'Часы преподавателя',
         studentHours: 'Часы студентов',
+        location: 'Место',
         page: 'Страница',
         of: 'из',
     },
@@ -409,6 +415,7 @@ const translations: Record<string, Record<string, string>> = {
         homework: 'Домашнє завдання',
         teacherHours: 'Години викладача',
         studentHours: 'Години студентів',
+        location: 'Місце',
         page: 'Сторінка',
         of: 'з',
     },
@@ -522,6 +529,11 @@ const Session = ({ session, defaultTeacherName, t, dateLocale }: SessionProps) =
                     <Text style={{ fontSize: 10, color: 'rgba(255,255,255,0.8)', marginTop: 2 }}>
                         {timeStr}
                     </Text>
+                    {session.type === 'ONSITE' && session.location && (
+                        <Text style={{ fontSize: 9, color: 'rgba(255,255,255,0.7)', marginTop: 2 }}>
+                            {t.location}: {session.location}
+                        </Text>
+                    )}
                 </View>
                 {session.type && (
                     <Text style={styles.sessionType}>{getTypeLabel()}</Text>

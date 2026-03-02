@@ -1,4 +1,5 @@
 import nodemailer from "nodemailer"
+import { Resend } from "resend"
 import { prisma } from "./prisma"
 
 interface SMTPConfig {
@@ -10,7 +11,32 @@ interface SMTPConfig {
   from: string
 }
 
-export async function getEmailTransport(organizationId: string) {
+interface EmailTransport {
+  sendMail(options: { from: string; to: string; subject: string; html: string }): Promise<void>
+}
+
+function createResendTransport(apiKey: string): EmailTransport {
+  const resend = new Resend(apiKey)
+  return {
+    async sendMail({ from, to, subject, html }) {
+      const { error } = await resend.emails.send({ from, to, subject, html })
+      if (error) {
+        throw new Error(error.message)
+      }
+    }
+  }
+}
+
+function createSmtpTransport(config: { host: string; port: number; secure: boolean; auth?: { user?: string; pass?: string } }): EmailTransport {
+  const transport = nodemailer.createTransport(config)
+  return {
+    async sendMail({ from, to, subject, html }) {
+      await transport.sendMail({ from, to, subject, html })
+    }
+  }
+}
+
+export async function getEmailTransport(organizationId: string): Promise<EmailTransport> {
   // In development, default to MailPit if no SMTP config exists
   if (process.env.NODE_ENV === "development") {
     const org = await prisma.organization.findUnique({
@@ -21,11 +47,10 @@ export async function getEmailTransport(organizationId: string) {
     // Use MailPit if no SMTP configured
     if (!org?.smtpConfig) {
       console.log("Using MailPit for email in development mode")
-      return nodemailer.createTransport({
+      return createSmtpTransport({
         host: "localhost",
         port: 1025,
         secure: false,
-        // No auth needed for MailPit
       })
     }
   }
@@ -37,21 +62,13 @@ export async function getEmailTransport(organizationId: string) {
   })
 
   if (!org?.smtpConfig) {
-    // Check for System-wide SMTP (Env Vars)
+    // Use Resend HTTP API (faster and more reliable than SMTP)
     if (process.env.RESEND_API_KEY) {
-      return nodemailer.createTransport({
-        host: "smtp.resend.com",
-        port: 465,
-        secure: true,
-        auth: {
-          user: "resend",
-          pass: process.env.RESEND_API_KEY
-        }
-      })
+      return createResendTransport(process.env.RESEND_API_KEY)
     }
 
     if (process.env.SMTP_HOST) {
-      return nodemailer.createTransport({
+      return createSmtpTransport({
         host: process.env.SMTP_HOST,
         port: parseInt(process.env.SMTP_PORT || "587"),
         secure: process.env.SMTP_SECURE === "true",
@@ -67,7 +84,7 @@ export async function getEmailTransport(organizationId: string) {
 
   const config = org.smtpConfig as unknown as SMTPConfig
 
-  return nodemailer.createTransport({
+  return createSmtpTransport({
     host: config.host,
     port: config.port,
     secure: config.secure,
