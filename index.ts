@@ -41,6 +41,7 @@ export { generateAttendancePDF } from './src/lib/pdf-export'
 export type { AttendanceData } from './src/lib/pdf-export'
 export { generateAttendancePDFv2, AttendancePDF } from './src/lib/pdf-attendance'
 export type { AttendanceData as AttendanceDataV2, AttendanceSession } from './src/lib/pdf-attendance'
+export { utcToTz, localToUtc, formatInTz } from './src/lib/timezone'
 // limits-server excluded: server-only
 // export { checkOrganizationLimit, getOrganizationLimitsUsage } from './src/lib/limits-server'
 

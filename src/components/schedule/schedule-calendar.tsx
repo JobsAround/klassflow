@@ -34,6 +34,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { EditSessionDialog } from "../sessions/edit-session-dialog"
 import { DeleteSessionDialog } from "../sessions/delete-session-dialog"
+import { formatInTz, utcToTz } from "@/lib/timezone"
 
 interface Teacher {
     id: string
@@ -60,6 +61,7 @@ interface ScheduleCalendarProps {
     onDayClick?: (date: Date) => void
     isTeacher?: boolean
     teachers?: Teacher[]
+    timezone?: string
 }
 
 export function ScheduleCalendar({
@@ -68,7 +70,8 @@ export function ScheduleCalendar({
     translate = (key) => key,
     onDayClick,
     isTeacher = false,
-    teachers = []
+    teachers = [],
+    timezone = "Europe/Paris"
 }: ScheduleCalendarProps) {
     const router = useRouter()
     const searchParams = useSearchParams()
@@ -126,7 +129,7 @@ export function ScheduleCalendar({
     // Group sessions by day
     const sessionsByDay = days.reduce((acc, day) => {
         const dayKey = format(day, "yyyy-MM-dd")
-        acc[dayKey] = sessions.filter(s => isSameDay(new Date(s.startTime), day))
+        acc[dayKey] = sessions.filter(s => isSameDay(utcToTz(s.startTime, timezone), day))
         return acc
     }, {} as Record<string, Session[]>)
 
@@ -212,7 +215,7 @@ export function ScheduleCalendar({
                                     >
                                         <div className="flex items-center justify-between mb-1">
                                             <span className="font-semibold truncate text-blue-600 dark:text-blue-400">
-                                                {format(new Date(session.startTime), "HH:mm")}
+                                                {formatInTz(session.startTime, "HH:mm", timezone)}
                                             </span>
                                             <div className="flex items-center gap-1">
                                                 <Badge variant={session.type === "ONLINE" ? "secondary" : session.type === "HOMEWORK" ? "default" : "outline"} className="text-[10px] h-4 px-1">

@@ -62,6 +62,7 @@ model Organization {
   // Settings
   googleServiceAccountJson String? // Encrypted or stored as JSON string
   smtpConfig               Json?   // { host, port, user, pass, secure }
+  timezone                 String  @default("Europe/Paris")
 
   users       User[]
   classrooms  Classroom[]

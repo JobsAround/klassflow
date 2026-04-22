@@ -2,6 +2,7 @@ import jsPDF from "jspdf"
 import autoTable from "jspdf-autotable"
 import { format } from "date-fns"
 import { fr, enUS, de, es, pt, ru, uk } from "date-fns/locale"
+import { formatInTz } from "./timezone"
 
 export interface AttendanceData {
     organizationName: string
@@ -27,6 +28,7 @@ export interface AttendanceData {
     teacherTotalHours: number
     totalStudentHours: number
     totalExpectedStudentHours: number
+    timezone?: string
 }
 
 // Translation maps for PDF text
@@ -246,12 +248,12 @@ export function generateAttendancePDF(data: AttendanceData, locale: string = 'fr
     currentY += 20
 
     // --- Sessions Loop ---
+    const tz = data.timezone || "Europe/Paris"
+
     data.sessions.forEach((session, index) => {
-        const sessionDate = new Date(session.startTime)
-        const sessionEnd = new Date(session.endTime)
-        const dateStr = format(sessionDate, "EEEE dd/MM/yyyy", { locale: dateLocale })
-        const startStr = format(sessionDate, "HH:mm")
-        const endStr = format(sessionEnd, "HH:mm")
+        const dateStr = formatInTz(session.startTime, "EEEE dd/MM/yyyy", tz, { locale: dateLocale })
+        const startStr = formatInTz(session.startTime, "HH:mm", tz)
+        const endStr = formatInTz(session.endTime, "HH:mm", tz)
 
         // Check for page break
         // Force page break for subsequent sessions to keep them intact

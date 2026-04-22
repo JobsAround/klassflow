@@ -17,6 +17,7 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover"
+import { formatInTz } from "@/lib/timezone"
 
 interface SessionListItemProps {
     session: {
@@ -35,9 +36,10 @@ interface SessionListItemProps {
     enrollments?: any[]
     teachers?: { id: string; name: string | null; email: string }[]
     classroomName?: string
+    timezone?: string
 }
 
-export function SessionListItem({ session, isTeacher, currentUserId, currentUserName, enrollments = [], teachers = [], classroomName = "Classroom" }: SessionListItemProps) {
+export function SessionListItem({ session, isTeacher, currentUserId, currentUserName, enrollments = [], teachers = [], classroomName = "Classroom", timezone = "Europe/Paris" }: SessionListItemProps) {
     const t = useTranslations('session')
     const tCommon = useTranslations('common')
     const tClassroom = useTranslations('classroom')
@@ -126,18 +128,13 @@ export function SessionListItem({ session, isTeacher, currentUserId, currentUser
                             year: "numeric",
                             month: "long",
                             day: "numeric",
+                            timeZone: timezone,
                         })}
                     </p>
                     <p className="text-sm text-slate-500">
-                        {new Date(session.startTime).toLocaleTimeString("fr-FR", {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                        })}
+                        {formatInTz(session.startTime, "HH:mm", timezone)}
                         {" - "}
-                        {new Date(session.endTime).toLocaleTimeString("fr-FR", {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                        })}
+                        {formatInTz(session.endTime, "HH:mm", timezone)}
                     </p>
                     {session.teacherId && (
                         <div className="mt-2">

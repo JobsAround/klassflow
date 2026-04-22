@@ -111,10 +111,11 @@ export async function sendReminderEmail(
   const transport = await getEmailTransport(organizationId)
   const org = await prisma.organization.findUnique({
     where: { id: organizationId },
-    select: { smtpConfig: true, name: true }
+    select: { smtpConfig: true, name: true, timezone: true }
   })
 
   const config = org?.smtpConfig as unknown as SMTPConfig
+  const tz = org?.timezone || "Europe/Paris"
   const isOnline = sessionData.type === "ONLINE"
   const isHomework = sessionData.type === "HOMEWORK"
 
@@ -152,8 +153,8 @@ export async function sendReminderEmail(
       <div class="info-box">
         <h2 style="margin-top: 0; color: #2563eb;">${sessionData.classroomName}</h2>
         ${sessionData.title ? `<p><strong>Sujet :</strong> ${sessionData.title}</p>` : ""}
-        <p><strong>📅 Date :</strong> ${sessionData.startTime.toLocaleDateString("fr-FR", { weekday: "long", year: "numeric", month: "long", day: "numeric", timeZone: "Europe/Paris" })}</p>
-        <p><strong>🕐 Horaire :</strong> ${sessionData.startTime.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit", timeZone: "Europe/Paris" })} - ${sessionData.endTime.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit", timeZone: "Europe/Paris" })}</p>
+        <p><strong>📅 Date :</strong> ${sessionData.startTime.toLocaleDateString("fr-FR", { weekday: "long", year: "numeric", month: "long", day: "numeric", timeZone: tz })}</p>
+        <p><strong>🕐 Horaire :</strong> ${sessionData.startTime.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit", timeZone: tz })} - ${sessionData.endTime.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit", timeZone: tz })}</p>
         <p><strong>📍 Type :</strong> ${getTypeLabel()}</p>
       </div>
 
@@ -203,10 +204,11 @@ export async function sendSignatureEmail(
   const transport = await getEmailTransport(organizationId)
   const org = await prisma.organization.findUnique({
     where: { id: organizationId },
-    select: { smtpConfig: true, name: true }
+    select: { smtpConfig: true, name: true, timezone: true }
   })
 
   const config = org?.smtpConfig as unknown as SMTPConfig
+  const tz = org?.timezone || "Europe/Paris"
   const isHomework = sessionData.type === "HOMEWORK"
   const isOnline = sessionData.type === "ONLINE"
 
@@ -254,8 +256,8 @@ export async function sendSignatureEmail(
         <h2 style="margin-top: 0; color: #059669;">${sessionData.classroomName}</h2>
         ${sessionData.title ? `<p><strong>Sujet :</strong> ${sessionData.title}</p>` : ""}
         <p><strong>📍 Type :</strong> <span class="type-badge">${getTypeLabel()}</span></p>
-        <p><strong>📅 Date :</strong> ${sessionData.startTime.toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long", year: "numeric", timeZone: "Europe/Paris" })}</p>
-        <p><strong>🕐 Horaire :</strong> ${sessionData.startTime.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit", timeZone: "Europe/Paris" })} - ${sessionData.endTime.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit", timeZone: "Europe/Paris" })}</p>
+        <p><strong>📅 Date :</strong> ${sessionData.startTime.toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long", year: "numeric", timeZone: tz })}</p>
+        <p><strong>🕐 Horaire :</strong> ${sessionData.startTime.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit", timeZone: tz })} - ${sessionData.endTime.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit", timeZone: tz })}</p>
         <p><strong>⏱️ Durée :</strong> ${Math.round((sessionData.endTime.getTime() - sessionData.startTime.getTime()) / (1000 * 60))} minutes</p>
       </div>
 
@@ -278,7 +280,7 @@ export async function sendSignatureEmail(
   await transport.sendMail({
     from: config?.from || process.env.SMTP_FROM || '"KlassFlow" <noreply@klassflow.app>',
     to,
-    subject: `${isHomework ? '📚 Travail personnel' : '✍️ Signature requise'} : ${sessionData.classroomName} (${sessionData.startTime.toLocaleDateString("fr-FR", { day: "2-digit", month: "2-digit", year: "numeric", timeZone: "Europe/Paris" })} ${sessionData.startTime.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit", timeZone: "Europe/Paris" })}-${sessionData.endTime.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit", timeZone: "Europe/Paris" })})`,
+    subject: `${isHomework ? '📚 Travail personnel' : '✍️ Signature requise'} : ${sessionData.classroomName} (${sessionData.startTime.toLocaleDateString("fr-FR", { day: "2-digit", month: "2-digit", year: "numeric", timeZone: tz })} ${sessionData.startTime.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit", timeZone: tz })}-${sessionData.endTime.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit", timeZone: tz })})`,
     html
   })
 }
@@ -453,10 +455,11 @@ export async function sendTeacherSignatureRequestEmail(
   const transport = await getEmailTransport(organizationId)
   const org = await prisma.organization.findUnique({
     where: { id: organizationId },
-    select: { smtpConfig: true, name: true }
+    select: { smtpConfig: true, name: true, timezone: true }
   })
 
   const config = org?.smtpConfig as unknown as SMTPConfig | null
+  const tz = org?.timezone || "Europe/Paris"
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"
   let signLink = link
 
@@ -506,8 +509,8 @@ export async function sendTeacherSignatureRequestEmail(
         <h2 style="margin-top: 0; color: #059669;">${sessionData.classroomName}</h2>
         ${sessionData.title ? `<p><strong>Sujet :</strong> ${sessionData.title}</p>` : ""}
         <p><strong>📍 Type :</strong> <span class="type-badge">${getTypeLabel()}</span></p>
-        <p><strong>📅 Date :</strong> ${sessionData.startTime.toLocaleDateString("fr-FR", { weekday: "long", year: "numeric", month: "long", day: "numeric", timeZone: "Europe/Paris" })}</p>
-        <p><strong>🕐 Horaire :</strong> ${sessionData.startTime.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit", timeZone: "Europe/Paris" })} - ${sessionData.endTime.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit", timeZone: "Europe/Paris" })}</p>
+        <p><strong>📅 Date :</strong> ${sessionData.startTime.toLocaleDateString("fr-FR", { weekday: "long", year: "numeric", month: "long", day: "numeric", timeZone: tz })}</p>
+        <p><strong>🕐 Horaire :</strong> ${sessionData.startTime.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit", timeZone: tz })} - ${sessionData.endTime.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit", timeZone: tz })}</p>
       </div>
 
       <p>Merci de cliquer sur le bouton ci-dessous pour accéder ${isHomework ? 'à la session' : 'au cours'} et signer :</p>

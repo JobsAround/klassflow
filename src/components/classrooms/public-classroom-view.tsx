@@ -3,6 +3,7 @@
 import { useState, useEffect, useMemo, useCallback } from "react"
 import { Calendar, FileText, Users, User, Loader2, Clock, Globe, Video, GraduationCap, CheckCircle2, AlertCircle } from "lucide-react"
 import { format } from "date-fns"
+import { formatInTz, utcToTz } from "@/lib/timezone"
 import { enUS, fr, de, es, ru, uk, pt } from "date-fns/locale"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -66,6 +67,7 @@ export interface PublicClassroomViewProps {
     joinLoading?: boolean
     logoText?: string
     badgeText?: string
+    timezone?: string
 }
 
 interface PendingSession {
@@ -387,7 +389,8 @@ export function PublicClassroomView({
     onJoinVideo,
     joinLoading = false,
     logoText = "KlassFlow",
-    badgeText = "Cloud"
+    badgeText = "Cloud",
+    timezone = "Europe/Paris"
 }: PublicClassroomViewProps) {
     const [activeTab, setActiveTab] = useState<TabValue>(() => getTabFromHash())
     // Start with "en" to match server render, then update on client
@@ -649,7 +652,7 @@ export function PublicClassroomView({
                                                     {session.title || t("classSession")}
                                                 </CardTitle>
                                                 <CardDescription>
-                                                    {format(new Date(session.startTime), "EEEE, MMMM d, yyyy", { locale: dateLocale })}
+                                                    {formatInTz(session.startTime, "EEEE, MMMM d, yyyy", timezone, { locale: dateLocale })}
                                                 </CardDescription>
                                             </div>
                                             <Badge variant={session.type === "ONLINE" ? "default" : session.type === "HOMEWORK" ? "outline" : "secondary"}>
@@ -662,8 +665,8 @@ export function PublicClassroomView({
                                             <div className="flex items-center gap-2">
                                                 <span className="text-slate-500">{t("time")}</span>
                                                 <span className="font-medium">
-                                                    {format(new Date(session.startTime), lang === "fr" || lang === "de" ? "HH:mm" : "h:mm a", { locale: dateLocale })} -{" "}
-                                                    {format(new Date(session.endTime), lang === "fr" || lang === "de" ? "HH:mm" : "h:mm a", { locale: dateLocale })}
+                                                    {formatInTz(session.startTime, lang === "fr" || lang === "de" ? "HH:mm" : "h:mm a", timezone, { locale: dateLocale })} -{" "}
+                                                    {formatInTz(session.endTime, lang === "fr" || lang === "de" ? "HH:mm" : "h:mm a", timezone, { locale: dateLocale })}
                                                 </span>
                                             </div>
                                             {session.teacher && (
@@ -837,7 +840,7 @@ export function PublicClassroomView({
                                                                     .sort((a, b) => new Date(b.startTime).getTime() - new Date(a.startTime).getTime())
                                                                     .map((session, idx) => (
                                                                         <span key={session.id}>
-                                                                            {format(new Date(session.startTime), "d MMM", { locale: dateLocale })}
+                                                                            {formatInTz(session.startTime, "d MMM", timezone, { locale: dateLocale })}
                                                                             {idx < student.sessions.length - 1 ? ", " : ""}
                                                                         </span>
                                                                     ))

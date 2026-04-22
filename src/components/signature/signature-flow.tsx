@@ -46,6 +46,7 @@ export interface SignatureFlowProps {
     onSubmitSignature: (signatureData: string) => Promise<{ success: boolean; missedSessions?: MissedSession[]; error?: string }>
     onSignMissedSession?: (token: string, signatureData: string) => Promise<{ success: boolean; error?: string }>
     onDeclareAbsence?: (token: string) => void
+    timezone?: string
     translations?: Partial<{
         title: string
         student: string
@@ -104,6 +105,7 @@ export function SignatureFlow({
     onSubmitSignature,
     onSignMissedSession,
     onDeclareAbsence,
+    timezone = "Europe/Paris",
     translations = {}
 }: SignatureFlowProps) {
     const t = { ...defaultTranslations, ...translations }
@@ -122,14 +124,16 @@ export function SignatureFlow({
             weekday: "long",
             year: "numeric",
             month: "long",
-            day: "numeric"
+            day: "numeric",
+            timeZone: timezone
         })
     }
 
     const formatTime = (dateStr: string) => {
         return new Date(dateStr).toLocaleTimeString("fr-FR", {
             hour: "2-digit",
-            minute: "2-digit"
+            minute: "2-digit",
+            timeZone: timezone
         })
     }
 

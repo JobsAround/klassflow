@@ -4,6 +4,7 @@ import { getAuthUser } from "@/lib/auth-utils"
 import { checkOrganizationLimit } from "@/lib/limits-server"
 
 import { addDays, addWeeks } from "date-fns"
+import { TZDate } from "@date-fns/tz"
 
 // ... imports
 
@@ -60,11 +61,19 @@ export async function POST(req: NextRequest) {
             }, { status: 403 })
         }
 
+        // Fetch org timezone for DST-safe recurrence
+        const orgData = await prisma.organization.findUnique({
+            where: { id: user.organizationId },
+            select: { timezone: true }
+        })
+        const tz = orgData?.timezone || "Europe/Paris"
+
         const createdSessions = []
 
         for (let i = 0; i < count; i++) {
-            let currentStartTime = new Date(startTime)
-            let currentEndTime = new Date(endTime)
+            // Use TZDate so addDays/addWeeks preserve local wall-clock time across DST
+            let currentStartTime: Date = new TZDate(new Date(startTime).getTime(), tz)
+            let currentEndTime: Date = new TZDate(new Date(endTime).getTime(), tz)
 
             if (recurrence === "DAILY") {
                 currentStartTime = addDays(currentStartTime, i)
@@ -78,8 +87,8 @@ export async function POST(req: NextRequest) {
                 title: title || null,
                 type: type || "ONSITE",
                 classroomId,
-                startTime: currentStartTime,
-                endTime: currentEndTime,
+                startTime: new Date(currentStartTime.getTime()),
+                endTime: new Date(currentEndTime.getTime()),
                 isOnline: isOnline || (type === "ONLINE"), // Fallback to type check
                 reminderEnabled: reminderEnabled !== undefined ? reminderEnabled : true,
                 reminderHoursBefore: reminderHoursBefore ? parseInt(String(reminderHoursBefore)) : 24,

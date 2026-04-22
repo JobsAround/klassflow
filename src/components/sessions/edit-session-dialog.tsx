@@ -38,6 +38,7 @@ import { Calendar } from "@/components/ui/calendar"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { cn } from "@/lib/utils"
 import { TimePicker } from "@/components/ui/time-picker"
+import { localToUtc, formatInTz, utcToTz } from "@/lib/timezone"
 
 const formSchema = z.object({
     type: z.enum(["ONSITE", "ONLINE", "HOMEWORK"]),
@@ -60,9 +61,10 @@ interface EditSessionDialogProps {
     }
     teachers?: { id: string; name: string | null; email: string }[]
     classroomName?: string
+    timezone?: string
 }
 
-export function EditSessionDialog({ session, teachers = [], classroomName = "Classroom" }: EditSessionDialogProps) {
+export function EditSessionDialog({ session, teachers = [], classroomName = "Classroom", timezone = "Europe/Paris" }: EditSessionDialogProps) {
     const t = useTranslations('session')
     const [open, setOpen] = useState(false)
     const router = useRouter()
@@ -71,9 +73,9 @@ export function EditSessionDialog({ session, teachers = [], classroomName = "Cla
         resolver: zodResolver(formSchema),
         defaultValues: {
             type: session.type,
-            date: new Date(session.startTime),
-            startTime: format(new Date(session.startTime), "HH:mm"),
-            endTime: format(new Date(session.endTime), "HH:mm"),
+            date: utcToTz(session.startTime, timezone),
+            startTime: formatInTz(session.startTime, "HH:mm", timezone),
+            endTime: formatInTz(session.endTime, "HH:mm", timezone),
             teacherId: session.teacherId || "none",
         },
     })
@@ -83,19 +85,19 @@ export function EditSessionDialog({ session, teachers = [], classroomName = "Cla
         if (open) {
             form.reset({
                 type: session.type,
-                date: new Date(session.startTime),
-                startTime: format(new Date(session.startTime), "HH:mm"),
-                endTime: format(new Date(session.endTime), "HH:mm"),
+                date: utcToTz(session.startTime, timezone),
+                startTime: formatInTz(session.startTime, "HH:mm", timezone),
+                endTime: formatInTz(session.endTime, "HH:mm", timezone),
                 teacherId: session.teacherId || "none",
             })
         }
-    }, [open, session, form])
+    }, [open, session, form, timezone])
 
     async function onSubmit(values: FormValues) {
         try {
             const dateStr = format(values.date, "yyyy-MM-dd")
-            const startDateTime = new Date(`${dateStr}T${values.startTime}`)
-            const endDateTime = new Date(`${dateStr}T${values.endTime}`)
+            const startDateTime = localToUtc(dateStr, values.startTime, timezone)
+            const endDateTime = localToUtc(dateStr, values.endTime, timezone)
 
             // Basic validation for end time > start time
             if (endDateTime <= startDateTime) {

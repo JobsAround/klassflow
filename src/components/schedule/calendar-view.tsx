@@ -37,9 +37,10 @@ interface CalendarViewProps {
     classrooms: Classroom[]
     sessions: Session[]
     isTeacher?: boolean
+    timezone?: string
 }
 
-export function CalendarView({ classrooms, sessions, isTeacher = false }: CalendarViewProps) {
+export function CalendarView({ classrooms, sessions, isTeacher = false, timezone = "Europe/Paris" }: CalendarViewProps) {
     const t = useTranslations('calendar')
     const tSession = useTranslations('session')
     const [selectedDate, setSelectedDate] = useState<Date | null>(null)
@@ -85,6 +86,7 @@ export function CalendarView({ classrooms, sessions, isTeacher = false }: Calend
                 open={createDialogOpen}
                 onOpenChange={setCreateDialogOpen}
                 trigger={null}
+                timezone={timezone}
             />
 
             <ScheduleCalendar
@@ -92,6 +94,7 @@ export function CalendarView({ classrooms, sessions, isTeacher = false }: Calend
                 onDayClick={handleDayClick}
                 isTeacher={isTeacher}
                 teachers={allTeachers}
+                timezone={timezone}
             />
         </div>
     )

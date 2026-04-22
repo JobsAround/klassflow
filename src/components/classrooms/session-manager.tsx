@@ -16,9 +16,10 @@ interface SessionManagerProps {
     classroom: { id: string; name: string; teachers?: { id: string; name: string | null; email: string }[] }
     enrollments?: any[]
     organizationId?: string
+    timezone?: string
 }
 
-export function SessionManager({ sessions, isTeacher, currentUserId, currentUserName, classroom, enrollments = [], organizationId }: SessionManagerProps) {
+export function SessionManager({ sessions, isTeacher, currentUserId, currentUserName, classroom, enrollments = [], organizationId, timezone = "Europe/Paris" }: SessionManagerProps) {
     const tSession = useTranslations('session')
     const tClassroom = useTranslations('classroom')
     const now = new Date()
@@ -54,7 +55,7 @@ export function SessionManager({ sessions, isTeacher, currentUserId, currentUser
                     <CardDescription>{tSession('manageSessions')}</CardDescription>
                 </div>
                 {isTeacher && (
-                    <CreateSessionDialog classrooms={[classroom]} organizationId={organizationId} />
+                    <CreateSessionDialog classrooms={[classroom]} organizationId={organizationId} timezone={timezone} />
                 )}
             </CardHeader>
             <CardContent>
@@ -78,6 +79,7 @@ export function SessionManager({ sessions, isTeacher, currentUserId, currentUser
                                     enrollments={enrollments}
                                     teachers={classroom.teachers || []}
                                     classroomName={classroom.name}
+                                    timezone={timezone}
                                 />
                             ))
                         )}
@@ -97,6 +99,7 @@ export function SessionManager({ sessions, isTeacher, currentUserId, currentUser
                                     enrollments={enrollments}
                                     teachers={classroom.teachers || []}
                                     classroomName={classroom.name}
+                                    timezone={timezone}
                                 />
                             ))
                         )}
