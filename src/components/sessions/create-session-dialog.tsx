@@ -40,6 +40,7 @@ import { Calendar } from "@/components/ui/calendar"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { cn } from "@/lib/utils"
 import { TimePicker } from "@/components/ui/time-picker"
+import { localToUtc } from "@/lib/timezone"
 
 const formSchema = z.object({
     classroomId: z.string().min(1, "Classroom is required"),
@@ -78,6 +79,7 @@ interface CreateSessionDialogProps {
     open?: boolean
     onOpenChange?: (open: boolean) => void
     trigger?: React.ReactNode
+    timezone?: string
 }
 
 export function CreateSessionDialog({
@@ -86,7 +88,8 @@ export function CreateSessionDialog({
     initialDate,
     open: controlledOpen,
     onOpenChange,
-    trigger
+    trigger,
+    timezone = "Europe/Paris"
 }: CreateSessionDialogProps) {
     const t = useTranslations('session')
     const [internalOpen, setInternalOpen] = useState(false)
@@ -126,8 +129,8 @@ export function CreateSessionDialog({
     async function onSubmit(values: FormValues) {
         try {
             const dateStr = format(values.date, "yyyy-MM-dd")
-            const startDateTime = new Date(`${dateStr}T${values.startTime}`)
-            const endDateTime = new Date(`${dateStr}T${values.endTime}`)
+            const startDateTime = localToUtc(dateStr, values.startTime, timezone)
+            const endDateTime = localToUtc(dateStr, values.endTime, timezone)
 
             // Basic validation for end time > start time
             if (endDateTime <= startDateTime) {
@@ -450,7 +453,7 @@ export function CreateSessionDialog({
                                             <FormItem>
                                                 <FormLabel>{t('occurrencesLabel')}</FormLabel>
                                                 <FormControl>
-                                                    <Input type="number" min={2} max={20} {...field} />
+                                                    <Input type="number" min={2} max={50} {...field} />
                                                 </FormControl>
                                                 <FormDescription>
                                                     {t('endsOn', { date: format(endDate, "dd/MM/yyyy") })}
