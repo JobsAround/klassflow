@@ -828,10 +828,15 @@ export function PublicClassroomView({
                                             const studentsWithPending = Array.from(studentMap.values())
                                                 .sort((a, b) => b.sessions.length - a.sessions.length)
 
+                                            const totalPendingSignatures = studentsWithPending.reduce(
+                                                (sum, student) => sum + student.sessions.length,
+                                                0
+                                            )
+
                                             return (
                                                 <>
                                                     <div className="text-sm font-medium text-amber-600 dark:text-amber-400">
-                                                        {studentsWithPending.length} {studentsWithPending.length === 1 ? t("pendingSignature") : t("pendingSignatures")}
+                                                        {totalPendingSignatures} {totalPendingSignatures === 1 ? t("pendingSignature") : t("pendingSignatures")}
                                                     </div>
                                                     {studentsWithPending.map((student) => (
                                                         <div
