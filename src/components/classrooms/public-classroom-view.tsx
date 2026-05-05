@@ -124,6 +124,8 @@ const defaultTranslations: Record<string, Record<string, string>> = {
         exportAttendance: "Export attendance sheets",
         from: "From",
         to: "To",
+        or: "or",
+        selectMonth: "Select a month",
     },
     fr: {
         loading: "Chargement...",
@@ -164,6 +166,8 @@ const defaultTranslations: Record<string, Record<string, string>> = {
         exportAttendance: "Exporter les feuilles d'émargement",
         from: "Du",
         to: "Au",
+        or: "ou",
+        selectMonth: "Sélectionner un mois",
     },
     de: {
         loading: "Laden...",
@@ -204,6 +208,8 @@ const defaultTranslations: Record<string, Record<string, string>> = {
         exportAttendance: "Anwesenheitslisten exportieren",
         from: "Von",
         to: "Bis",
+        or: "oder",
+        selectMonth: "Monat auswählen",
     },
     es: {
         loading: "Cargando...",
@@ -244,6 +250,8 @@ const defaultTranslations: Record<string, Record<string, string>> = {
         exportAttendance: "Exportar hojas de asistencia",
         from: "Desde",
         to: "Hasta",
+        or: "o",
+        selectMonth: "Seleccionar un mes",
     },
     ru: {
         loading: "Загрузка...",
@@ -284,6 +292,8 @@ const defaultTranslations: Record<string, Record<string, string>> = {
         exportAttendance: "Экспортировать листы посещаемости",
         from: "С",
         to: "По",
+        or: "или",
+        selectMonth: "Выбрать месяц",
     },
     uk: {
         loading: "Завантаження...",
@@ -324,6 +334,8 @@ const defaultTranslations: Record<string, Record<string, string>> = {
         exportAttendance: "Експортувати листи відвідуваності",
         from: "З",
         to: "По",
+        or: "або",
+        selectMonth: "Вибрати місяць",
     },
     pt: {
         loading: "A carregar...",
@@ -364,6 +376,8 @@ const defaultTranslations: Record<string, Record<string, string>> = {
         exportAttendance: "Exportar folhas de presença",
         from: "De",
         to: "Até",
+        or: "ou",
+        selectMonth: "Selecionar um mês",
     },
 }
 
@@ -485,6 +499,15 @@ export function PublicClassroomView({
         if (!now) return classroom.sessions // Show all sessions during SSR/initial render
         return classroom.sessions.filter(s => new Date(s.endTime) >= now)
     }, [classroom.sessions, now])
+
+    const firstSessionDate = useMemo(() => {
+        if (!classroom.sessions.length) return null
+        const earliest = classroom.sessions.reduce((min, s) => {
+            const t = new Date(s.startTime).getTime()
+            return t < min ? t : min
+        }, Infinity)
+        return Number.isFinite(earliest) ? new Date(earliest) : null
+    }, [classroom.sessions])
 
     // Prepare sessions for calendar with classroom name
     const calendarSessions = classroom.sessions.map(s => ({
@@ -888,6 +911,7 @@ export function PublicClassroomView({
                                 <PublicAttendanceExporter
                                     classroomId={classroom.id}
                                     lang={lang}
+                                    firstSessionDate={firstSessionDate}
                                     translations={{
                                         attendance: t("attendance"),
                                         attendanceDescription: t("attendanceDescription"),
@@ -898,6 +922,8 @@ export function PublicClassroomView({
                                         downloading: t("downloading"),
                                         exportError: t("exportError"),
                                         noSessions: t("noSessions"),
+                                        or: t("or"),
+                                        selectMonth: t("selectMonth"),
                                     }}
                                 />
                             </CardContent>

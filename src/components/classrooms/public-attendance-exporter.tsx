@@ -1,19 +1,21 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useMemo } from "react"
 import { Button } from "@/components/ui/button"
 import { Calendar as CalendarIcon, Download, Loader2 } from "lucide-react"
-import { format, startOfMonth, endOfMonth } from "date-fns"
+import { format, startOfMonth, endOfMonth, subMonths, isBefore } from "date-fns"
 import { enUS, fr, de, es, ru, uk, pt } from 'date-fns/locale'
 import { generateAttendancePDFv2 } from "@/lib/pdf-attendance"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Calendar } from "@/components/ui/calendar"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { cn } from "@/lib/utils"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 
 interface PublicAttendanceExporterProps {
     classroomId: string
     lang: string
+    firstSessionDate?: Date | null
     translations: {
         attendance: string
         attendanceDescription: string
@@ -24,6 +26,8 @@ interface PublicAttendanceExporterProps {
         downloading: string
         exportError: string
         noSessions: string
+        or: string
+        selectMonth: string
     }
 }
 
@@ -37,7 +41,7 @@ const dateLocaleMap: Record<string, any> = {
     'uk': uk
 }
 
-export function PublicAttendanceExporter({ classroomId, lang, translations: t }: PublicAttendanceExporterProps) {
+export function PublicAttendanceExporter({ classroomId, lang, firstSessionDate, translations: t }: PublicAttendanceExporterProps) {
     const dateLocale = dateLocaleMap[lang] || enUS
 
     // Initialize with current month
@@ -46,16 +50,30 @@ export function PublicAttendanceExporter({ classroomId, lang, translations: t }:
     const [isStartOpen, setIsStartOpen] = useState(false)
     const [isEndOpen, setIsEndOpen] = useState(false)
     const [loading, setLoading] = useState(false)
+    const [monthLoading, setMonthLoading] = useState(false)
+    const [selectedMonth, setSelectedMonth] = useState<string>("")
     const [error, setError] = useState<string | null>(null)
 
-    const handleExport = async () => {
-        if (!startDate || !endDate) return
+    const monthOptions = useMemo(() => {
+        if (!firstSessionDate) return []
+        const lastCompleted = startOfMonth(subMonths(new Date(), 1))
+        const firstMonth = startOfMonth(firstSessionDate)
+        if (isBefore(lastCompleted, firstMonth)) return []
+        const months: Date[] = []
+        let cursor = lastCompleted
+        while (!isBefore(cursor, firstMonth)) {
+            months.push(cursor)
+            cursor = subMonths(cursor, 1)
+        }
+        return months
+    }, [firstSessionDate])
 
-        setLoading(true)
+    const exportRange = async (start: Date, end: Date, setLoadingFn: (v: boolean) => void) => {
+        setLoadingFn(true)
         setError(null)
         try {
             const res = await fetch(
-                `/api/public/classroom/${classroomId}/attendance?startDate=${format(startDate, 'yyyy-MM-dd')}&endDate=${format(endDate, 'yyyy-MM-dd')}`,
+                `/api/public/classroom/${classroomId}/attendance?startDate=${format(start, 'yyyy-MM-dd')}&endDate=${format(end, 'yyyy-MM-dd')}`,
                 { cache: 'no-store' }
             )
             if (!res.ok) {
@@ -69,7 +87,6 @@ export function PublicAttendanceExporter({ classroomId, lang, translations: t }:
                 return
             }
 
-            // Convert date strings back to Date objects
             data.startDate = new Date(data.startDate)
             data.endDate = new Date(data.endDate)
 
@@ -85,8 +102,19 @@ export function PublicAttendanceExporter({ classroomId, lang, translations: t }:
             console.error("Export failed:", err)
             setError(t.exportError)
         } finally {
-            setLoading(false)
+            setLoadingFn(false)
         }
+    }
+
+    const handleExport = () => {
+        if (!startDate || !endDate) return
+        exportRange(startDate, endDate, setLoading)
+    }
+
+    const handleExportMonth = () => {
+        if (!selectedMonth) return
+        const monthDate = new Date(selectedMonth)
+        exportRange(startOfMonth(monthDate), endOfMonth(monthDate), setMonthLoading)
     }
 
     return (
@@ -188,6 +216,54 @@ export function PublicAttendanceExporter({ classroomId, lang, translations: t }:
                         )}
                     </Button>
                 </div>
+
+                {monthOptions.length > 0 && (
+                    <>
+                        <div className="flex items-center gap-3 my-2">
+                            <div className="flex-1 h-px bg-border" />
+                            <span className="text-xs uppercase tracking-wide text-muted-foreground">{t.or}</span>
+                            <div className="flex-1 h-px bg-border" />
+                        </div>
+
+                        <div className="flex flex-col sm:flex-row gap-3 flex-wrap">
+                            <Select value={selectedMonth} onValueChange={setSelectedMonth}>
+                                <SelectTrigger className="w-full sm:w-[220px]">
+                                    <CalendarIcon className="mr-2 h-4 w-4" />
+                                    <SelectValue placeholder={t.selectMonth} />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {monthOptions.map((m) => {
+                                        const value = format(m, 'yyyy-MM-dd')
+                                        const label = format(m, 'LLLL yyyy', { locale: dateLocale })
+                                        return (
+                                            <SelectItem key={value} value={value}>
+                                                {label.charAt(0).toUpperCase() + label.slice(1)}
+                                            </SelectItem>
+                                        )
+                                    })}
+                                </SelectContent>
+                            </Select>
+
+                            <Button
+                                onClick={handleExportMonth}
+                                disabled={monthLoading || !selectedMonth}
+                                className="w-full sm:w-auto"
+                            >
+                                {monthLoading ? (
+                                    <>
+                                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                        {t.downloading}
+                                    </>
+                                ) : (
+                                    <>
+                                        <Download className="mr-2 h-4 w-4" />
+                                        {t.download}
+                                    </>
+                                )}
+                            </Button>
+                        </div>
+                    </>
+                )}
 
                 {error && (
                     <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
